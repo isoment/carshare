@@ -6,6 +6,16 @@
 
 require('./bootstrap');
 
+// Import Vue Router
+import router from './routes';
+import VueRouter from 'vue-router';
+
+// Import Vue
+import Vue from 'vue';
+
+// This gives us access to a special Route object inside every component
+Vue.use(VueRouter);
+
 window.Vue = require('vue').default;
 
 /**
@@ -29,4 +39,5 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
+    router: router,
 });

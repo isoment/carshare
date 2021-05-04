@@ -15,15 +15,17 @@
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
     
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     </head>
     <body>
         <div id="app">
-            <div class="text-center text-green-400 text-xl font-bold tracking-wider">
-                Test
+            <div class="text-center text-green-400 text-xl font-bold tracking-wider mt-6">
+                Main Page
             </div>
+            <router-view></router-view>
         </div>
     </body>
 </html>
