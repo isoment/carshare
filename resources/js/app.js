@@ -30,6 +30,7 @@ window.Vue = require('vue').default;
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('error-404', require('./shared/components/Error404.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

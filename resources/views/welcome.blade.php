@@ -22,9 +22,6 @@
     </head>
     <body>
         <div id="app">
-            <div class="text-center text-green-400 text-xl font-bold tracking-wider mt-6">
-                Main Page
-            </div>
             <router-view></router-view>
         </div>
     </body>
