@@ -1,7 +1,8 @@
 <template>
-    <div class="container">
-        <div class="text-green-800 mx-12 font-mono font-bold text-sm tracking-widest">
-            Example Component
+    <div>
+        <main-navigation></main-navigation>
+        <div class="text-purple-400 text-center text-2xl font-header tracking-widest mt-4">
+            Main Page
         </div>
     </div>
 </template>

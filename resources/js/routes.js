@@ -1,12 +1,12 @@
 import VueRouter from 'vue-router';
-import ExampleComponent from './components/ExampleComponent';
+import MainPage from './components/MainPage';
 import Error404 from './shared/components/Error404';
 
 const routes = [
     {
         path: "/",
-        component: ExampleComponent,
-        name: "home",
+        component: MainPage,
+        name: "main-page",
     },
     {
         path: "*",

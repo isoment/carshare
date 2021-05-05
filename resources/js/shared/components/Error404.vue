@@ -9,12 +9,12 @@
                 <div class="text-gray-500">
                     <span>The page you requested does not exist, try checking the</span>
                     <span>
-                        <router-link :to="{ name: 'home' }" 
+                        <router-link :to="{ name: 'main-page' }" 
                                      class="text-purple-300 hover:text-purple-500 font-bold">
                             home page
                         </router-link>
                     </span>
-                    <span>for more info.</span>
+                    <span>for more options.</span>
                 </div>
             </div>
         </div>
