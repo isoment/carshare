@@ -4,7 +4,8 @@ module.exports = {
   theme: {
     extend: {},
     fontFamily: {
-      'header': 'Paytone One',
+      'bold1': 'Assistant',
+      'primary': 'Inter',
     },
   },
   variants: {

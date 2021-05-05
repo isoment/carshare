@@ -5,7 +5,7 @@
                 <div class="text-7xl">
                     <i class="fas fa-exclamation-circle"></i>
                 </div>
-                <h1 class="text-4xl font-header mt-4 mb-2">Page Not Found</h1>
+                <h1 class="text-4xl font-bold1 mt-4 mb-2">Page Not Found</h1>
                 <div class="text-gray-500">
                     <span>The page you requested does not exist, try checking the</span>
                     <span>

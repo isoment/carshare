@@ -16,34 +16,34 @@ import Index from './Index';
 // Import Vue
 import Vue from 'vue';
 
+// Import Vuex, we'll also set a seperate file where we have it store.js
+import Vuex from 'vuex';
+import storeDefinition from './store';
+
 // This gives us access to a special Route object inside every component
 Vue.use(VueRouter);
+// Need to use vuex as a vue plugin
+Vue.use(Vuex);
+
+// Setup a new state
+const store = new Vuex.Store(storeDefinition);
 
 window.Vue = require('vue').default;
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
-
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
+// Global Components
 Vue.component('error-404', require('./shared/components/Error404.vue').default);
 Vue.component('main-navigation', require('./shared/components/NavigationBarMain.vue').default);
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
+// Create root vue instance
 const app = new Vue({
     el: '#app',
+
+    // Add router
     router: router,
+
+    // Add vuex store
+    store,
+
     components: {
         'index': Index
     }
