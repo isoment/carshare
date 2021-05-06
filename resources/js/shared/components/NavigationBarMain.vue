@@ -29,18 +29,20 @@
                 </div>
                 <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
                     <div class="flex-shrink-0 flex items-center">
-                        <router-link :to="{ name: 'main-page' }">
+                        <router-link :to="{ name: 'main-page' }" exact-active-class="e9828ad291">
                             <i class="fas fa-car text-3xl text-purple-400"></i>
                         </router-link>
                     </div>
                     <div class="hidden sm:block sm:ml-6">
                         <div class="flex space-x-4">
-                            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                            <a href="#" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-bold" aria-current="page">Active</a>
+                            <!-- <a href="#" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-bold" aria-current="page">Active</a> -->
 
                             <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-bold">Share my car</a>
 
-                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-bold">Log in</a>
+                            <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-bold"
+                                         :to="{ name: 'login' }">
+                                Log in
+                            </router-link>
 
                             <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-bold">Sign up</a>
                         </div>
@@ -90,7 +92,7 @@
             <div class="sm:hidden absolute w-full bg-gray-800" id="mobile-menu"
                 v-show="mobileMenu">
                 <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="#" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" aria-current="page">Active</a>
+                <!-- <a href="#" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" aria-current="page">Active</a> -->
 
                 <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Share my car</a>
 

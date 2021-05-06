@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::routes();
+
+// Standard laravel auth routes
+// Auth::routes();
 
 // Redirect any request that isn't to the api into the vue router
 Route::get('/{any?}', function () {

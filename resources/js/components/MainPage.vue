@@ -12,7 +12,7 @@
                 </div>
                 <div class="flex justify-center mt-3">
                     <div class="bg-white rounded-lg md:rounded-full py-2 px-2 md:pl-5 md:pr-16 md:pt-2 md:pb-1 
-                                flex flex-col md:flex-row w-11/12 sm:w-3/4 md:w-auto">
+                                flex flex-col md:flex-row w-11/12 sm:w-3/4 md:w-auto shadow-lg">
                         <!-- Zip search -->
                         <div class="flex flex-col md:pr-2 border-b md:border-b-0 md:border-r border-gray-300 my-2 md:my-0">
                             <label for="zip" class="text-xs font-bold text-gray-500">Zipcode</label>

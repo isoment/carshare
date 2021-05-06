@@ -20,6 +20,11 @@
     bottom: -1px;
 }
 
+/* Offset for navigation bar */
+.navbar-offset {
+    margin-top: -64px;
+}
+
 /* Vue.js fade transition */
 .fade-enter-active, .fade-leave-active {
     transition: opacity .2s;
@@ -41,4 +46,9 @@
 .slide-fade-enter, .slide-fade-leave-to {
     transform: translateY(-10px);
     opacity: 0;
+}
+
+/* Router Link Active */
+.router-link-exact-active {
+    @apply bg-gray-700 text-white;
 }
