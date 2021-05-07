@@ -44,7 +44,10 @@
                                 Log in
                             </router-link>
 
-                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-bold">Sign up</a>
+                            <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-bold"
+                                         :to="{ name: 'register' }">
+                                Sign up
+                            </router-link>
                         </div>
                     </div>
                 </div>
@@ -96,9 +99,15 @@
 
                 <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Share my car</a>
 
-                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Log in</a>
+                <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                             :to="{ name: 'login' }">
+                    Log in
+                </router-link>
 
-                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Sign up</a>
+                <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                             :to="{ name: 'register' }">
+                    Sign up
+                </router-link>
                 </div>
             </div>
         </transition>

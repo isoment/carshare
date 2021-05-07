@@ -15,7 +15,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Standard laravel auth routes
-// Auth::routes();
+Auth::routes();
+
+// CSRF Token
+Route::get('/csrf', function() {
+    echo csrf_token(); 
+});
 
 // Redirect any request that isn't to the api into the vue router
 Route::get('/{any?}', function () {
