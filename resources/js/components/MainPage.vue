@@ -53,34 +53,13 @@
             </div>
         </section>
 
-        <!-- Vuex Test -->
-        <div>
-            <div class="text-purple-400 text-center font-boldnosans font-bold text-4xl tracking-widest mt-4">
-                Count: {{ count }}
-            </div>
-            <div class="my-3 text-center">
-                <button class="bg-purple-500 text-white font-bold text-sm p-2 hover:bg-purple-400 transition-all duration-200"
-                        @click="increment">
-                    Click Me
-                </button>
-            </div>
-        </div>
-
     </div>
 </template>
 
 <script>
     export default {
-        computed: {
-            count() {
-                return this.$store.state.count;
-            }
-        },
+        computed: {},
 
-        methods: {
-            increment() {
-                this.$store.commit('increment');
-            }
-        }
+        methods: {}
     }
 </script>

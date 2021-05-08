@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +20,12 @@ Auth::routes();
 
 // CSRF Token
 Route::get('/csrf', function() {
-    echo csrf_token(); 
+    echo csrf_token();
+});
+
+// Get auth user
+Route::middleware('auth')->get('/user', function(Request $request) {
+    return $request->user();
 });
 
 // Redirect any request that isn't to the api into the vue router

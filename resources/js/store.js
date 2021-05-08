@@ -1,11 +1,37 @@
+import { isLoggedIn } from "./shared/utils/auth";
+
 export default {
     state: {
-        count: 0,
+        isLoggedIn: false,
+        user: {}
     },
 
     mutations: {
-        increment (state) {
-            state.count++;
+        setUser(state, payload) {
+            state.user = payload;
+        },
+
+        setLoggedIn(state, payload) {
+            state.isLoggedIn = payload;
         }
-    }
+    },
+
+    actions: {
+        loadStoredState(context) {
+            context.commit('setLoggedIn', isLoggedIn());
+        },
+
+        // Load user information
+        async loadUser(context) {
+            if (isLoggedIn()) {
+                try {
+                    const user = (await axios.get('/user')).data;
+                    context.commit('setUser', user);
+                    context.commit('setLoggedIn', true);
+                } catch (error) {
+                    console.log(user);
+                }
+            }
+        }
+    },
 }
