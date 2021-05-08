@@ -1,4 +1,4 @@
-import { isLoggedIn } from "./shared/utils/auth";
+import { isLoggedIn, logOut } from "./shared/utils/auth";
 
 export default {
     state: {
@@ -17,6 +17,7 @@ export default {
     },
 
     actions: {
+        // Load stored state when we initialize Vue
         loadStoredState(context) {
             context.commit('setLoggedIn', isLoggedIn());
         },
@@ -29,9 +30,16 @@ export default {
                     context.commit('setUser', user);
                     context.commit('setLoggedIn', true);
                 } catch (error) {
-                    console.log(user);
+                    context.dispatch("logOut");
                 }
             }
+        },
+
+        // Logout a user
+        logOut(context) {
+            context.commit("setUser", {});
+            context.commit("setLoggedIn", false);
+            logOut();
         }
     },
 }
