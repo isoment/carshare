@@ -32,6 +32,7 @@ window.Vue = require('vue').default;
 
 // Global Components
 Vue.component('error-404', require('./shared/components/Error404.vue').default);
+Vue.component('unauthorized', require('./shared/components/Unauthorized.vue').default);
 Vue.component('main-navigation', require('./shared/components/NavigationBarMain.vue').default);
 Vue.component('validation-errors', require('./shared/components/ValidationErrors').default);
 
