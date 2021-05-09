@@ -94,7 +94,7 @@
                 this.validationErrors = null;
 
                 try {
-                    await axios.get('/sanctum/csrf-cookie');
+                    // await axios.get('/sanctum/csrf-cookie');
                     await axios.post('/login', {
                         email: this.email,
                         password: this.password,
@@ -103,7 +103,7 @@
                     this.$store.dispatch("loadUser");
                     this.$router.push({ name: "main-page" });
                 } catch(error) {
-                    this.validationErrors = error.response && error.response.data.errors;
+                    this.validationErrors = error.response.data.errors;
                 }
 
                 this.loading = false;
