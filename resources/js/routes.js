@@ -3,6 +3,8 @@ import MainPage from './components/MainPage';
 import Error404 from './shared/components/Error404';
 import Login from './auth/Login';
 import Register from './auth/Register';
+import PasswordResetRequest from './auth/PasswordResetRequest';
+import PasswordReset from './auth/PasswordReset';
 
 const routes = [
     {
@@ -19,6 +21,16 @@ const routes = [
         path: "/auth/register",
         component: Register,
         name: "register"
+    },
+    {
+        path: "/auth/password-reset-request",
+        component: PasswordResetRequest,
+        name: "password-reset-request"
+    },
+    {
+        path: "/auth/password-reset/:email",
+        component: PasswordReset,
+        name: "password-reset"
     },
     {
         path: "*",

@@ -13,7 +13,7 @@
                         </router-link>
                     </div>
                     <div class="px-12 pb-10">
-                        <h2 class="font-bold text-lg mb-5 text-gray-600">Sign In</h2>
+                        <h2 class="font-bold text-lg mb-5 text-gray-600">Reset Your Password</h2>
                         <!-- Email -->
                         <div class="w-full mb-4">
                             <div class="flex items-center">
@@ -21,25 +21,48 @@
                                 <input type="email" name="email" 
                                     placeholder="Email"
                                     class="-mx-6 px-8 w-full border rounded py-2 text-gray-700 focus:outline-none"
-                                    v-model="email">
+                                    v-model="user.email">
                             </div>
                             <validation-errors :errors="errorFor('email')"></validation-errors>
                         </div>
                         <!-- Password -->
                         <div class="w-full mb-4">
                             <div class="flex items-center">
-                                <i class='ml-3 fill-current text-purple-400 text-xs z-10 fas fa-lock'></i>
-                                <input name="password" type='password' placeholder="Password"
+                                <i class='ml-3 fill-current text-purple-400 text-xs z-10 fas fa-user'></i>
+                                <input type="password" name="password" 
+                                    placeholder="New Password"
                                     class="-mx-6 px-8 w-full border rounded py-2 text-gray-700 focus:outline-none"
-                                    v-model="password">
+                                    v-model="user.password">
                             </div>
                             <validation-errors :errors="errorFor('password')"></validation-errors>
                         </div>
-                        <!-- Forgot Password -->
+                        <!-- Password Confirmation -->
+                        <div class="w-full mb-4">
+                            <div class="flex items-center">
+                                <i class='ml-3 fill-current text-purple-400 text-xs z-10 fas fa-user'></i>
+                                <input type="password" name="password" 
+                                    placeholder="Confirm Password"
+                                    class="-mx-6 px-8 w-full border rounded py-2 text-gray-700 focus:outline-none"
+                                    v-model="user.password_confirmation">
+                            </div>
+                            <validation-errors :errors="errorFor('password_confirmation')"></validation-errors>
+                        </div>
+                        <!-- Verification Code -->
+                        <div class="w-full mb-4">
+                            <div class="flex items-center">
+                                <i class='ml-3 fill-current text-purple-400 text-xs z-10 fas fa-user'></i>
+                                <input type="text" name="verificationCode" 
+                                    placeholder="Verification Code"
+                                    class="-mx-6 px-8 w-full border rounded py-2 text-gray-700 focus:outline-none"
+                                    v-model="user.verificationCode">
+                            </div>
+                            <validation-errors :errors="errorFor('verificationCode')"></validation-errors>
+                        </div>
+                        <!-- Resend Verification -->
                         <div>
                             <router-link :to="{ name: 'password-reset-request' }"
                                         class="text-purple-500 hover:text-purple-400 transition-all duration-200 font-light">
-                                Forgot Your Password?
+                                Resend Verification Code
                             </router-link>
                         </div>
                         <!-- Button -->
@@ -47,17 +70,9 @@
                             <button class="text-white font-bold bg-purple-500 hover:bg-purple-400 transition-all 
                                         duration-200 focus:outline-none py-2 px-4 w-full"
                                     :disabled="loading"
-                                    @click.prevent="login">
-                                Login
+                                    @click.prevent="reset">
+                                Reset Password
                             </button>
-                        </div>
-                        <!-- Register -->
-                        <div class="text-gray-500 mt-6 text-center">
-                            Don't have an account? 
-                            <router-link :to="{ name: 'register' }" 
-                                        class="text-purple-500 hover:text-purple-400 transition-all duration-200 font-bold">
-                                Register
-                            </router-link>
                         </div>
                     </div>
                 </form>
@@ -67,17 +82,20 @@
 </template>
 
 <script>
-    import validationErrors from './../shared/mixins/validationErrors';
-    import { logIn } from './../shared/utils/auth';
     import { mapState } from 'vuex';
+    import validationErrors from './../shared/mixins/validationErrors';
 
     export default {
         mixins: [validationErrors],
 
         data() {
             return {
-                email: null,
-                password: null,
+                user: {
+                    email: null,
+                    verificationCode: null,
+                    password: null,
+                    password_confirmation: null
+                },
                 loading: false,
             }
         },
@@ -88,26 +106,27 @@
             }),
         },
 
+        //  Vue hook to set the email param
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                vm.user.email = to.params.email
+            });
+        },
+        
         methods: {
-            async login() {
+            async reset() {
                 this.loading = true;
                 this.validationErrors = null;
 
                 try {
-                    await axios.get('/sanctum/csrf-cookie');
-                    await axios.post('/login', {
-                        email: this.email,
-                        password: this.password,
-                    });
-                    logIn();
-                    this.$store.dispatch("loadUser");
-                    this.$router.push({ name: "main-page" });
-                } catch(error) {
+
+                } catch (error) {
                     this.validationErrors = error.response.data.errors;
                 }
 
                 this.loading = false;
             }
-        },
+        }
+
     }
 </script>
