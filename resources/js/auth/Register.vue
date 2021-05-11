@@ -61,7 +61,8 @@
                                         duration-200 focus:outline-none py-2 px-4 w-full"
                                     :disabled="loading"
                                     @click="register">
-                                Sign up
+                                <span v-if="!loading">Sign up</span>
+                                <span v-if="loading"><i class="fas fa-spinner fa-spin"></i> Sign up... </span>
                             </button>
                         </div>
                         <!-- Register -->
@@ -69,7 +70,7 @@
                             Already have an account? 
                             <router-link :to="{ name: 'login' }" 
                                         class="text-purple-500 hover:text-purple-400 transition-all duration-200 font-bold">
-                                Log in
+                                Login
                             </router-link>
                         </div>
                     </div>

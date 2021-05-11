@@ -34,7 +34,8 @@
                                         duration-200 focus:outline-none py-2 px-4 w-full"
                                     :disabled="loading"
                                     @click.prevent="reset">
-                                Reset Password
+                                <span v-if="!loading">Reset Password</span>
+                                <span v-if="loading"><i class="fas fa-spinner fa-spin"></i> Sending... </span>
                             </button>
                         </div>
                     </div>
@@ -72,8 +73,10 @@
                 this.validationErrors = null;
 
                 try {
-                    // const response = await axios.post('/password/email', this.user);
-                    this.$router.push({ name: "password-reset", params: { email: this.user.email } });
+                    const response = await axios.post('/password/email', this.user);
+                    if (response.status === 200) {
+                        this.$router.push({ name: "password-reset-email" });
+                    }
                 } catch (error) {
                     this.validationErrors = error.response.data.errors;
                 }

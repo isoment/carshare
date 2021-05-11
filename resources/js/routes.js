@@ -4,7 +4,7 @@ import Error404 from './shared/components/Error404';
 import Login from './auth/Login';
 import Register from './auth/Register';
 import PasswordResetRequest from './auth/PasswordResetRequest';
-import PasswordReset from './auth/PasswordReset';
+import PasswordResetEmail from './auth/PasswordResetEmail';
 
 const routes = [
     {
@@ -28,9 +28,9 @@ const routes = [
         name: "password-reset-request"
     },
     {
-        path: "/auth/password-reset/:email",
-        component: PasswordReset,
-        name: "password-reset"
+        path: "/auth/password-reset-email",
+        component: PasswordResetEmail,
+        name: "password-reset-email"
     },
     {
         path: "*",

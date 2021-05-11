@@ -48,7 +48,8 @@
                                         duration-200 focus:outline-none py-2 px-4 w-full"
                                     :disabled="loading"
                                     @click.prevent="login">
-                                Login
+                                <span v-if="!loading">Login</span>
+                                <span v-if="loading"><i class="fas fa-spinner fa-spin"></i> Login... </span>
                             </button>
                         </div>
                         <!-- Register -->
