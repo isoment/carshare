@@ -23,6 +23,7 @@
     <body>
         <div id="app">
             <index></index>
+            <notifications-list></notifications-list>
         </div>
     </body>
 </html>

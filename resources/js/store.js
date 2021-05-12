@@ -3,7 +3,8 @@ import { isLoggedIn, logOut } from "./shared/utils/auth";
 export default {
     state: {
         isLoggedIn: false,
-        user: {}
+        user: {},
+        notifications: [],
     },
 
     mutations: {
@@ -13,6 +14,28 @@ export default {
 
         setLoggedIn(state, payload) {
             state.isLoggedIn = payload;
+        },
+
+        /*
+            Payload is formatted... We also wnat to add an id
+            {
+                type: 'error',
+                message: .....
+                id: .....
+            }
+        */
+        pushNotification(state, payload) {
+            state.notifications.push({
+                ...payload,
+                id: (Math.random().toString(36) + Date.now().toString(36)).substr(2)
+            })
+        },
+
+        // Return all the notifications except the one specified in the payload
+        removeNotification(state, payload) {
+            state.notifications = state.notifications.filter(notification => {
+                return notification.id !== payload.id;
+            })
         }
     },
 
@@ -40,6 +63,16 @@ export default {
             context.commit("setUser", {});
             context.commit("setLoggedIn", false);
             logOut();
+        },
+
+        // Add a notification
+        addNotification(context, payload) {
+            context.commit('pushNotification', payload)
+        },
+
+        // Remove a notification
+        removeNotification(context, payload) {
+            context.commit('removeNotification', payload);
         }
     },
 }

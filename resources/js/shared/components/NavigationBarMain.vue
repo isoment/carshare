@@ -177,7 +177,13 @@
             async logout() {
                 try {
                     axios.post('/logout');
+
                     this.$store.dispatch('logOut');
+
+                    this.$store.dispatch('addNotification', {
+                        type: 'success',
+                        message: 'Logout successful'
+                    });
                 } catch(error) {
                     this.$store.dispatch('logOut');
                 }
