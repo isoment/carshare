@@ -1,6 +1,6 @@
 <template>
     <div class="notifications-list">
-        <transition-group name="fade" tag="div">
+        <transition-group name="slide-fade-x" tag="div">
             <notification-message v-for="notification in notifications"
                                 :key="notification.id"
                                 :notification="notification">

@@ -2,7 +2,7 @@
     <div :class="notificationColor" class="text-white shadow-md pl-4 pr-3 py-3 rounded-md text-sm my-2" 
          role="alert">
         <div class="flex justify-between items-center">
-            <span>{{ notification.message }}</span>
+            <span class="text-lg pr-3">{{ notification.message }}</span>
             <span class="px-1">
                 <i :class="notificationIcon"></i>
             </span>
@@ -24,9 +24,9 @@
 
             notificationIcon() {
                 if (this.notification.type === 'error') {
-                    return 'fas fa-exclamation-circle text-lg';
+                    return 'fas fa-exclamation-circle text-xl';
                 }
-                return 'fas fa-check-circle text-lg';
+                return 'fas fa-check-circle text-xl';
             }
         },
 

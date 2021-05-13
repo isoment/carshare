@@ -53,6 +53,41 @@
             </div>
         </section>
 
+        <!-- Info Section -->
+        <section>
+            <div class="relative flex justify-center">
+                <div class="absolute bg-white rounded-2xl px-10 py-3 insurance-logo">
+                    <img src="/img/logo_libertymutual.png">
+                </div>
+            </div>
+            <div class="text-center mt-28 mb-8 mx-2 sm:mx-6 md:mx-10 flex flex-col justify-center items-center">
+                <h4 class="font-bold text-xl mb-6">Drive with confidence</h4>
+                <h2 class="font-boldnosans text-3xl sm:text-4xl font-bold max-w-2xl">Exciting fun cars for any budget without the worry or hassle</h2>
+            </div>
+            <div class="max-w-6xl mx-auto px-2 sm:px-6 lg:px-8 mt-14">
+                <div class="flex flex-col mx-2 sm:mx-6 md:mx-14 lg:flex-row lg:mx-0 justify-center">
+                    <div class="mb-12 lg:mb-0 flex flex-col items-center sm:items-start">
+                        <img src="/img/info-icon-1.svg" class="h-10 w-10 mb-3">
+                        <h3 class="font-black text-bold font-boldnosans mb-2">Wide selection of cars</h3>
+                        <p class="text-gray-700 font-light mb-2 text-center sm:text-left">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Maiores illo quia, eaque velit ullam sit magni ad. Aspernatur odit excepturi.</p>
+                        <a href="#" class="font-bold text-purple-600">Learn More</a>
+                    </div>
+                    <div class="mb-12 lg:mb-0 flex flex-col items-center sm:items-start">
+                        <img src="/img/info-icon-2.svg" class="h-10 w-10 mb-3 -ml-2">
+                        <h3 class="font-black text-bold font-boldnosans mb-2">Cars near you</h3>
+                        <p class="text-gray-700 font-light mb-2 text-center sm:text-left">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Maiores illo quia, eaque velit ullam sit magni ad. Aspernatur odit excepturi.</p>
+                        <a href="#" class="font-bold text-purple-600">Learn More</a>
+                    </div>
+                    <div class="mb-12 lg:mb-0 flex flex-col items-center sm:items-start">
+                        <img src="/img/info-icon-3.svg" class="h-10 w-10 mb-3">
+                        <h3 class="font-black text-bold font-boldnosans mb-2">Strict safety standards</h3>
+                        <p class="text-gray-700 font-light mb-2 text-center sm:text-left">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Maiores illo quia, eaque velit ullam sit magni ad. Aspernatur odit excepturi.</p>
+                        <a href="#" class="font-bold text-purple-600">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </div>
 </template>
 

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 512 512"
+   width="512"
+   height="512"
+   version="1.1"
+   sodipodi:docname="car.svg"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15, custom)">
+  <metadata
+     id="metadata23">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs21" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2255"
+     inkscape:window-height="1216"
+     id="namedview19"
+     showgrid="false"
+     inkscape:zoom="1.96875"
+     inkscape:cx="256"
+     inkscape:cy="258.47721"
+     inkscape:window-x="54"
+     inkscape:window-y="38"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Layer_1" />
+  <path
+     d="M201.045,347H306.461a6,6,0,0,0,0-12H201.045a6,6,0,1,0,0,12Z"
+     id="path2"
+     style="fill:#9f7aea;fill-opacity:1" />
+  <path
+     d="M201.045,330H306.461a6,6,0,0,0,0-12H201.045a6,6,0,1,0,0,12Z"
+     id="path4"
+     style="fill:#9f7aea;fill-opacity:1" />
+  <path
+     d="M328.854,361h36.308a23,23,0,0,0,0-46H335.42a5.817,5.817,0,0,0-5.891,4.65l-6.565,33.86a6.385,6.385,0,0,0,1.263,5.133A6.171,6.171,0,0,0,328.854,361Zm11.517-34h24.791a11,11,0,0,1,0,22H336.125Z"
+     id="path6"
+     style="fill:#9f7aea;fill-opacity:1" />
+  <path
+     d="M142.344,361h36.307a6.356,6.356,0,0,0,5.891-7.481l-6.565-33.812A5.866,5.866,0,0,0,172.086,315H142.344a23,23,0,0,0,0,46Zm0-34h24.791l4.246,22H142.344a11,11,0,0,1,0-22Z"
+     id="path8"
+     style="fill:#9f7aea;fill-opacity:1" />
+  <path
+     d="M140.577,242.188l-19.386,52.979A26.485,26.485,0,0,0,98,321.255V371.93a8.6,8.6,0,0,0-7,8.5v23.6A9.185,9.185,0,0,0,99.929,413h1.21l.176,24.914a16.147,16.147,0,0,0,4.749,11.367A15.956,15.956,0,0,0,117.238,454h.121l26.9-.4a15.9,15.9,0,0,0,15.813-15.993L159.9,413H351.966l.177,24.914a16.139,16.139,0,0,0,4.749,11.367A15.956,15.956,0,0,0,368.065,454h.122l26.9-.4a15.938,15.938,0,0,0,11.23-4.858,15.571,15.571,0,0,0,4.583-11.189L410.727,413h1.344A9.185,9.185,0,0,0,421,404.029v-23.6a8.6,8.6,0,0,0-7-8.5V321.255a26.377,26.377,0,0,0-23.191-25.979l-19.293-53.089A27.685,27.685,0,0,0,345.779,224H166.22A27.562,27.562,0,0,0,140.577,242.188Zm3.6,199.5-26.9.315h-.02a4.15,4.15,0,0,1-2.769-1.348,3.786,3.786,0,0,1-1.171-2.716L113.14,413H147.9l.175,24.589A4.054,4.054,0,0,1,144.176,441.685ZM397.77,440.3A4.1,4.1,0,0,1,395,441.644L368.1,442h-.031a4.141,4.141,0,0,1-2.758-1.349,3.775,3.775,0,0,1-1.171-2.715L363.967,413h34.759l.174,24.59A3.714,3.714,0,0,1,397.77,440.3ZM409,384v17H103V384ZM195.629,372l5.337-8H305.831l5.337,8ZM402,321.255V372H325.957l-12.186-17.211A6.3,6.3,0,0,0,308.9,352H197.894a6.3,6.3,0,0,0-4.869,2.789L180.84,372H110V321.255A14.587,14.587,0,0,1,124.555,307h262.89A14.587,14.587,0,0,1,402,321.255Zm-41.857-75.011L377.781,295H134.219l17.637-48.755A15.492,15.492,0,0,1,166.22,236H345.779A15.493,15.493,0,0,1,360.143,246.244Z"
+     id="path10"
+     style="fill:#9f7aea;fill-opacity:1" />
+  <path
+     d="M436.558,16.007A6,6,0,0,0,430.9,12H81.1a6,6,0,0,0-5.66,4.007L29.628,146.1a5.929,5.929,0,0,0,5.659,7.9H45V494a6.088,6.088,0,0,0,6.1,6H460.9a6.088,6.088,0,0,0,6.1-6V154h9.713a5.938,5.938,0,0,0,5.659-7.924ZM455,488H57V154H185.011a5.955,5.955,0,0,0,3.781-1.3l73.661-59.77,73.662,59.759A5.969,5.969,0,0,0,339.9,154H455ZM342.025,142,266.234,80.524a6,6,0,0,0-7.562-.023L182.882,142H43.762L85.35,24h341.3l41.588,118Z"
+     id="path12"
+     style="fill:#9f7aea;fill-opacity:1" />
+  <path
+     d="M77,192.425a6,6,0,0,0-6,6V300.181a6,6,0,0,0,12,0V198.425A6,6,0,0,0,77,192.425Z"
+     id="path14"
+     style="fill:#9f7aea;fill-opacity:1" />
+  <path
+     d="M77,168.857a6,6,0,0,0-6,6v4.884a6,6,0,0,0,12,0v-4.884A6,6,0,0,0,77,168.857Z"
+     id="path16"
+     style="fill:#9f7aea;fill-opacity:1" />
+</svg>
