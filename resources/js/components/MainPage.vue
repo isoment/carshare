@@ -94,7 +94,7 @@
 
         <!-- Car make slider -->
         <section class="my-24">
-            <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 mt-14">
+            <div class="vehicle-make-slider-width mx-auto px-2 sm:px-6 lg:px-8 mt-14">
                 <h3 class="font-black text-bold font-boldnosans mb-4 mx-8 text-xl">Browse by make</h3>
                 <vehicle-make-slider></vehicle-make-slider>
             </div>

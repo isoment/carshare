@@ -35,6 +35,10 @@
     @apply bg-gray-700 text-white;
 }
 
+.vehicle-make-slider-width {
+    max-width: 76rem;
+}
+
 
 /* VUE TRANSITIONS */
 /*******************/

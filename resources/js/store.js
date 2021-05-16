@@ -17,7 +17,7 @@ export default {
         },
 
         /*
-            Payload is formatted... We also wnat to add an id
+            Payload is formatted... We also want to add an id
             {
                 type: 'error',
                 message: .....

@@ -1,16 +1,21 @@
 <template>
     <div>
         <vue-slick-carousel v-bind="carouselSettings" class="mx-6">
+            
+            <!-- Previous Arrow -->
             <template #prevArrow="arrowOption">
                 <i class="fas fa-chevron-left text-lg custom-arrow">
                     {{ arrowOption.currentSlide }}/{{ arrowOption.slideCount }}
                 </i>
             </template>
+
+            <!-- Next Arrow -->
             <template #nextArrow="arrowOption">
                 <i class="fas fa-chevron-left text-lg custom-arrow">
                     {{ arrowOption.currentSlide }}/{{ arrowOption.slideCount }}
                 </i>
             </template>
+
             <!-- Card -->
             <div>
                 <div class="max-w-sm rounded-lg overflow-hidden shadow-md mx-2 my-3 hover:shadow-lg

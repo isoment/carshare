@@ -18,11 +18,6 @@ use Illuminate\Support\Facades\Route;
 // Standard laravel auth routes
 Auth::routes();
 
-// CSRF Token
-Route::get('/csrf', function() {
-    echo csrf_token();
-});
-
 // Get auth user
 Route::middleware('auth')->get('/user', function(Request $request) {
     return $request->user();
