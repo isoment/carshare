@@ -1,7 +1,9 @@
 <template>
     <div>
-        <vue-slick-carousel v-bind="carouselSettings" class="mx-6">
-            
+        <vue-slick-carousel v-bind="carouselSettings" 
+                            class="mx-6" 
+                            v-if="vehicleMakesExists">
+
             <!-- Previous Arrow -->
             <template #prevArrow="arrowOption">
                 <i class="fas fa-chevron-left text-lg custom-arrow">
@@ -17,65 +19,16 @@
             </template>
 
             <!-- Card -->
-            <div>
+            <div v-for="vehicle in vehicleMakes" :key="vehicle.id">
                 <div class="max-w-sm rounded-lg overflow-hidden shadow-md mx-2 my-3 hover:shadow-lg
                             transition-all transform hover:-translate-y-1 duration-300 hover:text-purple-500">
-                    <img class="w-full" src="/img/card-top.jpg" alt="Sunset in the mountains">
+                    <img class="w-full" alt="make" :src="vehicle.image">
                     <div class="px-6 py-3 text-center">
-                        <div class="font-bold mb-2 font-boldnosans">Toyota</div>
+                        <div class="font-bold mb-2 font-boldnosans">{{ vehicle.make }}</div>
                     </div>
                 </div>
-            </div>
-            <!-- Card -->
-            <div>
-                <div class="max-w-sm rounded-lg overflow-hidden shadow-md mx-2 my-3 hover:shadow-lg
-                            transition-all transform hover:-translate-y-1 duration-300 hover:text-purple-500">
-                    <img class="w-full" src="/img/card-top.jpg" alt="Sunset in the mountains">
-                    <div class="px-6 py-3 text-center">
-                        <div class="font-bold mb-2 font-boldnosans">Toyota</div>
-                    </div>
-                </div>
-            </div>
-            <!-- Card -->
-            <div>
-                <div class="max-w-sm rounded-lg overflow-hidden shadow-md mx-2 my-3 hover:shadow-lg
-                            transition-all transform hover:-translate-y-1 duration-300 hover:text-purple-500">
-                    <img class="w-full" src="/img/card-top.jpg" alt="Sunset in the mountains">
-                    <div class="px-6 py-3 text-center">
-                        <div class="font-bold mb-2 font-boldnosans">Toyota</div>
-                    </div>
-                </div>
-            </div>      
-            <!-- Card -->
-            <div>
-                <div class="max-w-sm rounded-lg overflow-hidden shadow-md mx-2 my-3 hover:shadow-lg
-                            transition-all transform hover:-translate-y-1 duration-300 hover:text-purple-500">
-                    <img class="w-full" src="/img/card-top.jpg" alt="Sunset in the mountains">
-                    <div class="px-6 py-3 text-center">
-                        <div class="font-bold mb-2 font-boldnosans">Toyota</div>
-                    </div>
-                </div>
-            </div>      
-            <!-- Card -->
-            <div>
-                <div class="max-w-sm rounded-lg overflow-hidden shadow-md mx-2 my-3 hover:shadow-lg
-                            transition-all transform hover:-translate-y-1 duration-300 hover:text-purple-500">
-                    <img class="w-full" src="/img/card-top.jpg" alt="Sunset in the mountains">
-                    <div class="px-6 py-3 text-center">
-                        <div class="font-bold mb-2 font-boldnosans">Toyota</div>
-                    </div>
-                </div>
-            </div>      
-            <!-- Card -->
-            <div>
-                <div class="max-w-sm rounded-lg overflow-hidden shadow-md mx-2 my-3 hover:shadow-lg
-                            transition-all transform hover:-translate-y-1 duration-300 hover:text-purple-500">
-                    <img class="w-full" src="/img/card-top.jpg" alt="Sunset in the mountains">
-                    <div class="px-6 py-3 text-center">
-                        <div class="font-bold mb-2 font-boldnosans">Toyota</div>
-                    </div>
-                </div>
-            </div>                                                                                                      
+            </div>    
+
         </vue-slick-carousel>
     </div>
 </template>
@@ -132,9 +85,32 @@
                             }
                         }
                     ]
-                }
+                },
+
+                vehicleMakes: null,
+                loading: false,
+                error: null,
             }
         },
+
+        computed: {
+            vehicleMakesExists() {
+                return this.vehicleMakes !== null;
+            }
+        },
+
+        async created() {
+            this.loading = true;
+            this.error = null;
+
+            try {
+                this.vehicleMakes = (await axios.get('/api/vehicle-make/list')).data.data;
+            } catch (error) {
+                this.error = error.response.status;
+            }
+            
+            this.loading = false;
+        }
     }
 </script>
 
