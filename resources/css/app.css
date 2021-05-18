@@ -39,6 +39,28 @@
     max-width: 76rem;
 }
 
+.travelogue-purple-bar {
+    height: 1.65rem;
+    width: 24rem;
+    z-index: -1;
+    bottom: -6px;
+    left: 2.5rem;
+}
+
+.travelogue-detail-box {
+    max-width: 360px;
+    top: 20%;
+    left: 0;
+}
+
+.travelogue-photo-div {
+    background-image: url('/img/travelogue-main.jpg');
+    background-size: cover;
+    background-position: left;
+    height: 496px;
+    width: 1000px;
+}
+
 
 /* VUE TRANSITIONS */
 /*******************/
