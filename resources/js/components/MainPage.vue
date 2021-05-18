@@ -93,34 +93,36 @@
         </section>
 
         <!-- Car make slider -->
-        <section class="mb-24 mt-32">
-            <div class="vehicle-make-slider-width mx-auto px-2 sm:px-6 lg:px-8 mt-14">
+        <section class="md:mb-24 mt-6 md:mt-32">
+            <div class="vehicle-make-slider-width mx-auto px-2 sm:px-6 lg:px-8 md:mt-14">
                 <h3 class="font-black text-bold font-boldnosans mb-4 mx-8 text-xl">Browse by make</h3>
                 <vehicle-make-slider></vehicle-make-slider>
             </div>
         </section>
 
         <!-- Travelogue -->
-        <section class="my-24">
-            <div class="text-center mt-28 mb-8 mx-2 sm:mx-6 md:mx-10 flex flex-col justify-center items-center overflow-hidden">
-                <div class="relative">
-                    <div>
-                        <h2 class="font-boldnosans text-3xl sm:text-5xl font-bold max-w-2xl z-40">Find your adventure</h2>
+        <section class="my-12 md:my-24">
+            <div class="text-center mt-12 md:mt-28 mb-8 flex flex-col justify-center items-center overflow-hidden">
+                <div class="mx-2 sm:mx-6 md:mx-10">
+                    <div class="relative">
+                        <div>
+                            <h2 class="font-boldnosans text-3xl sm:text-5xl font-bold max-w-2xl z-40">Find your adventure</h2>
+                        </div>
+                        <div class="absolute bg-purple-100 travelogue-purple-bar"></div>
                     </div>
-                    <div class="absolute bg-purple-100 travelogue-purple-bar"></div>
-                </div>
-                <div class="mt-8">
-                    <h5 class="text-gray-700 font-light">Stoke your wanderlust with some dreamy photo chronicles of road trip adventures.</h5>
-                </div>
-                <div class="mt-10">
-                    <a class="bg-purple-500 hover:bg-purple-400 text-white py-4 px-6 font-lg font-bold 
-                              transition-all duration-200" 
-                       href="#">
-                        Explore Adventure
-                    </a>
+                    <div class="mt-8">
+                        <h5 class="text-gray-700 font-light">Stoke your wanderlust with some dreamy photo chronicles of road trip adventures.</h5>
+                    </div>
+                    <div class="mt-10">
+                        <a class="bg-purple-500 hover:bg-purple-400 text-white py-4 px-6 font-lg font-bold 
+                                transition-all duration-200" 
+                        href="#">
+                            Explore Adventure
+                        </a>
+                    </div>
                 </div>
                 <div class="max-w-6xl px-2 sm:px-6 lg:px-8 mt-14">
-                    <div class="pl-32 overflow-hidden w-full relative">
+                    <div class="pl-32 overflow-hidden relative">
                         <div class="travelogue-photo-div"></div>
                         <div class="bg-gray-900 text-white px-6 py-8 text-left travelogue-detail-box absolute">
                             <h5 class="uppercase text-xs font-semibold">FEATURED TRAVELOGUE</h5>
