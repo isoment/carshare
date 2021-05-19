@@ -92,9 +92,9 @@
             </div>
         </section>
 
-        <!-- Car make slider -->
+        <!-- Car Make Slider -->
         <section class="md:mb-24 mt-6 md:mt-32">
-            <div class="vehicle-make-slider-width mx-auto px-2 sm:px-6 lg:px-8 md:mt-14">
+            <div class="slider-width mx-auto px-2 sm:px-6 lg:px-8 md:mt-14">
                 <h3 class="font-black text-bold font-boldnosans mb-4 mx-8 text-xl">Browse by make</h3>
                 <vehicle-make-slider></vehicle-make-slider>
             </div>
@@ -137,15 +137,33 @@
             </div>
         </section>
 
+        <!-- Top Hosts Slider -->
+        <section class="md:mb-24 mt-6 md:mt-32">
+            <div class="slider-width mx-auto px-2 sm:px-6 lg:px-8 md:mt-14">
+                <div class="flex flex-col justify-center items-center">
+                    <div class="text-center relative">
+                        <div>
+                            <h2 class="font-boldnosans text-3xl sm:text-5xl font-bold max-w-2xl z-40 mb-4 md:mb-12">Meet the hosts</h2>
+                        </div>
+                        <div class="absolute bg-purple-100 meet-hosts-purple-bar"></div>
+                    </div>
+                </div>
+                <h3 class="font-black text-bold font-boldnosans mb-2 mx-8 text-xl">Our top hosts</h3>
+                <hosts-slider></hosts-slider>
+            </div>
+        </section>
+
     </div>
 </template>
 
 <script>
     import VehicleMakeSlider from './../sliders/VehicleMakeSlider';
+    import HostsSlider from './../sliders/HostsSlider';
 
     export default {
         components: {
-            VehicleMakeSlider
+            VehicleMakeSlider,
+            HostsSlider
         }
     }
 </script>

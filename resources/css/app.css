@@ -7,140 +7,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Tienne:wght@400;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-.hero-background {
-    background-image: url('/img/car-header-image.jpg');
-    background-size: cover;
-    background-position-y: center;
-    background-repeat: no-repeat;
-}
-
-/* Serach magnifier button */
-.magnifier-button {
-    right: -3.7rem;
-    bottom: -1px;
-}
-
-/* Offset for navigation bar */
-.navbar-offset {
-    margin-top: -64px;
-}
-
-.insurance-logo {
-    top: -20px;
-    z-index: 999;
-}
+@import 'main-page-component';
+@import 'vue-transitions';
 
 /* Router Link Active */
 .router-link-exact-active {
     @apply bg-gray-700 text-white;
 }
 
-.vehicle-make-slider-width {
+.slider-width {
     max-width: 76rem;
-}
-
-.travelogue-purple-bar {
-    height: 1.65rem;
-    width: 24rem;
-    z-index: -1;
-    bottom: -6px;
-    left: 7.2rem;
-}
-
-.travelogue-detail-box {
-    max-width: 360px;
-    top: 20%;
-    left: 0;
-}
-
-.travelogue-photo-div {
-    background-image: url('/img/travelogue-main.jpg');
-    background-size: cover;
-    background-position: left;
-    height: 496px;
-    width: 1200px;
-}
-
-
-/* MEDIA QUERIES */
-/*****************/
-
-@media only screen and (max-width: 1205px) {
-    .travelogue-detail-box {
-        left: 50%;
-    }
-}
-
-@media only screen and (max-width: 850px) {
-    .travelogue-detail-box {
-        left: 20%;
-    }
-}
-
-@media only screen and (max-width: 749px) {
-    .travelogue-detail-box {
-        right: 0;
-    }
-}
-
-@media only screen and (max-width: 700px) {
-    .travelogue-detail-box {
-        max-width: 285px;
-        left: 37.5%;
-    }
-}
-
-@media only screen and (max-width: 640px) {
-    .travelogue-purple-bar {
-        width: 12rem;
-        left: 12.75rem;
-    }
-}
-
-@media only screen and (max-width: 400px) {
-    .travelogue-purple-bar {
-        left: 8.75rem;
-    }
-}
-
-
-
-/* VUE TRANSITIONS */
-/*******************/
-
-/* Vue.js fade transition */
-.fade-enter-active, .fade-leave-active {
-    transition: opacity .2s;
-}
-
-.fade-enter, .fade-leave-to {
-    opacity: 0;
-}
-
-/* Vue.js slide fade transition Y axis */
-.slide-fade-enter-active {
-    transition: all .3s ease;
-}
-
-.slide-fade-leave-active {
-    transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-
-.slide-fade-enter, .slide-fade-leave-to {
-    transform: translateY(-10px);
-    opacity: 0;
-}
-
-/* Vue.js slide fade transition X axis */
-.slide-fade-x-enter-active {
-    transition: all .3s ease;
-}
-
-.slide-fade-x-leave-active {
-    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-
-.slide-fade-x-enter, .slide-fade-x-leave-to {
-    transform: translateX(10px);
-    opacity: 0;
 }

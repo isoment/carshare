@@ -1,0 +1,110 @@
+.hero-background {
+    background-image: url('/img/car-header-image.jpg');
+    background-size: cover;
+    background-position-y: center;
+    background-repeat: no-repeat;
+}
+
+/* Serach magnifier button */
+.magnifier-button {
+    right: -3.7rem;
+    bottom: -1px;
+}
+
+/* Offset for navigation bar */
+.navbar-offset {
+    margin-top: -64px;
+}
+
+.insurance-logo {
+    top: -20px;
+    z-index: 999;
+}
+
+.travelogue-purple-bar {
+    height: 1.65rem;
+    width: 24rem;
+    z-index: -1;
+    bottom: -6px;
+    left: 7.2rem;
+}
+
+.travelogue-detail-box {
+    max-width: 360px;
+    top: 20%;
+    left: 0;
+}
+
+.travelogue-photo-div {
+    background-image: url('/img/travelogue-main.jpg');
+    background-size: cover;
+    background-position: left;
+    height: 496px;
+    width: 1200px;
+}
+
+.meet-hosts-purple-bar {
+    height: 1.95rem;
+    width: 20rem;
+    z-index: -1;
+    bottom: 2.5rem;
+    left: 1rem;
+}
+
+
+
+
+/* MEDIA QUERIES */
+/*****************/
+
+@media only screen and (max-width: 1205px) {
+    .travelogue-detail-box {
+        left: 50%;
+    }
+}
+
+@media only screen and (max-width: 850px) {
+    .travelogue-detail-box {
+        left: 20%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .meet-hosts-purple-bar {
+        bottom: 0.5rem;
+    }
+}
+
+@media only screen and (max-width: 749px) {
+    .travelogue-detail-box {
+        right: 0;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .travelogue-detail-box {
+        max-width: 285px;
+        left: 37.5%;
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .travelogue-purple-bar {
+        width: 12rem;
+        left: 12.75rem;
+    }
+
+    .meet-hosts-purple-bar {
+        height: 1.3rem;
+        width: 12rem;
+        z-index: -1;
+        bottom: 0.8rem;
+        left: 1rem;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .travelogue-purple-bar {
+        left: 8.75rem;
+    }
+}
