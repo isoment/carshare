@@ -40,4 +40,52 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     *  Relationship to vehicles
+     */
+    public function vehicles() 
+    {
+        return $this->hasMany(Vehicle::class);
+    }
+
+    /**
+     *  Relationship to bookings
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    /**
+     *  Relationship to renter reviews
+     */
+    public function renterReviews()
+    {
+        return $this->hasMany(RenterReview::class);
+    }
+
+    /**
+     *  Relationship to host reviews
+     */
+    public function hostReviews()
+    {
+        return $this->hasMany(HostReview::class);
+    }
+
+    /**
+     *  Relationship to profile
+     */
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+
+    /**
+     *  Relationship to drivers license
+     */
+    public function driversLicense()
+    {
+        return $this->hasOne(DriversLicense::class);
+    }
 }

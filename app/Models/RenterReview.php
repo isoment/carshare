@@ -8,4 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class RenterReview extends Model
 {
     use HasFactory;
+
+    /**
+     *  Relationship to booking
+     */
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
+
+    /**
+     *  Relationship to user
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
