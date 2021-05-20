@@ -29,7 +29,7 @@
                         <div class="flex flex-col ml-4">
                             <div class="font-bold -mb-1">Test User</div>
                             <div>
-                                <i class="fas fa-award text-xs"></i>
+                                <i class="fas fa-award text-xs text-purple-500"></i>
                                 <span class="text-xs">Top Host</span>
                                 <div class="text-xs">
                                     <span>5,431 trips</span>
@@ -69,7 +69,7 @@
                         <div class="flex flex-col ml-4">
                             <div class="font-bold -mb-1">Test User</div>
                             <div>
-                                <i class="fas fa-award text-xs"></i>
+                                <i class="fas fa-award text-xs text-purple-500"></i>
                                 <span class="text-xs">Top Host</span>
                                 <div class="text-xs">
                                     <span>5,431 trips</span>
@@ -109,7 +109,7 @@
                         <div class="flex flex-col ml-4">
                             <div class="font-bold -mb-1">Test User</div>
                             <div>
-                                <i class="fas fa-award text-xs"></i>
+                                <i class="fas fa-award text-xs text-purple-500"></i>
                                 <span class="text-xs">Top Host</span>
                                 <div class="text-xs">
                                     <span>5,431 trips</span>
@@ -149,7 +149,7 @@
                         <div class="flex flex-col ml-4">
                             <div class="font-bold -mb-1">Test User</div>
                             <div>
-                                <i class="fas fa-award text-xs"></i>
+                                <i class="fas fa-award text-xs text-purple-500"></i>
                                 <span class="text-xs">Top Host</span>
                                 <div class="text-xs">
                                     <span>5,431 trips</span>
