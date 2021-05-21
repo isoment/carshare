@@ -14,6 +14,14 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        User::factory()->count(100)->create();
+        // Create some hosts
+        User::factory()->count(100)->create([
+            'host' => 1
+        ]);
+
+        // Create some non hosts
+        User::factory()->count(300)->create([
+            'host' => 0
+        ]);
     }
 }
