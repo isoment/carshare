@@ -47,4 +47,18 @@ class UserFactory extends Factory
             ];
         });
     }
+
+    /**
+     *  We want to have some users be hosts
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function(User $user) {
+
+            $user->update([
+                'host' => random_int(0, 1)
+            ]);
+
+        });
+    }
 }
