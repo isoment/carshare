@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Vehicle;
+use Database\Factories\VehicleModelFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,7 +17,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            VehicleMakeSeeder::class
+            VehicleMakeSeeder::class,
+            VehicleModelSeeder::class,
+            VehicleSeeder::class,
         ]);
     }
 }
