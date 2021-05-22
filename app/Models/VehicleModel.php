@@ -16,4 +16,12 @@ class VehicleModel extends Model
     {
         return $this->belongsTo(VehicleMake::class);
     }
+
+    /**
+     *  Relationship to vehicle
+     */
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class);
+    }
 }

@@ -14,7 +14,7 @@ class RenterReview extends Model
      */
     public function booking()
     {
-        return $this->belongsTo(Booking::class);
+        return $this->hasOne(Booking::class, 'renter_review_key');
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Booking extends Model
 {
@@ -30,7 +31,7 @@ class Booking extends Model
      */
     public function renterReviews()
     {
-        return $this->hasMany(RenterReview::class);
+        return $this->belongsTo(RenterReview::class);
     }
 
     /**
@@ -38,6 +39,20 @@ class Booking extends Model
      */
     public function hostReviews()
     {
-        return $this->hasMany(HostReview::class);
+        return $this->belongsTo(HostReview::class);
+    }
+
+    /**
+     *  Create a user and host review key when a new Booking
+     *  is created.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function($booking) {
+            $booking->renter_review_key = Str::uuid();
+            $booking->host_review_key = Str::uuid();
+        });
     }
 }

@@ -14,12 +14,13 @@ class CreateHostReviewsTable extends Migration
     public function up()
     {
         Schema::create('host_reviews', function (Blueprint $table) {
-            $table->uuid('id');
-            $table->unsignedBigInteger('booking_id');
-            $table->unsignedBigInteger('user_id');
+            $table->uuid('id')->primary();
+            $table->unsignedBigInteger('user_id')->index();
             $table->tinyInteger('rating');
             $table->text('content');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
