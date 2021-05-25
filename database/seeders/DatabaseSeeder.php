@@ -20,7 +20,9 @@ class DatabaseSeeder extends Seeder
             VehicleMakeSeeder::class,
             VehicleModelSeeder::class,
             VehicleSeeder::class,
-            BookingSeeder::class
+            BookingSeeder::class,
+            RenterReviewSeeder::class,
+            HostReviewSeeder::class
         ]);
     }
 }

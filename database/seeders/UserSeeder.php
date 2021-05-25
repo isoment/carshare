@@ -19,6 +19,12 @@ class UserSeeder extends Seeder
             'host' => 1
         ]);
 
+        // Create some top hosts
+        User::factory()->count(12)->create([
+            'host' => 1,
+            'top_host' => 1
+        ]);
+
         // Create some non hosts
         User::factory()->count(300)->create([
             'host' => 0

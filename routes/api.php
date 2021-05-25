@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('vehicle-make/list', 'App\Http\Controllers\Api\VehicleMakeListController')
     ->name('vehicle-make.list');
+
+Route::get('top-hosts/list', 'App\Http\Controllers\Api\TopHostsListController')
+    ->name('top-hosts.list');

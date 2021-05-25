@@ -88,4 +88,19 @@ class User extends Authenticatable
     {
         return $this->hasOne(DriversLicense::class);
     }
+
+    /**
+     *  Get a random assorted listing of top hosts with a single associated
+     *  host review.
+     */
+    public function scopeTopHostsList($query)
+    {
+        $collection = $query
+            ->where('top_host', 1)
+            ->join('host_reviews', 'users.id', '=', 'host_reviews.user_id')
+            ->where('rating', 5)
+            ->get(['users.*', 'host_reviews.rating', 'host_reviews.content']);
+
+        return $collection->unique('id')->random(8);
+    }
 }
