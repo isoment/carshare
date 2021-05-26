@@ -17,7 +17,7 @@ class BookingSeeder extends Seeder
     public function run()
     {
         Vehicle::all()->each(function ($vehicle) {
-            // This initial booking
+            // The initial booking
             $booking = Booking::factory()->make();
 
             // Create a collection that we will push bookings to from the loop below

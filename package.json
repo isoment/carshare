@@ -25,6 +25,7 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
+        "moment": "^2.29.1",
         "vue-clickaway": "^2.2.2",
         "vue-router": "^3.5.1",
         "vue-slick-carousel": "^1.0.6",

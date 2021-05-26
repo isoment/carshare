@@ -1,7 +1,8 @@
 <template>
     <div>
         <vue-slick-carousel v-bind="carouselSettings"
-                            class="mx-6">
+                            class="mx-6"
+                            v-if="topHostsExists">
 
             <!-- Previous Arrow -->
             <template #prevArrow="arrowOption">
@@ -18,7 +19,7 @@
             </template>
 
             <!-- Top Host Card -->
-            <div>
+            <div v-for="host in topHosts" :key="host.id">
                 <div class="rounded-lg shadow-md mx-2 my-5 hover:shadow-lg transition-all transform border 
                             border-gray-100 hover:-translate-y-1 duration-300 p-3">
                     <div class="flex">
@@ -27,14 +28,14 @@
                                 class="rounded-full h-20 w-20">
                         </div>
                         <div class="flex flex-col ml-4">
-                            <div class="font-bold -mb-1">Test User</div>
+                            <div class="font-bold -mb-1">{{ host.host_name }}</div>
                             <div>
                                 <i class="fas fa-award text-xs text-purple-500"></i>
                                 <span class="text-xs">Top Host</span>
                                 <div class="text-xs">
-                                    <span>5,431 trips</span>
+                                    <span>{{ host.host_review_count }} trips</span>
                                     <span>•</span>
-                                    <span>Joined Aug 2015</span>
+                                    <span>{{ dateConvert(host.created_at) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -48,135 +49,12 @@
                             <i class="fas fa-star text-sm text-purple-500"></i>
                         </div>
                     </div>
-                    <div class="mt-2">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas, repudiandae perferendis ea quas.
-                    </div>
+                    <div class="mt-2">{{ truncateString(host.content, 100) }}</div>
                     <div class="italic font-bold text-sm mt-3">
-                        Customer Name
+                        {{ host.renter_name }}
                     </div>
                 </div>
             </div>
-
-            <!-- Top Host Card -->
-            <div>
-                <div class="rounded-lg shadow-md mx-2 my-5 hover:shadow-lg transition-all transform border 
-                            border-gray-100 hover:-translate-y-1 duration-300 p-3">
-                    <div class="flex">
-                        <div>
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="profile" 
-                                class="rounded-full h-20 w-20">
-                        </div>
-                        <div class="flex flex-col ml-4">
-                            <div class="font-bold -mb-1">Test User</div>
-                            <div>
-                                <i class="fas fa-award text-xs text-purple-500"></i>
-                                <span class="text-xs">Top Host</span>
-                                <div class="text-xs">
-                                    <span>5,431 trips</span>
-                                    <span>•</span>
-                                    <span>Joined Aug 2015</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <div class="flex">
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                        </div>
-                    </div>
-                    <div class="mt-2">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas, repudiandae perferendis ea quas.
-                    </div>
-                    <div class="italic font-bold text-sm mt-3">
-                        Customer Name
-                    </div>
-                </div>
-            </div>
-
-            <!-- Top Host Card -->
-            <div>
-                <div class="rounded-lg shadow-md mx-2 my-5 hover:shadow-lg transition-all transform border 
-                            border-gray-100 hover:-translate-y-1 duration-300 p-3">
-                    <div class="flex">
-                        <div>
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="profile" 
-                                class="rounded-full h-20 w-20">
-                        </div>
-                        <div class="flex flex-col ml-4">
-                            <div class="font-bold -mb-1">Test User</div>
-                            <div>
-                                <i class="fas fa-award text-xs text-purple-500"></i>
-                                <span class="text-xs">Top Host</span>
-                                <div class="text-xs">
-                                    <span>5,431 trips</span>
-                                    <span>•</span>
-                                    <span>Joined Aug 2015</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <div class="flex">
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                        </div>
-                    </div>
-                    <div class="mt-2">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas, repudiandae perferendis ea quas.
-                    </div>
-                    <div class="italic font-bold text-sm mt-3">
-                        Customer Name
-                    </div>
-                </div>
-            </div>
-
-            <!-- Top Host Card -->
-            <div>
-                <div class="rounded-lg shadow-md mx-2 my-5 hover:shadow-lg transition-all transform border 
-                            border-gray-100 hover:-translate-y-1 duration-300 p-3">
-                    <div class="flex">
-                        <div>
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="profile" 
-                                class="rounded-full h-20 w-20">
-                        </div>
-                        <div class="flex flex-col ml-4">
-                            <div class="font-bold -mb-1">Test User</div>
-                            <div>
-                                <i class="fas fa-award text-xs text-purple-500"></i>
-                                <span class="text-xs">Top Host</span>
-                                <div class="text-xs">
-                                    <span>5,431 trips</span>
-                                    <span>•</span>
-                                    <span>Joined Aug 2015</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <div class="flex">
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                        </div>
-                    </div>
-                    <div class="mt-2">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas, repudiandae perferendis ea quas.
-                    </div>
-                    <div class="italic font-bold text-sm mt-3">
-                        Customer Name
-                    </div>
-                </div>
-            </div>
-
 
         </vue-slick-carousel>
     </div>
@@ -186,6 +64,7 @@
     import VueSlickCarousel from 'vue-slick-carousel';
     import 'vue-slick-carousel/dist/vue-slick-carousel.css';
     import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css';
+    import moment from 'moment';
 
     export default {
         components: {
@@ -225,8 +104,45 @@
                         }
                     ]
                 },
+
+                topHosts: null,
+                loading: false,
+                error: null
             }
-        }
+        },
+
+        computed: {
+            topHostsExists() {
+                return this.topHosts !== null;
+            }
+        },
+
+        async created() {
+            this.loading = true;
+            this.error = null;
+
+            try {
+                this.topHosts = (await axios.get('/api/top-hosts/list')).data.data;
+            } catch(error) {
+                this.error = error.response.status;
+            }
+
+            this.loading = false;
+        },
+
+        methods: {
+            dateConvert($date) {
+                return moment($date).format('MMMM Do YYYY');
+            },
+
+            truncateString(string, length) {
+                if (string.length <= length) {
+                    return string;
+                }
+
+                return string.slice(0, length) + '...';
+            }
+        },
     }
 </script>
 

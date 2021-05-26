@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Booking;
 use App\Models\HostReview;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -18,9 +19,18 @@ class HostReviewSeeder extends Seeder
      */
     public function run()
     {
-        User::where('host', 1)->get()->each(function($user) {
-            $reviews = HostReview::factory()->count(random_int(5, 30))->make();
-            $user->hostReviews()->saveMany($reviews);
+        // User::where('host', 1)->get()->each(function($user) {
+        //     $reviews = HostReview::factory()->count(random_int(5, 30))->make();
+        //     $user->hostReviews()->saveMany($reviews);
+        // });
+
+        Booking::all()->each(function ($booking) {
+
+            HostReview::factory()->create([
+                'id' => $booking->host_review_key,
+                'user_id' => $booking->vehicle->user->id
+            ]);
+            
         });
     }
 }

@@ -23,23 +23,23 @@ class Booking extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
      *  Relationship to renter reviews
      */
-    public function renterReviews()
+    public function renterReview()
     {
-        return $this->belongsTo(RenterReview::class);
+        return $this->belongsTo(RenterReview::class, 'renter_review_key');
     }
 
     /**
      *  Relationship to host reviews
      */
-    public function hostReviews()
+    public function hostReview()
     {
-        return $this->belongsTo(HostReview::class);
+        return $this->belongsTo(HostReview::class, 'host_review_key');
     }
 
     /**

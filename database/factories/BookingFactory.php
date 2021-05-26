@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Booking;
+use App\Models\HostReview;
+use App\Models\RenterReview;
 use App\Models\User;
 use App\Models\Vehicle;
 use Carbon\Carbon;
