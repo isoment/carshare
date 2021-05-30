@@ -19,25 +19,37 @@
                             <input type="text" name="zip" class="focus:outline-none font-semibold text-sm">
                         </div>
                         <div class="relative">
-                            <div class="flex flex-col md:flex-row justify-around">
-                                <!-- Start date -->
-                                <div class="flex flex-col md:border-r border-gray-300 md:px-3 border-b 
-                                            md:border-b-0 my-2 md:my-0">
-                                    <label for="from" class="text-xs font-bold text-gray-500">From</label>
-                                    <input type="date" name="from" class="focus:outline-none">
-                                </div>
-                                <!-- Until date -->
-                                <div class="flex flex-col md:px-3 border-b md:border-b-0 border-gray-300 my-2 md:my-0">
-                                    <label for="until" class="text-xs font-bold text-gray-500">Until</label>
-                                    <input type="date" name="until" class="focus:outline-none">
-                                </div>
-                            </div>
+
+                            <date-picker v-model="range" 
+                                         color="purple" 
+                                         is-range
+                                         :min-date="new Date()">
+                                <template v-slot="{ inputValue, inputEvents }">
+                                    <div class="flex flex-col md:flex-row justify-around">
+                                        <div class="flex flex-col md:border-r border-gray-300 md:px-3 border-b 
+                                                    md:border-b-0 my-2 md:my-0">
+                                            <label for="from" class="text-xs font-bold text-gray-500">From</label>
+                                            <input class="focus:outline-none"
+                                                    :value="inputValue.start"
+                                                    v-on="inputEvents.start">
+                                        </div>
+                                        <div class="flex flex-col md:px-3 border-b md:border-b-0 border-gray-300 my-2 md:my-0">
+                                            <label for="until" class="text-xs font-bold text-gray-500">Until</label>
+                                            <input class="focus:outline-none"
+                                                    :value="inputValue.end"
+                                                    v-on="inputEvents.end">
+                                        </div>
+                                    </div>
+                                </template>
+                            </date-picker>
+
                             <div class="absolute magnifier-button hidden md:block">
                                 <button class="text-white bg-purple-500 hover:bg-purple-400 transition-all duration-200 
                                                rounded-full focus:outline-none">
                                     <i class="fas fa-search text-2xl w-12 h-12 pt-2"></i>
                                 </button>
                             </div>
+
                             <div class="md:hidden">
                                 <button class="text-white font-bold bg-purple-500 hover:bg-purple-400 transition-all 
                                                duration-200 focus:outline-none py-2 px-4 w-full">
@@ -47,6 +59,7 @@
                                     </div>
                                 </button>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -159,11 +172,24 @@
 <script>
     import VehicleMakeSlider from './../sliders/VehicleMakeSlider';
     import HostsSlider from './../sliders/HostsSlider';
+    import Calendar from 'v-calendar/lib/components/calendar.umd'
+    import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 
     export default {
         components: {
             VehicleMakeSlider,
-            HostsSlider
-        }
+            HostsSlider,
+            Calendar,
+            DatePicker
+        },
+
+        data() {
+            return {
+                range: {
+                    start: new Date().toLocaleDateString("en-US"),
+                    end: new Date().toLocaleDateString("en-US"),
+                },
+            };
+        },
     }
 </script>
