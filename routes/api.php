@@ -14,8 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// List vehicle makes
 Route::get('vehicle-make/list', 'App\Http\Controllers\Api\VehicleMakeListController')
     ->name('vehicle-make.list');
 
+// List top hosts
 Route::get('top-hosts/list', 'App\Http\Controllers\Api\TopHostsListController')
     ->name('top-hosts.list');
+
+// List all vehicles
+Route::get('vehicles-index', [App\Http\Controllers\Api\VehiclesController::class, 'index'])
+    ->name('vehicles.index');

@@ -13,10 +13,10 @@
                 <div class="flex justify-center mt-3">
                     <div class="bg-white rounded-lg md:rounded-full py-2 px-2 md:pl-5 md:pr-16 md:pt-2 md:pb-1 
                                 flex flex-col md:flex-row w-11/12 sm:w-3/4 md:w-auto shadow-lg">
-                        <!-- Zip search -->
+                        <!-- Make search -->
                         <div class="flex flex-col md:pr-2 border-b md:border-b-0 md:border-r border-gray-300 my-2 md:my-0">
-                            <label for="zip" class="text-xs font-bold text-gray-500">Zipcode</label>
-                            <input type="text" name="zip" class="focus:outline-none font-semibold text-sm">
+                            <label for="make" class="text-xs font-bold text-gray-500">Vehicle Make</label>
+                            <input type="text" name="make" class="focus:outline-none font-semibold text-sm search-input-width">
                         </div>
                         <div class="relative">
 
@@ -29,13 +29,13 @@
                                         <div class="flex flex-col md:border-r border-gray-300 md:px-3 border-b 
                                                     md:border-b-0 my-2 md:my-0">
                                             <label for="from" class="text-xs font-bold text-gray-500">From</label>
-                                            <input class="focus:outline-none"
+                                            <input class="focus:outline-none search-input-width"
                                                     :value="inputValue.start"
                                                     v-on="inputEvents.start">
                                         </div>
                                         <div class="flex flex-col md:px-3 border-b md:border-b-0 border-gray-300 my-2 md:my-0">
                                             <label for="until" class="text-xs font-bold text-gray-500">Until</label>
-                                            <input class="focus:outline-none"
+                                            <input class="focus:outline-none search-input-width"
                                                     :value="inputValue.end"
                                                     v-on="inputEvents.end">
                                         </div>
@@ -59,7 +59,7 @@
                                     </div>
                                 </button>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -186,8 +186,8 @@
         data() {
             return {
                 range: {
-                    start: new Date().toLocaleDateString("en-US"),
-                    end: new Date().toLocaleDateString("en-US"),
+                    start: new Date().toLocaleDateString(),
+                    end: new Date().toLocaleDateString(),
                 },
             };
         },

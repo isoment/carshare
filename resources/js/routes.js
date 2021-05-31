@@ -5,6 +5,7 @@ import Login from './auth/Login';
 import Register from './auth/Register';
 import PasswordResetRequest from './auth/PasswordResetRequest';
 import PasswordResetEmail from './auth/PasswordResetEmail';
+import MainVehicleComponent from './vehicle/MainVehicleComponent';
 
 const routes = [
     {
@@ -31,6 +32,11 @@ const routes = [
         path: "/auth/password-reset-email",
         component: PasswordResetEmail,
         name: "password-reset-email"
+    },
+    {
+        path: "/vehicles",
+        component: MainVehicleComponent,
+        name: "main-vehicle"
     },
     {
         path: "*",

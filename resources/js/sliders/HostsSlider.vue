@@ -21,7 +21,7 @@
             <!-- Top Host Card -->
             <div v-for="host in topHosts" :key="host.id">
                 <div class="rounded-lg shadow-md mx-2 my-5 hover:shadow-lg transition-all transform border 
-                            border-gray-100 hover:-translate-y-1 duration-300 p-3">
+                            border-gray-100 duration-300 p-3">
                     <div class="flex">
                         <div>
                             <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="profile" 
