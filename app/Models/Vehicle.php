@@ -32,4 +32,14 @@ class Vehicle extends Model
     {
         return $this->hasMany(Booking::class);
     }
+
+    /**
+     *  Get all the vehicles including make, model and trip count
+     */
+    public function scopeAllVehicles($query)
+    {
+        return $query->with('vehicleModel.vehicleMake')
+            ->withCount('bookings')
+            ->paginate();
+    }
 }
