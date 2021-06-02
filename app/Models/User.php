@@ -99,7 +99,7 @@ class User extends Authenticatable
         $collection = $query
             ->where('top_host', 1)
             ->join('host_reviews', 'users.id', '=', 'host_reviews.user_id')
-            ->where('rating', 5)
+            ->where('rating', '>=', 3)
             ->get(['users.*', 'host_reviews.id as review_id', 'host_reviews.rating', 'host_reviews.content']);
 
         // One get one review with the user info collection

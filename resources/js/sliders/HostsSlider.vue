@@ -42,11 +42,9 @@
                     </div>
                     <div class="mt-4">
                         <div class="flex">
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
-                            <i class="fas fa-star text-sm text-purple-500"></i>
+                            <i class="fas fa-star text-sm text-purple-500"
+                               v-for="rating in host.rating" :key="rating.id">
+                            </i>
                         </div>
                     </div>
                     <div class="mt-2">{{ truncateString(host.content, 100) }}</div>
@@ -114,7 +112,7 @@
         computed: {
             topHostsExists() {
                 return this.topHosts !== null;
-            }
+            },
         },
 
         async created() {
@@ -141,7 +139,7 @@
                 }
 
                 return string.slice(0, length) + '...';
-            }
+            },
         },
     }
 </script>
