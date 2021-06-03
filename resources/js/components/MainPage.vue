@@ -45,14 +45,16 @@
 
                             <div class="absolute magnifier-button hidden md:block">
                                 <button class="text-white bg-purple-500 hover:bg-purple-400 transition-all duration-200 
-                                               rounded-full focus:outline-none">
+                                               rounded-full focus:outline-none"
+                                        @click="search">
                                     <i class="fas fa-search text-2xl w-12 h-12 pt-2"></i>
                                 </button>
                             </div>
 
                             <div class="md:hidden">
                                 <button class="text-white font-bold bg-purple-500 hover:bg-purple-400 transition-all 
-                                               duration-200 focus:outline-none py-2 px-4 w-full">
+                                               duration-200 focus:outline-none py-2 px-4 w-full"
+                                        @click="search">
                                     <div class="flex items-center justify-center">
                                         <div class="mr-2">Search for cars</div>
                                         <i class="fas fa-search"></i>
@@ -186,10 +188,24 @@
         data() {
             return {
                 range: {
-                    start: new Date().toLocaleDateString(),
-                    end: new Date().toLocaleDateString(),
+                    start: new Date(),
+                    end: new Date(),
                 },
             };
+        },
+
+        methods: {
+            search() {
+                // Convert dates to MM/DD/YYYY format
+                let start = this.range.start.toLocaleDateString();
+                let end = this.range.end.toLocaleDateString();
+
+                // Call the action to set local storage
+                this.$store.dispatch('setSearchDates', {
+                    start: start,
+                    end: end
+                });
+            }
         },
     }
 </script>

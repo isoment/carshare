@@ -5,6 +5,10 @@ export default {
         isLoggedIn: false,
         user: {},
         notifications: [],
+        searchDates: {
+            start: null,
+            end: null
+        },
     },
 
     mutations: {
@@ -36,6 +40,11 @@ export default {
             state.notifications = state.notifications.filter(notification => {
                 return notification.id !== payload.id;
             })
+        },
+
+        // Set the search dates
+        setSearchDates(state, payload) {
+            state.searchDates = payload;
         }
     },
 
@@ -67,12 +76,18 @@ export default {
 
         // Add a notification
         addNotification(context, payload) {
-            context.commit('pushNotification', payload)
+            context.commit('pushNotification', payload);
         },
 
         // Remove a notification
         removeNotification(context, payload) {
             context.commit('removeNotification', payload);
+        },
+
+        // Set the search dates and store in local storage
+        setSearchDates(context, payload) {
+            context.commit('setSearchDates', payload);
+            localStorage.setItem('searchDates', JSON.stringify(payload));
         }
     },
 }
