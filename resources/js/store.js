@@ -51,7 +51,15 @@ export default {
     actions: {
         // Load stored state when we initialize Vue
         loadStoredState(context) {
+            // Set the logged in user
             context.commit('setLoggedIn', isLoggedIn());
+
+            // Get the last date seach from local storage
+            const lastSearchDates = localStorage.getItem('searchDates');
+
+            if (lastSearchDates) {
+                context.commit('setSearchDates', JSON.parse(lastSearchDates));
+            }
         },
 
         // Load user information

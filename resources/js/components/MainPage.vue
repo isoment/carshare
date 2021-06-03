@@ -188,8 +188,8 @@
         data() {
             return {
                 range: {
-                    start: new Date(),
-                    end: new Date(),
+                    start: null,
+                    end: null
                 },
             };
         },
@@ -205,7 +205,23 @@
                     start: start,
                     end: end
                 });
+
+                console.log('Dates Set!');
             }
         },
+
+        created() {
+            // If search dates have been stored in the local storage through vuex we
+            // use those, else set the start date to today and end to tomorrow
+            let today = new Date();
+
+            this.range.start = this.$store.state.searchDates.start ? 
+                this.$store.state.searchDates.start :
+                new Date().toLocaleDateString();
+
+            this.range.end = this.$store.state.searchDates.end ?
+                this.$store.state.searchDates.end :
+                new Date(today.getTime() + (24 * 60 * 60 * 1000)).toLocaleDateString();
+        }
     }
 </script>
