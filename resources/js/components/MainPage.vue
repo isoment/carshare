@@ -174,8 +174,10 @@
 <script>
     import VehicleMakeSlider from './../sliders/VehicleMakeSlider';
     import HostsSlider from './../sliders/HostsSlider';
-    import Calendar from 'v-calendar/lib/components/calendar.umd'
-    import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+    import Calendar from 'v-calendar/lib/components/calendar.umd';
+    import DatePicker from 'v-calendar/lib/components/date-picker.umd';
+    import { dateTypeCheck } from './../shared/utils/dateHelpers';
+    import moment from 'moment';
 
     export default {
         components: {
@@ -196,18 +198,14 @@
 
         methods: {
             search() {
-                // Convert dates to MM/DD/YYYY format
-                let start = this.range.start.toLocaleDateString();
-                let end = this.range.end.toLocaleDateString();
-
                 // Call the action to set local storage
                 this.$store.dispatch('setSearchDates', {
-                    start: start,
-                    end: end
+                    start: dateTypeCheck(this.range.start),
+                    end: dateTypeCheck(this.range.end)
                 });
 
                 console.log('Dates Set!');
-            }
+            },
         },
 
         created() {
