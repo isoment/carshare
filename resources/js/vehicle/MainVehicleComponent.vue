@@ -78,6 +78,13 @@
         },
 
         created() {
+            // Set the dates based on query strings, we do this so manual changes
+            // to the URL are reflected in the local store
+            this.$store.dispatch('setSearchDates', {
+                start: this.$route.query.start,
+                end: this.$route.query.end
+            })
+
             this.fetchVehicles();
         }
     }

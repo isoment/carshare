@@ -204,7 +204,18 @@
                     end: dateTypeCheck(this.range.end)
                 });
 
-                console.log('Dates Set!');
+                let dates = localStorage.getItem('searchDates');
+
+                let start = JSON.parse(dates).start;
+                let end = JSON.parse(dates).end;
+
+                this.$router.push({
+                    name: 'main-vehicle',
+                    query: {
+                        start: start,
+                        end: end
+                    }
+                })
             },
         },
 
