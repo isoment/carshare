@@ -8,6 +8,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @import 'main-page-component';
+@import 'main-vehicle-component';
 @import 'vue-transitions';
 
 /* Router Link Active */
@@ -17,4 +18,8 @@
 
 .slider-width {
     max-width: 76rem;
+}
+
+.menu-background {
+    background-color: rgba(54, 54, 54, 0.5);
 }

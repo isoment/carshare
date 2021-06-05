@@ -4,7 +4,30 @@
         <!-- Main Navigation -->
         <main-navigation></main-navigation>
 
-        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 my-12">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
+            
+            <div>
+                <div class="pt-4 pb-2 mb-2 border-b border-gray-100 flex">
+                    <button class="border rounded-md border-gray-300 flex items-center py-2 px-3 mb-2
+                                text-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-100
+                                transition-all duration-300"
+                            @click="toggleDatesMenu">
+                        <i class="far fa-calendar-alt text-md"></i>
+                        <div class="font-bold font-mono text-sm ml-2">
+                            Change dates
+                        </div>
+                    </button>
+                    <button class="border rounded-md border-gray-300 flex items-center py-2 px-3 mb-2 ml-2
+                                text-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-100
+                                transition-all duration-300">
+                        <i class="fas fa-sliders-h"></i>
+                        <div class="font-bold font-mono text-sm ml-2">
+                            Filters
+                        </div>
+                    </button>
+                </div>
+            </div>
+
             <div class="grid grid-cols-2 gap-4">
                 <div class="p-8 shadow-lg border border-gray-50 rounded-lg"
                      v-for="vehicle in vehicles" 
@@ -43,10 +66,15 @@
                 page: 1,
                 lastPage: 1,
                 endOfResults: false,
+                datesMenu: false,
             }
         },
 
         methods: {
+            toggleDatesMenu() {
+                this.datesMenu = !this.datesMenu;
+            },
+
             async fetchVehicles() {
                 this.loading = true;
 
