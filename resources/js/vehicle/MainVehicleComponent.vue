@@ -6,8 +6,8 @@
 
         <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
             
-            <div>
-                <div class="pt-4 pb-2 mb-2 border-b border-gray-100 flex">
+            <div class="pt-4 pb-2 mb-2 border-b border-gray-100">
+                <div class="flex">
                     <button class="border rounded-md border-gray-300 flex items-center py-2 px-3 mb-2
                                 text-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-100
                                 transition-all duration-300"
@@ -26,9 +26,45 @@
                         </div>
                     </button>
                 </div>
+
+                <div v-show="datesMenu" class="w-full md:w-1/2 my-2">
+
+                    <date-picker v-model="range" 
+                                 color="purple" 
+                                 is-range
+                                 :min-date="new Date()">
+                        <template v-slot="{ inputValue, inputEvents }">
+                            <div class="flex items-center">
+                                <div class="flex items-center border-b border-gray-300">
+                                    <div>
+                                        <label for="from" class="text-purple-500 font-bold text-sm">From</label>
+                                    </div>
+                                    <input type="text" name="from" class="ml-2 main-vehicle-date-input focus:outline-none"
+                                           :value="inputValue.start"
+                                           v-on="inputEvents.start">
+                                </div>
+                                <div class="flex items-center border-b border-gray-300 ml-3">
+                                    <div>
+                                        <label for="until" class="text-purple-500 font-bold text-sm">Until</label>
+                                    </div>
+                                    <input type="text" name="until" class="ml-2 main-vehicle-date-input focus:outline-none"
+                                           :value="inputValue.end"
+                                           v-on="inputEvents.end">
+                                </div>
+                                <div>
+                                    <button class="bg-purple-500 hover:bg-purple-400 transition-all duration-200 
+                                                    px-2 py-1 focus:outline-none rounded-lg ml-3">
+                                        <i class="fas fa-search text-white text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </date-picker>
+
+                </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="p-8 shadow-lg border border-gray-50 rounded-lg"
                      v-for="vehicle in vehicles" 
                      :key="vehicle.id">
@@ -58,7 +94,16 @@
 </template>
 
 <script>
+    import Calendar from 'v-calendar/lib/components/calendar.umd';
+    import DatePicker from 'v-calendar/lib/components/date-picker.umd';
+    import { dateTypeCheck } from './../shared/utils/dateHelpers';
+
     export default {
+        components: {
+            Calendar,
+            DatePicker
+        },
+
         data() {
             return {
                 loading: false,
@@ -67,12 +112,20 @@
                 lastPage: 1,
                 endOfResults: false,
                 datesMenu: false,
+                range: {
+                    start: null,
+                    end: null
+                },
             }
         },
 
         methods: {
             toggleDatesMenu() {
                 this.datesMenu = !this.datesMenu;
+            },
+
+            updateDates() {
+
             },
 
             async fetchVehicles() {
