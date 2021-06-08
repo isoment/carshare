@@ -27,41 +27,43 @@
                     </button>
                 </div>
 
-                <div v-show="datesMenu" class="w-full md:w-1/2 my-2">
-
-                    <date-picker v-model="range" 
-                                 color="purple" 
-                                 is-range
-                                 :min-date="new Date()">
-                        <template v-slot="{ inputValue, inputEvents }">
-                            <div class="flex items-center">
-                                <div class="flex items-center border-b border-gray-300">
-                                    <div>
-                                        <label for="from" class="text-purple-500 font-bold text-sm">From</label>
+                <transition name="slide-fade">
+                    <div v-show="datesMenu" class="w-full md:w-1/2 my-2">
+                        <date-picker v-model="range" 
+                                    color="purple" 
+                                    is-range
+                                    :min-date="new Date()">
+                            <template v-slot="{ inputValue, inputEvents }">
+                                <div class="flex items-center">
+                                    <div class="flex items-center border-b border-gray-300">
+                                        <div>
+                                            <label for="from" class="text-purple-500 font-bold text-sm">From</label>
+                                        </div>
+                                        <input type="text" name="from" class="ml-2 main-vehicle-date-input focus:outline-none"
+                                            :value="inputValue.start"
+                                            v-on="inputEvents.start">
                                     </div>
-                                    <input type="text" name="from" class="ml-2 main-vehicle-date-input focus:outline-none"
-                                           :value="inputValue.start"
-                                           v-on="inputEvents.start">
-                                </div>
-                                <div class="flex items-center border-b border-gray-300 ml-3">
-                                    <div>
-                                        <label for="until" class="text-purple-500 font-bold text-sm">Until</label>
+                                    <div class="flex items-center border-b border-gray-300 ml-3">
+                                        <div>
+                                            <label for="until" class="text-purple-500 font-bold text-sm">Until</label>
+                                        </div>
+                                        <input type="text" name="until" class="ml-2 main-vehicle-date-input focus:outline-none"
+                                            :value="inputValue.end"
+                                            v-on="inputEvents.end">
                                     </div>
-                                    <input type="text" name="until" class="ml-2 main-vehicle-date-input focus:outline-none"
-                                           :value="inputValue.end"
-                                           v-on="inputEvents.end">
+                                    <div>
+                                        <button class="bg-purple-500 hover:bg-purple-400 transition-all duration-200 
+                                                        px-2 py-1 focus:outline-none rounded-lg ml-3"
+                                                @click="updateDates">
+                                            <i class="fas fa-search text-white text-sm"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div>
-                                    <button class="bg-purple-500 hover:bg-purple-400 transition-all duration-200 
-                                                    px-2 py-1 focus:outline-none rounded-lg ml-3">
-                                        <i class="fas fa-search text-white text-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </template>
-                    </date-picker>
+                            </template>
+                        </date-picker>
+                    </div>
+                </transition>
 
-                </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -96,7 +98,7 @@
 <script>
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
-    import { dateTypeCheck } from './../shared/utils/dateHelpers';
+    import { dateTypeCheck, dateSetterStart, dateSetterEnd } from './../shared/utils/dateHelpers';
 
     export default {
         components: {
@@ -125,7 +127,25 @@
             },
 
             updateDates() {
+                // Call the action to set local storage
+                this.$store.dispatch('setSearchDates', {
+                    start: dateTypeCheck(this.range.start),
+                    end: dateTypeCheck(this.range.end)
+                });
 
+                // Get and parse dates from local storage
+                let dates = localStorage.getItem('searchDates');
+                let start = JSON.parse(dates).start;
+                let end = JSON.parse(dates).end;
+
+                // Redirect to same page to update query string
+                this.$router.push({
+                    name: 'main-vehicle',
+                    query: {
+                        start: start,
+                        end: end
+                    }
+                });
             },
 
             async fetchVehicles() {
@@ -161,11 +181,21 @@
         created() {
             // Set the dates based on query strings, we do this so manual changes
             // to the URL are reflected in the local store
-            this.$store.dispatch('setSearchDates', {
-                start: this.$route.query.start,
-                end: this.$route.query.end
-            })
+            if (this.$route.query.start && this.$route.query.end) {
 
+                this.$store.dispatch('setSearchDates', {
+                    start: this.$route.query.start,
+                    end: this.$route.query.end
+                });
+
+            };
+
+            // If there is no query string
+            this.range.start = dateSetterStart(this.$store.state.searchDates.start);
+
+            this.range.end = dateSetterEnd(this.$store.state.searchDates.end);
+
+            // Get listing of vehicles
             this.fetchVehicles();
         }
     }

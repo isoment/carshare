@@ -176,8 +176,7 @@
     import HostsSlider from './../sliders/HostsSlider';
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
-    import { dateTypeCheck } from './../shared/utils/dateHelpers';
-    import moment from 'moment';
+    import { dateTypeCheck, dateSetterStart, dateSetterEnd } from './../shared/utils/dateHelpers';
 
     export default {
         components: {
@@ -204,33 +203,26 @@
                     end: dateTypeCheck(this.range.end)
                 });
 
+                // Get and parse dates from local storage
                 let dates = localStorage.getItem('searchDates');
-
                 let start = JSON.parse(dates).start;
                 let end = JSON.parse(dates).end;
 
+                // Redirect to main vehicle page with dates are query string 
                 this.$router.push({
                     name: 'main-vehicle',
                     query: {
                         start: start,
                         end: end
                     }
-                })
+                });
             },
         },
 
         created() {
-            // If search dates have been stored in the local storage through vuex we
-            // use those, else set the start date to today and end to tomorrow
-            let today = new Date();
+            this.range.start = dateSetterStart(this.$store.state.searchDates.start);
 
-            this.range.start = this.$store.state.searchDates.start ? 
-                this.$store.state.searchDates.start :
-                new Date().toLocaleDateString();
-
-            this.range.end = this.$store.state.searchDates.end ?
-                this.$store.state.searchDates.end :
-                new Date(today.getTime() + (24 * 60 * 60 * 1000)).toLocaleDateString();
+            this.range.end = dateSetterEnd(this.$store.state.searchDates.end);
         }
     }
 </script>

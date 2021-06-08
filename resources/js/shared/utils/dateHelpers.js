@@ -10,3 +10,25 @@ export function dateTypeCheck(date) {
         return date.toLocaleDateString();
     }
 }
+
+/*
+    Set the start date if its stored in local storage, if not
+    create a new range starting today and ending tomorrow.
+*/
+export function dateSetterStart(start) {
+    return start ? 
+        start :
+        new Date().toLocaleDateString();
+}
+
+/*
+    Set the end date if its stored in local storage, if not
+    create a new range starting today and ending tomorrow
+*/
+export function dateSetterEnd(end) {
+    let today = new Date();
+
+    return end ?
+        end :
+        new Date(today.getTime() + (24 * 60 * 60 * 1000)).toLocaleDateString();
+}
