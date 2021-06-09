@@ -155,12 +155,22 @@
                         console.error(error);
                     }
                 });
+
+                // Clear the vehicles array
+                this.vehicles = [];
+
+                // Reset page to first page
+                this.page = 1;
+
+                this.fetchVehicles();
             },
 
             async fetchVehicles() {
                 this.loading = true;
 
-                let vehicles = await axios.get(`/api/vehicles-index?page=${this.page}`);
+                let vehicles = await axios.get(
+                    `/api/vehicles-index?page=${this.page}&from=${this.$store.state.searchDates.start}&to=${this.$store.state.searchDates.end}`
+                );
 
                 // Each time this method is called we will push the 
                 // new page to the vehicles array
@@ -209,7 +219,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>

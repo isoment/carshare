@@ -20,7 +20,7 @@ class VehiclesController extends Controller
         ];
 
         $data = $request->validate([
-            'from' => ['required', 'date', 'after_or_equal:now'],
+            'from' => ['required', 'date', 'after_or_equal:yesterday'],
             'to' => ['required', 'date', 'after_or_equal:from']
         ], $customMessages);
 
