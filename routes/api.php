@@ -22,6 +22,6 @@ Route::get('vehicle-make/list', 'App\Http\Controllers\Api\VehicleMakeListControl
 Route::get('top-hosts/list', 'App\Http\Controllers\Api\TopHostsListController')
     ->name('top-hosts.list');
 
-// List all vehicles
+// Vehicles index
 Route::get('vehicles-index', [App\Http\Controllers\Api\VehiclesController::class, 'index'])
     ->name('vehicles.index');

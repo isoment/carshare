@@ -42,4 +42,16 @@ class Vehicle extends Model
             ->withCount('bookings')
             ->paginate();
     }
+
+    /**
+     * Get the vehicles available on the dates passed in
+     */
+    public function scopeIndexOfAvailableVehicles($query, $from, $to)
+    {
+        return $query->whereDoesntHave('bookings', function($query) use ($from, $to) {
+            $query->betweenDates($from, $to);
+        })->with('vehicleModel.vehicleMake')
+            ->withCount('bookings')
+            ->paginate();
+    }
 }

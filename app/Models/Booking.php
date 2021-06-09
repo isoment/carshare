@@ -43,6 +43,18 @@ class Booking extends Model
     }
 
     /**
+     *  We need to check if there is a match in bookings during the dates
+     *  that we specify, this is kind of hard to visualize but we can do
+     *  it using two where queries.
+     */
+    public function scopeBetweenDates($query, $from, $to)
+    {
+        return $query->where('to', '>=', $from)
+            ->where('from', '<=', $to);
+    }
+
+
+    /**
      *  Create a user and host review key when a new Booking
      *  is created.
      */

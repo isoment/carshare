@@ -139,11 +139,20 @@
                 let end = JSON.parse(dates).end;
 
                 // Redirect to same page to update query string
+                // Don't log the error router throws when navigating to
+                // same page if the query string isn't updated.
                 this.$router.push({
                     name: 'main-vehicle',
                     query: {
                         start: start,
                         end: end
+                    }
+                }).catch(error => {
+                    if (
+                        error.name !== 'NavigationDuplicated' &&
+                        !error.message.includes('Avoided redundant navigation to current location')
+                    ) {
+                        console.error(error);
                     }
                 });
             },
