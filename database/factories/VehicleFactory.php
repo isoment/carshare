@@ -53,7 +53,7 @@ class VehicleFactory extends Factory
             'vehicle_model_id' => VehicleModel::all()->random()->id,
             'year' => $this->vehicleYear(),
             'plate_num' => $this->plateNumber(),
-            'price_day' => $this->faker->randomFloat(2, 35, 500),
+            'price_day' => $this->faker->randomFloat(0, 35, 500),
         ];
     }
 }

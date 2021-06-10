@@ -11,20 +11,33 @@
                     <button class="border rounded-md border-gray-300 flex items-center py-2 px-3 mb-2
                                 text-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-100
                                 transition-all duration-300"
+                            :class="{ active: datesMenu }"
                             @click="toggleDatesMenu">
                         <i class="far fa-calendar-alt text-md"></i>
                         <div class="font-bold font-mono text-sm ml-2">
                             Change dates
                         </div>
                     </button>
+
                     <button class="border rounded-md border-gray-300 flex items-center py-2 px-3 mb-2 ml-2
+                                text-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-100
+                                transition-all duration-300"
+                            :class="{ active: priceMenu }"
+                            @click="togglePriceMenu">
+                        <i class="fas fa-dollar-sign"></i>
+                        <div class="font-bold font-mono text-sm ml-2">
+                            Price
+                        </div>
+                    </button>
+                    
+                    <!-- <button class="border rounded-md border-gray-300 flex items-center py-2 px-3 mb-2 ml-2
                                 text-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-100
                                 transition-all duration-300">
                         <i class="fas fa-sliders-h"></i>
                         <div class="font-bold font-mono text-sm ml-2">
                             Filters
                         </div>
-                    </button>
+                    </button> -->
                 </div>
 
                 <transition name="slide-fade">
@@ -64,6 +77,16 @@
                     </div>
                 </transition>
 
+                <transition name="slide-fade">
+                    <div v-show="priceMenu" class="w-full md:w-1/3 my-2">
+                        <vue-slider v-model="priceRange"
+                                    :min="0"
+                                    :max="100"
+                                    :enable-cross="false">
+                        </vue-slider>
+                    </div>
+                </transition>
+
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -99,11 +122,14 @@
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
     import { dateTypeCheck, dateSetterStart, dateSetterEnd } from './../shared/utils/dateHelpers';
+    import VueSlider from 'vue-slider-component';
+    import 'vue-slider-component/theme/material.css';
 
     export default {
         components: {
             Calendar,
-            DatePicker
+            DatePicker,
+            VueSlider
         },
 
         data() {
@@ -114,6 +140,8 @@
                 lastPage: 1,
                 endOfResults: false,
                 datesMenu: false,
+                priceMenu: false,
+                priceRange: [0, 50],
                 range: {
                     start: null,
                     end: null
@@ -123,7 +151,25 @@
 
         methods: {
             toggleDatesMenu() {
-                this.datesMenu = !this.datesMenu;
+                if (this.priceMenu) {
+                    this.priceMenu = false;
+                    setTimeout(function() {
+                        this.datesMenu = !this.datesMenu;
+                    }.bind(this), 500);
+                } else {
+                    this.datesMenu = !this.datesMenu;
+                }
+            },
+
+            togglePriceMenu() {
+                if (this.datesMenu) {
+                    this.datesMenu = false;
+                    setTimeout(function() {
+                        this.priceMenu = !this.priceMenu;
+                    }.bind(this), 500);
+                } else {
+                    this.priceMenu = !this.priceMenu;
+                }
             },
 
             updateDates() {
@@ -219,3 +265,9 @@
         }
     }
 </script>
+
+<style scoped>
+    .active {
+        color: rgb(139, 92, 246);
+    }
+</style>

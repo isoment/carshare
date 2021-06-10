@@ -19,7 +19,7 @@ class CreateVehiclesTable extends Migration
             $table->unsignedBigInteger('vehicle_model_id')->index();
             $table->string('year');
             $table->string('plate_num');
-            $table->string('price_day');
+            $table->unsignedMediumInteger('price_day');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
