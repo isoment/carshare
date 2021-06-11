@@ -15,7 +15,7 @@
                             @click="toggleDatesMenu">
                         <i class="far fa-calendar-alt text-md"></i>
                         <div class="font-bold font-mono text-sm ml-2">
-                            Change dates
+                            Dates
                         </div>
                     </button>
 
@@ -79,10 +79,14 @@
 
                 <transition name="slide-fade">
                     <div v-show="priceMenu" class="w-full md:w-1/3 my-2">
+                        <h4 class="font-bold text-sm mb-2">${{ priceRange[0] }} - ${{ priceRange[1] }}</h4>
                         <vue-slider v-model="priceRange"
+                                    :max="1000"
                                     :min="0"
-                                    :max="100"
-                                    :enable-cross="false">
+                                    :interval="10"
+                                    :enable-cross="false"
+                                    :tooltip="'none'"
+                                    class="mx-2">
                         </vue-slider>
                     </div>
                 </transition>
@@ -141,7 +145,7 @@
                 endOfResults: false,
                 datesMenu: false,
                 priceMenu: false,
-                priceRange: [0, 50],
+                priceRange: 0,
                 range: {
                     start: null,
                     end: null
@@ -155,7 +159,7 @@
                     this.priceMenu = false;
                     setTimeout(function() {
                         this.datesMenu = !this.datesMenu;
-                    }.bind(this), 500);
+                    }.bind(this), 400);
                 } else {
                     this.datesMenu = !this.datesMenu;
                 }
@@ -166,7 +170,7 @@
                     this.datesMenu = false;
                     setTimeout(function() {
                         this.priceMenu = !this.priceMenu;
-                    }.bind(this), 500);
+                    }.bind(this), 400);
                 } else {
                     this.priceMenu = !this.priceMenu;
                 }
@@ -262,6 +266,15 @@
 
             // Get listing of vehicles
             this.fetchVehicles();
+        },
+
+        mounted() {
+            // axios.get('/api/vehicles/price-range')
+            //     .then(response => {
+            //         this.priceRange = Array(response.data.max, response.data.min);
+            //     });
+
+            this.priceRange = [25, 1000];
         }
     }
 </script>

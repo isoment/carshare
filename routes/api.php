@@ -25,3 +25,6 @@ Route::get('top-hosts/list', 'App\Http\Controllers\Api\TopHostsListController')
 // Vehicles index
 Route::get('vehicles-index', [App\Http\Controllers\Api\VehiclesController::class, 'index'])
     ->name('vehicles.index');
+
+// Get max and min price of vehicles
+Route::get('vehicles/price-range', 'App\Http\Controllers\Api\VehiclePriceRangeController');

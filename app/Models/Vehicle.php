@@ -54,4 +54,17 @@ class Vehicle extends Model
             ->withCount('bookings')
             ->paginate();
     }
+
+    /**
+     *  Get the max and min price for vehicles in the system
+     *  rounded to nearest ten
+     */
+    public static function priceRange()
+    {
+        return [
+            'max' => ceil(Vehicle::max('price_day') / 10) * 10,
+            'min' => floor(Vehicle::min('price_day') / 10) * 10
+        ];
+    }
+
 }
