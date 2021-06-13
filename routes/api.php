@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/***********************
+ *  Public API Routes  *
+ ***********************/
+
 // List vehicle makes
 Route::get('vehicle-make/list', 'App\Http\Controllers\Api\VehicleMakeListController')
     ->name('vehicle-make.list');

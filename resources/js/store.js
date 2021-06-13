@@ -9,6 +9,10 @@ export default {
             start: null,
             end: null
         },
+        priceRange: {
+            min: null,
+            max: null
+        }
     },
 
     mutations: {
@@ -35,26 +39,31 @@ export default {
             })
         },
 
-        // Return all the notifications except the one specified in the payload
+        // Return all the notifications except the one specified in the payload.
         removeNotification(state, payload) {
             state.notifications = state.notifications.filter(notification => {
                 return notification.id !== payload.id;
             })
         },
 
-        // Set the search dates
+        // Set the search dates.
         setSearchDates(state, payload) {
             state.searchDates = payload;
+        },
+
+        // Set the price range
+        setPriceRange(state, payload) {
+            state.priceRange = payload;
         }
     },
 
     actions: {
-        // Load stored state when we initialize Vue
+        // Load stored state when we initialize Vue.
         loadStoredState(context) {
-            // Set the logged in user
+            // Set the logged in user.
             context.commit('setLoggedIn', isLoggedIn());
 
-            // Get the last date seach from local storage
+            // Get the last date seach from local storage.
             const lastSearchDates = localStorage.getItem('searchDates');
 
             if (lastSearchDates) {
@@ -62,7 +71,7 @@ export default {
             }
         },
 
-        // Load user information
+        // Load user information.
         async loadUser(context) {
             if (isLoggedIn()) {
                 try {
@@ -75,27 +84,33 @@ export default {
             }
         },
 
-        // Logout a user
+        // Logout a user.
         logOut(context) {
             context.commit("setUser", {});
             context.commit("setLoggedIn", false);
             logOut();
         },
 
-        // Add a notification
+        // Add a notification.
         addNotification(context, payload) {
             context.commit('pushNotification', payload);
         },
 
-        // Remove a notification
+        // Remove a notification.
         removeNotification(context, payload) {
             context.commit('removeNotification', payload);
         },
 
-        // Set the search dates and store in local storage
+        // Set the search dates and store in local storage.
         setSearchDates(context, payload) {
             context.commit('setSearchDates', payload);
             localStorage.setItem('searchDates', JSON.stringify(payload));
+        },
+
+        // Set the price range and store in local storage.
+        setPriceRange(context, payload) {
+            context.commit('setPriceRange', payload);
+            localStorage.setItem('priceRange', JSON.stringify(payload));
         }
     },
 }

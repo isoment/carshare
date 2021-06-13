@@ -79,13 +79,14 @@
 
                 <transition name="slide-fade">
                     <div v-show="priceMenu" class="w-full md:w-1/3 my-2">
-                        <h4 class="font-bold text-sm mb-2">${{ priceRange[0] }} - ${{ priceRange[1] }}</h4>
+                        <h4 class="font-bold text-sm mb-2">${{ priceRange[0] }} - ${{ priceRange[1] }} / Day</h4>
                         <vue-slider v-model="priceRange"
-                                    :max="1000"
-                                    :min="0"
+                                    :max="maxPrice"
+                                    :min="minPrice"
                                     :interval="10"
                                     :enable-cross="false"
                                     :tooltip="'none'"
+                                    @drag-end="() => updatePriceRange()"
                                     class="mx-2">
                         </vue-slider>
                     </div>
@@ -146,6 +147,8 @@
                 datesMenu: false,
                 priceMenu: false,
                 priceRange: 0,
+                maxPrice: 1000,
+                minPrice: 0,
                 range: {
                     start: null,
                     end: null
@@ -177,13 +180,13 @@
             },
 
             updateDates() {
-                // Call the action to set local storage
+                // Call the action to set local storage.
                 this.$store.dispatch('setSearchDates', {
                     start: dateTypeCheck(this.range.start),
                     end: dateTypeCheck(this.range.end)
                 });
 
-                // Get and parse dates from local storage
+                // Get and parse dates from local storage.
                 let dates = localStorage.getItem('searchDates');
                 let start = JSON.parse(dates).start;
                 let end = JSON.parse(dates).end;
@@ -206,10 +209,10 @@
                     }
                 });
 
-                // Clear the vehicles array
+                // Clear the vehicles array.
                 this.vehicles = [];
 
-                // Reset page to first page
+                // Reset page to first page.
                 this.page = 1;
 
                 this.fetchVehicles();
@@ -219,11 +222,15 @@
                 this.loading = true;
 
                 let vehicles = await axios.get(
-                    `/api/vehicles-index?page=${this.page}&from=${this.$store.state.searchDates.start}&to=${this.$store.state.searchDates.end}`
+                    `/api/vehicles-index?page=${this.page}
+                    &from=${this.$store.state.searchDates.start}
+                    &to=${this.$store.state.searchDates.end}
+                    &min=${this.$store.state.priceRange.min}
+                    &max=${this.$store.state.priceRange.max}`
                 );
 
                 // Each time this method is called we will push the 
-                // new page to the vehicles array
+                // new page to the vehicles array.
                 this.vehicles.push(...vehicles.data.data);
 
                 // Each time this method is called we update the last_page from
@@ -233,10 +240,54 @@
                 this.loading = false;
             },
 
+            async updatePriceRange() {
+                // Call action to set the local storage.
+                this.$store.dispatch('setPriceRange', {
+                    min: this.priceRange[0],
+                    max: this.priceRange[1]
+                });
+
+                // Get and parse price min and max from local storage.
+                let prices = localStorage.getItem('priceRange');
+                let min = JSON.parse(prices).min;
+                let max = JSON.parse(prices).max;
+
+                // Get and parse dates from local storage.
+                let dates = localStorage.getItem('searchDates');
+                let start = JSON.parse(dates).start;
+                let end = JSON.parse(dates).end;
+
+                // Set query strings for price range.
+                this.$router.push({
+                    name: 'main-vehicle',
+                    query: {
+                        start: start,
+                        end: end,
+                        min: min,
+                        max: max
+                    }
+                }).catch(error => {
+                    if (
+                        error.name !== 'NavigationDuplicated' &&
+                        !error.message.includes('Avoided redundant navigation to current location')
+                    ) {
+                        console.error(error);
+                    }
+                });
+
+                // Clear the vehicles array.
+                this.vehicles = [];
+
+                // Reset page to first page.
+                this.page = 1;
+
+                this.fetchVehicles();
+            },
+
             handleScrolledToBottom(isVisible) {
                 if (!isVisible) { return };
 
-                // If we are on the last page return
+                // If we are on the last page return.
                 if (this.page >= this.lastPage) { 
                     return;
                 };
@@ -249,7 +300,7 @@
 
         created() {
             // Set the dates based on query strings, we do this so manual changes
-            // to the URL are reflected in the local store
+            // to the URL are reflected in the local store.
             if (this.$route.query.start && this.$route.query.end) {
 
                 this.$store.dispatch('setSearchDates', {
@@ -259,23 +310,41 @@
 
             };
 
-            // If there is no query string
-            this.range.start = dateSetterStart(this.$store.state.searchDates.start);
+            // Set the price range based on query strings
+            if (this.$route.query.min && this.$route.query.max) {
 
+                this.$store.dispatch('setPriceRange', {
+                    min: this.$route.query.min,
+                    max: this.$route.query.max
+                });
+
+            }
+
+            // If there is no query string.
+            this.range.start = dateSetterStart(this.$store.state.searchDates.start);
             this.range.end = dateSetterEnd(this.$store.state.searchDates.end);
 
-            // Get listing of vehicles
+            // We need to get the min and max vehicle prices from the api
+            // and save these as state for use in the slider. If there is no value in local
+            // storage use the min and max from api.
+            axios.get('/api/vehicles/price-range')
+                .then(response => {
+                    if (localStorage.getItem('priceRange')) {
+                        this.priceRange = Array(
+                            Number(JSON.parse(localStorage.getItem('priceRange')).min),
+                            Number(JSON.parse(localStorage.getItem('priceRange')).max)
+                        )
+                    } else {
+                        this.priceRange = Array(Number(response.data.max), Number(response.data.min));
+                    }
+
+                    this.maxPrice = Number(response.data.max);
+                    this.minPrice = Number(response.data.min);
+                });
+
+            // Get listing of vehicles.
             this.fetchVehicles();
         },
-
-        mounted() {
-            // axios.get('/api/vehicles/price-range')
-            //     .then(response => {
-            //         this.priceRange = Array(response.data.max, response.data.min);
-            //     });
-
-            this.priceRange = [25, 1000];
-        }
     }
 </script>
 

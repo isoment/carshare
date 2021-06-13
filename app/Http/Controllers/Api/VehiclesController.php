@@ -17,18 +17,18 @@ class VehiclesController extends Controller
             'date' => 'Must be a date',
             'from.after_or_equal' => 'Date must be after or equal to now',
             'to.after_or_equal' => 'Date must be after or equal to from date',
+            'gte:min' => 'Max must be greater than min'
         ];
 
         $data = $request->validate([
             'from' => ['required', 'date', 'after_or_equal:yesterday'],
-            'to' => ['required', 'date', 'after_or_equal:from']
+            'to' => ['required', 'date', 'after_or_equal:from'],
+            'min' => ['numeric'],
+            'max' => ['numeric', 'gte:min']
         ], $customMessages);
 
-        $from = Carbon::parse($data['from'])->toDateString();
-        $to = Carbon::parse($data['to'])->toDateString();
-
         return VehicleIndexResource::collection(
-            Vehicle::indexOfAvailableVehicles($from, $to)
+            Vehicle::indexOfAvailableVehicles($data)
         );
     }
 }

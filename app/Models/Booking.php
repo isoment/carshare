@@ -53,7 +53,6 @@ class Booking extends Model
             ->where('from', '<=', $to);
     }
 
-
     /**
      *  Create a user and host review key when a new Booking
      *  is created.
