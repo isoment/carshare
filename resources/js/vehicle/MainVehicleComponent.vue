@@ -146,7 +146,7 @@
                 endOfResults: false,
                 datesMenu: false,
                 priceMenu: false,
-                priceRange: 0,
+                priceRange: [],
                 maxPrice: 1000,
                 minPrice: 0,
                 range: {
@@ -240,40 +240,17 @@
                 this.loading = false;
             },
 
-            async updatePriceRange() {
+            updatePriceRange() {
                 // Call action to set the local storage.
                 this.$store.dispatch('setPriceRange', {
                     min: this.priceRange[0],
                     max: this.priceRange[1]
                 });
 
-                // Get and parse price min and max from local storage.
-                let prices = localStorage.getItem('priceRange');
-                let min = JSON.parse(prices).min;
-                let max = JSON.parse(prices).max;
-
                 // Get and parse dates from local storage.
-                let dates = localStorage.getItem('searchDates');
-                let start = JSON.parse(dates).start;
-                let end = JSON.parse(dates).end;
-
-                // Set query strings for price range.
-                this.$router.push({
-                    name: 'main-vehicle',
-                    query: {
-                        start: start,
-                        end: end,
-                        min: min,
-                        max: max
-                    }
-                }).catch(error => {
-                    if (
-                        error.name !== 'NavigationDuplicated' &&
-                        !error.message.includes('Avoided redundant navigation to current location')
-                    ) {
-                        console.error(error);
-                    }
-                });
+                // let dates = localStorage.getItem('searchDates');
+                // let start = JSON.parse(dates).start;
+                // let end = JSON.parse(dates).end;
 
                 // Clear the vehicles array.
                 this.vehicles = [];
@@ -298,7 +275,7 @@
             }
         },
 
-        created() {
+        async created() {
             // Set the dates based on query strings, we do this so manual changes
             // to the URL are reflected in the local store.
             if (this.$route.query.start && this.$route.query.end) {
@@ -310,39 +287,25 @@
 
             };
 
-            // Set the price range based on query strings
-            if (this.$route.query.min && this.$route.query.max) {
-
-                this.$store.dispatch('setPriceRange', {
-                    min: this.$route.query.min,
-                    max: this.$route.query.max
-                });
-
-            }
-
             // If there is no query string.
             this.range.start = dateSetterStart(this.$store.state.searchDates.start);
             this.range.end = dateSetterEnd(this.$store.state.searchDates.end);
 
-            // We need to get the min and max vehicle prices from the api
-            // and save these as state for use in the slider. If there is no value in local
-            // storage use the min and max from api.
-            axios.get('/api/vehicles/price-range')
-                .then(response => {
-                    if (localStorage.getItem('priceRange')) {
-                        this.priceRange = Array(
-                            Number(JSON.parse(localStorage.getItem('priceRange')).min),
-                            Number(JSON.parse(localStorage.getItem('priceRange')).max)
-                        )
-                    } else {
-                        this.priceRange = Array(Number(response.data.max), Number(response.data.min));
-                    }
+            // We need to get the min and max vehicle prices from the api.
+            let prices = await axios.get('/api/vehicles/price-range');
 
-                    this.maxPrice = Number(response.data.max);
-                    this.minPrice = Number(response.data.min);
-                });
+            // Set this to the price range state
+            this.priceRange = Array(Number(prices.data.max), Number(prices.data.min));
 
-            // Get listing of vehicles.
+            this.$store.dispatch('setPriceRange', {
+                min: prices.data.min,
+                max: prices.data.max
+            });
+
+            // Set the min and max price state.
+            this.minPrice = Number(prices.data.min);
+            this.maxPrice = Number(prices.data.max);
+
             this.fetchVehicles();
         },
     }

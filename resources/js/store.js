@@ -110,7 +110,7 @@ export default {
         // Set the price range and store in local storage.
         setPriceRange(context, payload) {
             context.commit('setPriceRange', payload);
-            localStorage.setItem('priceRange', JSON.stringify(payload));
+            // localStorage.setItem('priceRange', JSON.stringify(payload));
         }
     },
 }
