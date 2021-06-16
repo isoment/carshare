@@ -20,7 +20,8 @@ class VehicleIndexResource extends JsonResource
             'price_day' => $this->price_day,
             'model' => $this->vehicleModel->model,
             'vehicle_make' => $this->vehicleModel->vehicleMake->make,
-            'bookings_count' => $this->bookings_count
+            'bookings_count' => $this->bookings_count,
+            'image' => $this->vehicleImages->first()->image
         ];
     }
 }

@@ -39,7 +39,7 @@ class Vehicle extends Model
      */
     public function vehicleImages()
     {
-        return $this->hasMany(VehicleImages::class, 'vehicle_id');
+        return $this->hasMany(VehicleImages::class);
     }
 
     /**
@@ -73,6 +73,7 @@ class Vehicle extends Model
             $query->whereBetween('price_day', [$data['min'], $data['max']]);
 
         })->with('vehicleModel.vehicleMake')
+            ->with('vehicleImages')
             ->withCount('bookings')
             ->paginate();
     }

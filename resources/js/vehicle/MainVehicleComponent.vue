@@ -100,9 +100,7 @@
                      :key="vehicle.id">
                     <div>
                         <div class="h-56 rounded-t-lg"
-                             :style="{
-                                backgroundImage: 'url(storage/vehicle-seeder-img/lexus-r3ihfu3w.jpg)'
-                             }"
+                             :style="{ 'background-image': 'url(' + vehicle.image + ')' }"
                              style="background-size: cover; background-position: 50% 50%;">
                         </div>
                     </div>
