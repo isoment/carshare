@@ -95,26 +95,39 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="p-8 shadow-lg border border-gray-50 rounded-lg"
+                <div class="shadow-lg border border-gray-50 rounded-lg"
                      v-for="vehicle in vehicles" 
                      :key="vehicle.id">
                     <div>
-                        <h3 class="font-bold font-boldnosans text-xl">{{ vehicle.vehicle_make }} {{ vehicle.model }}</h3>
-                        <h6 class="font-light text-sm">{{ vehicle.year }}</h6>
-                        <h6 class="font-light text-sm">Vehicle ID {{ vehicle.id }}</h6>
+                        <div class="h-56 rounded-t-lg"
+                             :style="{
+                                backgroundImage: 'url(storage/vehicle-seeder-img/lexus-r3ihfu3w.jpg)'
+                             }"
+                             style="background-size: cover; background-position: 50% 50%;">
+                        </div>
                     </div>
-                    <div class="text-right font-bold text-sm text-purple-500 mt-6">
-                        ${{ vehicle.price_day }} / Day
+                    <div class="px-6 pt-3 pb-2">
+                        <div>
+                            <h3 class="font-bold font-boldnosans text-xl">{{ vehicle.vehicle_make }} {{ vehicle.model }}</h3>
+                            <h6 class="font-light text-sm">{{ vehicle.year }}</h6>
+                            <h6 class="font-light text-sm">Vehicle ID {{ vehicle.id }}</h6>
+                        </div>
+                        <div class="text-right font-bold text-sm text-purple-500 mt-6">
+                            ${{ vehicle.price_day }} / Day
+                        </div>
                     </div>
                 </div>
             </div>
+
             <div class="text-center mt-8"
                  v-if="loading">
                   <i class="fas fa-spinner fa-spin text-purple-500 text-4xl"></i>
             </div>
+
             <div v-if="endOfResults" class="my-4">
                 No More Vehicles
             </div>
+
             <div v-observe-visibility="handleScrolledToBottom"
                  v-if="vehicles.length">
             </div>

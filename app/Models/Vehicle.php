@@ -35,6 +35,14 @@ class Vehicle extends Model
     }
 
     /**
+     *  Relationship to vehicle images
+     */
+    public function vehicleImages()
+    {
+        return $this->hasMany(VehicleImages::class, 'vehicle_id');
+    }
+
+    /**
      *  Get all the vehicles including make, model and trip count
      */
     public function scopeAllVehicles($query)

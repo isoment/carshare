@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             VehicleSeeder::class,
             BookingSeeder::class,
             RenterReviewSeeder::class,
-            HostReviewSeeder::class
+            HostReviewSeeder::class,
         ]);
     }
 }
