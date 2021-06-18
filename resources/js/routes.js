@@ -6,6 +6,7 @@ import Register from './auth/Register';
 import PasswordResetRequest from './auth/PasswordResetRequest';
 import PasswordResetEmail from './auth/PasswordResetEmail';
 import MainVehicleComponent from './vehicle/MainVehicleComponent';
+import VehicleComponent from './vehicle/VehicleComponent';
 
 const routes = [
     {
@@ -37,6 +38,11 @@ const routes = [
         path: "/vehicles",
         component: MainVehicleComponent,
         name: "main-vehicle"
+    },
+    {
+        path: "/vehicle/:id",
+        component: VehicleComponent,
+        name: "vehicle"
     },
     {
         path: "*",

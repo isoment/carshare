@@ -43,6 +43,22 @@ class Booking extends Model
     }
 
     /**
+     *  Get host reviews
+     */
+    public function scopeGetReviews($query, $vehicleId)
+    {
+        $bookings = $query->where('vehicle_id', $vehicleId)->get();
+
+        $hostReviews = $bookings->each(function($booking) {
+            $booking->hostReview;
+        });
+
+        $ratings = $hostReviews->pluck('hostReview.rating');
+
+        return round($ratings->sum() / $ratings->count(), 1);
+    }
+
+    /**
      *  We need to check if there is a match in bookings during the dates
      *  that we specify, this is kind of hard to visualize but we can do
      *  it using two where queries.
