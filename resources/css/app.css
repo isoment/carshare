@@ -23,3 +23,7 @@
 .menu-background {
     background-color: rgba(54, 54, 54, 0.5);
 }
+
+.vehicle-image-slider {
+    height: 35rem;
+}

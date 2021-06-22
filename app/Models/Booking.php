@@ -43,9 +43,9 @@ class Booking extends Model
     }
 
     /**
-     *  Get host reviews
+     *  Calculate vehicle rating
      */
-    public function scopeGetReviews($query, $vehicleId)
+    public function scopeCalculateVehicleRating($query, $vehicleId)
     {
         $bookings = $query->where('vehicle_id', $vehicleId)->get();
 
