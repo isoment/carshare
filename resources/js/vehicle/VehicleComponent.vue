@@ -13,6 +13,8 @@
 
         <div class="my-10 max-w-5xl mx-auto px-2 sm:px-6 lg:px-8">
             <div class="grid grid-cols-3">
+
+                <!-- Left Pane -->
                 <div class="col-span-2 mr-4">
 
                     <div class="grid grid-cols-4">
@@ -84,16 +86,92 @@
                         </div>                        
                     </div>
 
+                    <div class="grid grid-cols-4 mt-12">
+                        <div class="mx-3 text-right mt-2 font-boldnosans font-bold tracking-widest text-sm">
+                            Ratings and reviews
+                        </div>
+                        <div class="col-span-3 mx-2">
+                            <!-- Total rating and review count -->
+                            <div>
+                                <div class="flex items-center">
+                                    <span class="font-boldnosans font-bold text-3xl mr-1">4.87</span>
+                                    <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    (21 ratings)
+                                </div>
+                            </div>
+
+                            <!-- Reviews List -->
+                            <div class="mt-6">
+                                <h5 class="font-bold uppercase font-boldnosans text-gray-500 text-sm">Reviews</h5>
+
+                                <div class="flex border-b border-gray-200 mt-5 pb-5">
+                                    <div class="flex-shrink-0 mr-4">
+                                        <img src="/img/avatar-female.jpeg" alt="avatar" 
+                                             class="h-12 w-12 rounded-full">
+                                    </div>
+                                    <div>
+                                        <div class="flex">
+                                            <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
+                                            <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
+                                            <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
+                                            <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
+                                            <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
+                                        </div>
+                                        <div class="text-xs my-1">
+                                            <span>User Name</span>
+                                            <span class="text-gray-500">Mar 14, 2020</span>
+                                        </div>
+                                        <div>
+                                            <p>Lorem, ipsum dolor sit amet consectetur rantom Molestias aut, repellat ipsum</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex border-b border-gray-200 mt-5 pb-5">
+                                    <div class="flex-shrink-0 mr-4">
+                                        <img src="/img/avatar-female.jpeg" alt="avatar" 
+                                             class="h-12 w-12 rounded-full">
+                                    </div>
+                                    <div>
+                                        <div class="flex">
+                                            <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
+                                            <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
+                                            <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
+                                            <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
+                                            <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
+                                        </div>
+                                        <div class="text-xs my-1">
+                                            <span>User Name</span>
+                                            <span class="text-gray-500">Mar 14, 2020</span>
+                                        </div>
+                                        <div>
+                                            <p>Lorem, ipsum dolor sit amet consectetur rantom Molestias aut, repellat ipsum</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>                        
+                    </div>
+
                 </div>
 
+                <!-- Right Pane -->
                 <div class="font-boldnosans">
-                    <div class="mb-2">
+                    <div class="mt-2 mb-1">
                         <span class="font-bold text-xl font-boldnosans">$185</span>
                         <span>/</span>
                         <span>day</span>
                     </div>
+                    <div class="text-xs text-gray-600 underline mb-3">
+                        $547 est total
+                    </div>
                     <hr>
                 </div>
+
             </div>
         </div>
 
