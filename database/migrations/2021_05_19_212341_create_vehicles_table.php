@@ -20,10 +20,12 @@ class CreateVehiclesTable extends Migration
             $table->string('year');
             $table->string('plate_num');
             $table->unsignedMediumInteger('price_day');
+            $table->text('description');
+            $table->integer('doors');
+            $table->integer('seats');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-            // $table->foreign('vehicle_model_id')->references('id')->on('vehicle_models');
         });
     }
 

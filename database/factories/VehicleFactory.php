@@ -185,6 +185,9 @@ class VehicleFactory extends Factory
             'year' => $this->vehicleYear(),
             'plate_num' => $this->plateNumber(),
             'price_day' => $this->faker->randomFloat(0, 35, 500),
+            'description' => $this->faker->paragraph(4),
+            'doors' => $this->faker->numberBetween(2, 4),
+            'seats' => $this->faker->numberBetween(2, 4)
         ];
     }
 
