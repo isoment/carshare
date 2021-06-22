@@ -78,8 +78,8 @@
                         </div>
                         <div class="col-span-3 mx-2">
                             <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias aut, repellat ipsum facere voluptate dicta obcaecati deserunt nobis suscipit eaque?
-                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias aut, repellat ipsum facere voluptate dicta obcaecati deserunt nobis suscipit eaque?
-                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias aut, repellat ipsum facere voluptate dicta obcaecati deserunt nobis suscipit eaque?
+                                Lorem, ipsum dolor sit amet consectetur adipisicing  aut, repellat ipsum facere voluptate dicta obcaecati deserunt nobis suscipit eaque?
+                                Lorem, ipsum dolor sit amet consectetur rantom Molestias aut, repellat ipsum facere voluptate dicta obcaecati deserunt nobis suscipit eaque?
                             </p>
                         </div>                        
                     </div>
@@ -87,11 +87,12 @@
                 </div>
 
                 <div class="font-boldnosans">
-                    <div>
+                    <div class="mb-2">
                         <span class="font-bold text-xl font-boldnosans">$185</span>
                         <span>/</span>
                         <span>day</span>
                     </div>
+                    <hr>
                 </div>
             </div>
         </div>
