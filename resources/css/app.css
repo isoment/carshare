@@ -24,6 +24,67 @@
     background-color: rgba(54, 54, 54, 0.5);
 }
 
-.vehicle-image-slider {
-    height: 35rem;
+.vehicle-image-wrap {
+    width: auto;
+    object-fit: fill;
+}
+
+.vehicle-image-img {
+    height: 100%;
+    width: 100%;
+}
+
+@media screen and (min-width: 300px) {
+    .vehicle-image-slider {
+        height: 13rem;
+    }
+
+    .vehicle-image-wrap {
+        height: 13rem;
+    }
+}
+
+@media screen and (min-width: 420px) {
+    .vehicle-image-slider {
+        height: 18rem;
+    }
+
+    .vehicle-image-wrap {
+        height: 18rem;
+    }
+}
+
+@media screen and (min-width: 640px) {
+    .vehicle-image-slider {
+        height: 22rem;
+    }
+
+    .vehicle-image-wrap {
+        height: 22rem;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    .vehicle-image-slider {
+        height: 28rem;
+    }
+
+    .vehicle-image-wrap {
+        height: 28rem;
+    }
+}
+
+@media screen and (min-width: 1026px) {
+    .vehicle-image-slider {
+        height: 35rem;
+    }
+
+    .vehicle-image-wrap {
+        height: 35rem;
+    }
+
+    .vehicle-image-img {
+        height: auto;
+        width: auto;
+    }
 }

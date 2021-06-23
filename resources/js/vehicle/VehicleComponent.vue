@@ -5,11 +5,12 @@
         <main-navigation></main-navigation>
 
         <!-- Vehicle Image Slider -->
-        <div class="vehicle-image-slider"
+        <!-- <div class="vehicle-image-slider"
             style="background-size: cover; 
                    background-position: 50% 50%;
                    background-image: url(/storage/vehicle-seeder-img/honda-3219ur1hfo9eq.jpg)">
-        </div>
+        </div> -->
+        <vehicle-images-slider></vehicle-images-slider>
 
         <div class="my-10 max-w-5xl mx-auto px-2 sm:px-6 lg:px-8">
             <div class="grid grid-cols-3">
@@ -161,7 +162,7 @@
 
                 <!-- Right Pane -->
                 <div class="font-boldnosans">
-                    <div class="mt-2 mb-1">
+                    <div class="mb-1">
                         <span class="font-bold text-xl font-boldnosans">$185</span>
                         <span>/</span>
                         <span>day</span>
@@ -179,7 +180,11 @@
 </template>
 
 <script>
-    export default {
-        
+    import VehicleImagesSlider from './../sliders/VehicleImagesSlider';
+
+    export default {   
+        components: {
+            VehicleImagesSlider
+        },
     }
 </script>
