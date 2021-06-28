@@ -17,7 +17,7 @@ class VehicleMakeListTest extends TestCase
      *  @test
      *  The api route has a 200 status
      */
-    public function the_api_route_has_200_status()
+    public function the_vehicle_make_list_api_route_has_200_status()
     {
         $this->json('GET', '/api/vehicle-make/list')
             ->assertStatus(200);
@@ -29,14 +29,28 @@ class VehicleMakeListTest extends TestCase
      */
     public function the_vehicle_make_results_are_displayed_as_json()
     {
-        $vehicle = VehicleMake::factory()->create();
+        $vehicle1 = VehicleMake::factory()->create();
+        $vehicle2 = VehicleMake::factory()->create();
+        $vehicle3 = VehicleMake::factory()->create();
 
         $response = $this->json('GET', '/api/vehicle-make/list');
 
-        $response->assertJsonFragment([
-                'id' => $vehicle->id,
-                'make' => $vehicle->make,
-                'image' => $vehicle->image
+        $response->assertJsonStructure([
+            'data' => [
+                '*' => ['id', 'make', 'image']
+            ]
+        ])->assertJsonFragment([
+            'id' => $vehicle1->id,
+            'make' => $vehicle1->make,
+            'image' => $vehicle1->image
+        ])->assertJsonFragment([
+            'id' => $vehicle2->id,
+            'make' => $vehicle2->make,
+            'image' => $vehicle2->image
+        ])->assertJsonFragment([
+            'id' => $vehicle3->id,
+            'make' => $vehicle3->make,
+            'image' => $vehicle3->image
         ]);
     }
 }
