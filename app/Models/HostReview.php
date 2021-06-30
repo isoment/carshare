@@ -9,6 +9,8 @@ class HostReview extends Model
 {
     use HasFactory;
 
+    protected $keyType = 'string';
+
     /**
      *  Relationship to booking
      */

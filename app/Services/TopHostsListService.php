@@ -21,18 +21,18 @@ class TopHostsListService
             ->get(['users.*', 'host_reviews.id as review_id', 'host_reviews.rating', 'host_reviews.content']);
 
         // Get one review with the user info collection
-        $unique = $collection->unique('id')->random(8);
+        $unique = $collection->unique('id')->shuffle()->take(8);
 
         // We want to add the number of host reviews and also
         // the renters name for the review we selected above for the top host
         $hostReviewInfo = [];
 
         foreach ($unique as $u) {
-            $test = HostReview::where('id', $u['review_id'])->first();
+            $hostReview = HostReview::where('id', $u['review_id'])->first();
 
             $hostReviewToAdd = [
                 'host_review_count' => HostReview::where('user_id', $u['id'])->count(),
-                'renter_name' => $test->booking->user->name
+                'renter_name' => $hostReview->booking->user->name
             ];
 
             array_push($hostReviewInfo, $hostReviewToAdd);

@@ -2,7 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Booking;
+use App\Models\HostReview;
 use App\Models\RenterReview;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
@@ -14,16 +17,6 @@ class TopHostsListTest extends TestCase
 
     /**
      *  @test
-     *  The api route has a 200 status
-     */
-    // public function the_top_hosts_list_api_route_returns_200_status()
-    // {
-    //     $this->json('GET', '/api/top-hosts/list')
-    //         ->assertStatus(200);
-    // }
-
-    /**
-     *  @test
      *  The top hosts list results are displayed as json correctly
      */
     public function the_top_hosts_list_results_are_displayed_as_json_correctly()
@@ -32,7 +25,8 @@ class TopHostsListTest extends TestCase
 
         $response = $this->json('GET', '/api/top-hosts/list');
 
-        $response->assertJsonStructure([
+        $response->assertStatus(200)
+            ->assertJsonStructure([
             'data' => [
                 '*' => [
                     'id', 'host_name', 'created_at', 'rating', 'content', 
@@ -40,7 +34,5 @@ class TopHostsListTest extends TestCase
                 ]
             ]
         ]);
-
-        Log::info($response->getContent());
     }
 }
