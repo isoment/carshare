@@ -5,9 +5,17 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TopHostsListResource;
 use App\Models\User;
+use App\Services\TopHostsListService;
 
 class TopHostsListController extends Controller
 {
+    protected $topHostsListService;
+
+    public function __construct(TopHostsListService $topHostsListService)
+    {
+        $this->topHostsListService = $topHostsListService;
+    }
+
     /**
      * Handle the incoming request.
      *
@@ -16,8 +24,10 @@ class TopHostsListController extends Controller
      */
     public function __invoke()
     {
+        $topHostsList = $this->topHostsListService->index();
+
         return TopHostsListResource::collection(
-            User::TopHostsList()
+            $topHostsList
         );
     }
 }

@@ -10,24 +10,27 @@ class UserSeeder extends Seeder
     /**
      * Run the database seeds.
      *
+     * @param int $renterCount number of renters to create
+     * @param int $hostCount number of hosts to create
+     * @param int $topHostCount number of top hosts to create
      * @return void
      */
-    public function run()
+    public static function run(int $renterCount = 300, int $hostCount = 100, int $topHostCount = 22)
     {
+        // Create some renters
+        User::factory()->count($renterCount)->create([
+            'host' => 0
+        ]);
+
         // Create some hosts
-        User::factory()->count(100)->create([
+        User::factory()->count($hostCount)->create([
             'host' => 1
         ]);
 
         // Create some top hosts
-        User::factory()->count(22)->create([
+        User::factory()->count($topHostCount)->create([
             'host' => 1,
             'top_host' => 1
-        ]);
-
-        // Create some non hosts
-        User::factory()->count(300)->create([
-            'host' => 0
         ]);
     }
 }

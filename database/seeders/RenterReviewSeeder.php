@@ -18,13 +18,8 @@ class RenterReviewSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public static function run()
     {
-        // User::where('host', 0)->get()->each(function($user) {
-        //     $reviews = RenterReview::factory()->count(random_int(5, 30))->make();
-        //     $user->renterReviews()->saveMany($reviews);
-        // });
-
         Booking::all()->each(function ($booking) {
 
             RenterReview::factory()->create([

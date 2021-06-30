@@ -17,7 +17,7 @@ class VehicleMakeListTest extends TestCase
      *  @test
      *  The api route has a 200 status
      */
-    public function the_vehicle_make_list_api_route_has_200_status()
+    public function the_vehicle_make_list_api_route_returns_200_status()
     {
         $this->json('GET', '/api/vehicle-make/list')
             ->assertStatus(200);

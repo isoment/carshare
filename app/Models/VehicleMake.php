@@ -9,6 +9,8 @@ class VehicleMake extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     /**
      *  Relationship to vehicle model
      */

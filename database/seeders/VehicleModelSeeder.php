@@ -14,8 +14,6 @@ class VehicleModelSeeder extends Seeder
      */
     public function run()
     {
-        // VehicleModel::factory()->count(50)->create();
-
         $chevyModels = [
             'Camaro', 'Corvette', 'Colorado', 'Impala', 'Sonic', 'Malibu', 'Express',
             'Suburban', 'Blazer', 'Tahoe', 'Trax', 'Traverse', 'Colorado', 'Silverado 1500'
