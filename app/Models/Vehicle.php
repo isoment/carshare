@@ -55,32 +55,6 @@ class Vehicle extends Model
     }
 
     /**
-     * Get the vehicles available on the dates passed in
-     * and within the price range if applicable
-     */
-    public function scopeIndexOfAvailableVehicles($query, array $data)
-    {
-        $from = Carbon::parse($data['from'])->toDateString();
-        $to = Carbon::parse($data['to'])->toDateString();
-
-        // Only want to search by price if its selected
-        $hasMinMax = isset($data['min']) && isset($data['max']);
-
-        return $query->whereDoesntHave('bookings', function($query) use ($from, $to) {
-
-            $query->betweenDates($from, $to);
-
-        })->when($hasMinMax, function($query) use ($data) {
-
-            $query->whereBetween('price_day', [$data['min'], $data['max']]);
-
-        })->with('vehicleModel.vehicleMake')
-            ->with('vehicleImages')
-            ->withCount('bookings')
-            ->paginate();
-    }
-
-    /**
      *  Get the max and min price for vehicles in the system
      *  rounded to nearest ten
      */
