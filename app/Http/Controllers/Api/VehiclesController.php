@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\VehicleIndexRequest;
 use App\Http\Resources\VehicleIndexResource;
+use App\Http\Resources\VehicleShowResource;
 use App\Services\VehicleService;
 
 class VehiclesController extends Controller
@@ -31,6 +32,6 @@ class VehiclesController extends Controller
      */
     public function show($id)
     {
-        return $this->vehicleService->show($id);
+        return new VehicleShowResource($this->vehicleService->show($id));
     }
 }

@@ -2,11 +2,15 @@
 
 namespace App\Services;
 
+use App\Http\Traits\VehicleTrait;
 use App\Models\Vehicle;
+use App\Models\VehicleImages;
 use Carbon\Carbon;
 
 class VehicleService
 {
+    use VehicleTrait;
+
     /**
      *  Return and index of vehicles and filter by parameters
      *  in the request.
@@ -38,6 +42,12 @@ class VehicleService
      */
     public function show($id)
     {
-        
+        $vehicle = Vehicle::findOrFail($id);
+
+        return collect([
+            'vehicle_info' => $vehicle,
+            'vehicle_images' => $this->vehicleImages($vehicle->id),
+            'host' => $this->hostInfo($vehicle->user_id)
+        ]);
     }
 }
