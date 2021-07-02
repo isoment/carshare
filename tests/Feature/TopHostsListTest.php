@@ -2,13 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Booking;
-use App\Models\HostReview;
-use App\Models\RenterReview;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class TopHostsListTest extends TestCase
@@ -27,12 +21,12 @@ class TopHostsListTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-            'data' => [
-                '*' => [
-                    'id', 'host_name', 'created_at', 'rating', 'content', 
-                    'host_review_count', 'renter_name'
+                'data' => [
+                    '*' => [
+                        'id', 'host_name', 'created_at', 'rating', 'content', 
+                        'host_review_count', 'renter_name'
+                    ]
                 ]
-            ]
-        ]);
+            ]);
     }
 }

@@ -16,10 +16,21 @@ class VehiclesController extends Controller
         $this->vehicleService = $vehicleService;
     }
 
+    /**
+     *  Get a list of vehicles
+     */
     public function index(VehicleIndexRequest $request)
     {
         return VehicleIndexResource::collection(
             $this->vehicleService->index($request->all())
         );
+    }
+
+    /**
+     *  Show an individual vehicle
+     */
+    public function show($id)
+    {
+        return $this->vehicleService->show($id);
     }
 }

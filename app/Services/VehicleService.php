@@ -32,4 +32,12 @@ class VehicleService
             ->withCount('bookings')
             ->paginate();
     }
+
+    /**
+     *  Get information for an individual vehicle
+     */
+    public function show($id)
+    {
+        
+    }
 }
