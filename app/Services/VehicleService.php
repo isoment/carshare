@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Traits\VehicleTrait;
+use App\Models\Booking;
 use App\Models\Vehicle;
 use App\Models\VehicleImages;
 use Carbon\Carbon;
@@ -12,7 +13,7 @@ class VehicleService
     use VehicleTrait;
 
     /**
-     *  Return and index of vehicles and filter by parameters
+     *  Return an index of vehicles and filter by parameters
      *  in the request.
      */
     public function index($request)
@@ -48,7 +49,11 @@ class VehicleService
             'vehicle_images' => $this->vehicleImages($vehicle->id),
             'host' => $this->hostInfo($vehicle->user_id),
             'host_total_trips' => $this->totalTrips($vehicle->user_id),
-            'host_rating' => $this->calculateUserRating($vehicle->user_id)
+            'host_rating' => $this->calculateUserTotalRating($vehicle->user_id),
+            'vehicle_rating' => Booking::calculateVehicleRating($vehicle->id),
+            'vehicle_review_count' => $this->vehiclesReviewCount($vehicle->id),
+            'vehicle_trip_count' => $this->vehicleTripCount($vehicle->id),
+            'vehicle_reviews' => $this->vehicleReviews($vehicle->id)
         ]);
     }
 }

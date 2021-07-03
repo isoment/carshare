@@ -16,8 +16,8 @@ class CreateHostReviewsTable extends Migration
         Schema::create('host_reviews', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->unsignedBigInteger('user_id')->index();
-            $table->tinyInteger('rating');
-            $table->text('content');
+            $table->tinyInteger('rating')->nullable();
+            $table->text('content')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
