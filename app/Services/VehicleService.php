@@ -43,7 +43,7 @@ class VehicleService
      */
     public function show($id)
     {
-        $vehicle = Vehicle::findOrFail($id);
+        $vehicle = Vehicle::with('vehicleModel.vehicleMake')->findOrFail($id);
 
         return collect($vehicle)->merge([
             'vehicle_images' => $this->vehicleImages($vehicle->id),

@@ -1,12 +1,8 @@
 <template>
     <div>
         <vue-slick-carousel class="vehicle-image-slider" v-bind="carouselSettings">
-            <div class="vehicle-image-wrap">
-                <img src="/storage/vehicle-seeder-img/honda-3219ur1hfo9eq.jpg" 
-                     alt="" class="vehicle-image-img">
-            </div>
-            <div class="vehicle-image-wrap">
-                <img src="/storage/vehicle-seeder-img/mercedes-32732798.webp" 
+            <div class="vehicle-image-wrap" v-for="image in vehicleImages" :key="image.id">
+                <img :src="imageString(image)" 
                      alt="" class="vehicle-image-img">
             </div>
         </vue-slick-carousel>
@@ -23,6 +19,10 @@
             VueSlickCarousel
         },
 
+        props: {
+            vehicleImages: Array
+        },
+
         data() {
             return {
                 carouselSettings: {
@@ -35,6 +35,12 @@
                     "slidesToShow": 1,
                     "slidesToScroll": 1
                 }
+            }
+        },
+
+        methods: {
+            imageString($image) {
+                return '/' + $image;
             }
         }
     }

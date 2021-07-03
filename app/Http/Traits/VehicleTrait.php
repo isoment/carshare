@@ -74,7 +74,7 @@ trait VehicleTrait
             ->get()
             ->pluck('host_review_key');
 
-        return HostReview::whereIn('id', $bookings)->whereNotNull('rating')->get();
+        return HostReview::whereIn('id', $bookings)->whereNotNull('rating')->paginate(5);
     }
 
     /**
@@ -84,7 +84,11 @@ trait VehicleTrait
      */
     public function vehiclesReviewCount(int $vehicleId)
     {
-        return $this->vehicleReviews($vehicleId)->count();
+        $bookings = Booking::where('vehicle_id', $vehicleId)
+            ->get()
+            ->pluck('host_review_key');
+
+        return HostReview::whereIn('id', $bookings)->whereNotNull('rating')->count();
     }
 
     /**

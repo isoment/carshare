@@ -119,7 +119,7 @@ class VehicleFactory extends Factory
             'toyota-dh3iry3.webp'
         ];
 
-        $volkswagen =[
+        $volkswagen = [
             'volkswagen-398rhyq8dj.jpg',  
             'volkswagen-398yhwe98ufe.jpg',  
             'volkswagen-3hyr9eqhfea.jpg',  

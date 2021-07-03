@@ -11,7 +11,7 @@
 
         <div v-else>
             <!-- Vehicle Images -->
-            <vehicle-images-slider></vehicle-images-slider>
+            <vehicle-images-slider :vehicle-images="vehicleData.vehicle_images"></vehicle-images-slider>
 
             <div class="my-10 max-w-5xl mx-auto px-2 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-3">
@@ -24,7 +24,7 @@
                                 The car
                             </div>
                             <div class="col-span-3 flex flex-col mx-2">
-                                <h2 class="font-bold text-4xl font-boldnosans">Tesla Model S 2016</h2>
+                                <h2 class="font-bold text-4xl font-boldnosans">Tesla Model S {{vehicleData.year}}</h2>
                                 <div class="my-2">
                                     <span class="font-boldnosans font-bold text-xl">4.95</span>
                                     <span><i class="fas fa-star text-purple-500 text-md"></i></span>
