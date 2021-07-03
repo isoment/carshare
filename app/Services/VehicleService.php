@@ -44,10 +44,11 @@ class VehicleService
     {
         $vehicle = Vehicle::findOrFail($id);
 
-        return collect([
-            'vehicle_info' => $vehicle,
+        return collect($vehicle)->merge([
             'vehicle_images' => $this->vehicleImages($vehicle->id),
-            'host' => $this->hostInfo($vehicle->user_id)
+            'host' => $this->hostInfo($vehicle->user_id),
+            'host_total_trips' => $this->totalTrips($vehicle->user_id),
+            'host_rating' => $this->calculateUserRating($vehicle->user_id)
         ]);
     }
 }
