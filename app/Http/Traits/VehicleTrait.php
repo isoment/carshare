@@ -64,20 +64,6 @@ trait VehicleTrait
     }
 
     /**
-     *  Get the reviews for a vehicle
-     * 
-     *  @param int $vehicleId
-     */
-    public function vehicleReviews(int $vehicleId)
-    {
-        $bookings = Booking::where('vehicle_id', $vehicleId)
-            ->get()
-            ->pluck('host_review_key');
-
-        return HostReview::whereIn('id', $bookings)->whereNotNull('rating')->paginate(5);
-    }
-
-    /**
      *  Count the total ratings for a vehicle
      * 
      *  @param int $vehicleId

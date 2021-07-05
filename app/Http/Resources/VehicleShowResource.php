@@ -31,7 +31,6 @@ class VehicleShowResource extends JsonResource
             'vehicle_rating' => $this['vehicle_rating'],
             'vehicle_review_count' => $this['vehicle_review_count'],
             'vehicle_trip_count' => $this['vehicle_trip_count'],
-            'vehicle_reviews' => $this['vehicle_reviews']
         ];
     }
 }

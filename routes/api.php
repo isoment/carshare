@@ -36,3 +36,7 @@ Route::get('vehicles-index', [App\Http\Controllers\Api\VehiclesController::class
 // Vehicle show
 Route::get('vehicle-show/{id}', [App\Http\Controllers\Api\VehiclesController::class, 'show'])
     ->name('vehicle.show');
+
+// Get reviews for a vehicle
+Route::get('reviews-vehicle/{id}', [App\Http\Controllers\Api\ReviewController::class, 'vehicleReviews'])
+    ->name('reviews.vehicle');

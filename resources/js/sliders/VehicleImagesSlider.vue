@@ -39,8 +39,8 @@
         },
 
         methods: {
-            imageString($image) {
-                return '/' + $image;
+            imageString(image) {
+                return '/' + image;
             }
         }
     }

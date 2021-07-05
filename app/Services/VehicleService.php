@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Http\Traits\VehicleTrait;
 use App\Models\Booking;
 use App\Models\Vehicle;
-use App\Models\VehicleImages;
 use Carbon\Carbon;
 
 class VehicleService
@@ -53,7 +52,6 @@ class VehicleService
             'vehicle_rating' => Booking::calculateVehicleRating($vehicle->id),
             'vehicle_review_count' => $this->vehiclesReviewCount($vehicle->id),
             'vehicle_trip_count' => $this->vehicleTripCount($vehicle->id),
-            'vehicle_reviews' => $this->vehicleReviews($vehicle->id)
         ]);
     }
 }

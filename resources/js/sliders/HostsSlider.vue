@@ -129,8 +129,8 @@
         },
 
         methods: {
-            dateConvert($date) {
-                return moment($date).format('MMMM Do YYYY');
+            dateConvert(date) {
+                return moment(date).format('MMMM Do YYYY');
             },
 
             truncateString(string, length) {
