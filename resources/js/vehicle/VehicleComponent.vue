@@ -113,7 +113,7 @@
                                 <!-- Vehicle Reviews -->
                                 <div class="mt-6">
                                     <h5 class="font-bold uppercase font-boldnosans text-gray-500 text-sm">Reviews</h5>
-                                    <!-- <review-list :reviews="vehicleData.vehicle_reviews"></review-list> -->
+                                    <review-list></review-list>
                                 </div>
                             </div>                        
                         </div>

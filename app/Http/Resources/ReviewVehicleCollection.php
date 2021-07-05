@@ -14,8 +14,6 @@ class ReviewVehicleCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        // return parent::toArray($request);
-
         return [
             'data' => ReviewVehicleResource::collection($this->collection)
         ];

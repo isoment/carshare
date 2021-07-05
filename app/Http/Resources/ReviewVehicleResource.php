@@ -17,10 +17,10 @@ class ReviewVehicleResource extends JsonResource
         // return parent::toArray($request);
 
         return [
-            'id' => $this->id,
             'rating' => $this->rating,
             'content' => $this->content,
             'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
             'user' => $this->booking->user
         ];
     }
