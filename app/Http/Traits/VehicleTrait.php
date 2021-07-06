@@ -28,7 +28,7 @@ trait VehicleTrait
      */
     public function hostInfo(int $userId)
     {
-        return User::find($userId);
+        return User::with('profile')->find($userId);
     }
 
     /**

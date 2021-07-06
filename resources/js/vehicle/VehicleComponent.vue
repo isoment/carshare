@@ -60,9 +60,9 @@
                             <div class="col-span-3 mx-2">
                                 <div class="flex items-center">
                                     <div class="relative">
-                                        <img src="/img/avatar-female.jpeg" alt="avatar" 
+                                        <img :src="avatar(vehicleData.host_avatar)" alt="avatar" 
                                             class="h-20 w-20 rounded-full">
-                                        <div class="absolute bg-white shadow-lg rounded-full border border-gray-50 px-4
+                                        <div class="absolute bg-white shadow-lg rounded-full border border-gray-200 px-4
                                                     flex top-16">
                                             <span class="mr-1 font-semibold">
                                                 {{vehicleData.host_rating}}
@@ -141,6 +141,7 @@
 </template>
 
 <script>
+    import avatarHelper from './../shared/mixins/avatarHelper';
     import VehicleImagesSlider from './../sliders/VehicleImagesSlider';
     import ReviewList from './../review/ReviewList';
     import moment from 'moment';
@@ -150,6 +151,8 @@
             VehicleImagesSlider,
             ReviewList
         },
+
+        mixins: [avatarHelper],
 
         data() {
             return {

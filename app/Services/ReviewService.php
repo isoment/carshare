@@ -18,7 +18,7 @@ class ReviewService
             ->get()
             ->pluck('host_review_key');
 
-        return HostReview::with('booking.user:id,name')
+        return HostReview::with('booking.user.profile')
             ->whereIn('id', $bookings)->whereNotNull('rating')->paginate(5);
     }
 }

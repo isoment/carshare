@@ -14,6 +14,8 @@ class VehicleShowResource extends JsonResource
      */
     public function toArray($request)
     {
+        // return parent::toArray($request);
+
         return [
             'vehicle_model' => $this['vehicle_model']['model'],
             'vehicle_make' => $this['vehicle_model']['vehicle_make']['make'],
@@ -26,6 +28,7 @@ class VehicleShowResource extends JsonResource
             'host_name' => $this['host']['name'],
             'top_host' => $this['host']['top_host'],
             'member_since' => $this['host']['created_at'],
+            'host_avatar' => $this['host']['profile']['image'],
             'host_total_trips' => $this['host_total_trips'],
             'host_rating' => $this['host_rating'],
             'vehicle_rating' => $this['vehicle_rating'],

@@ -58,7 +58,7 @@ class UserFactory extends Factory
             Profile::create([
                 'user_id' => $user->id,
                 'phone' => '555-555-5555',
-                'image' => '/storage/avatar-seeder-img' . $this->imagePicker()
+                'image' => '/storage/avatar-seeder-img/' . $this->imagePicker()
             ]);
         });
     }
