@@ -197,7 +197,7 @@ class VehicleFactory extends Factory
             for ($i = 0; $i < 5; $i++) {
                 VehicleImages::create([
                     'vehicle_id' => $vehicle->id,
-                    'image' => 'storage/vehicle-seeder-img/' . 
+                    'image' => '/storage/vehicle-seeder-img/' . 
                         $this->imagePicker($vehicle->vehicleModel->vehicleMake->make)
                 ]);
             }

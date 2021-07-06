@@ -2,7 +2,7 @@
     <div>
         <vue-slick-carousel class="vehicle-image-slider" v-bind="carouselSettings">
             <div class="vehicle-image-wrap" v-for="image in vehicleImages" :key="image.id">
-                <img :src="imageString(image)" 
+                <img :src="image" 
                      alt="" class="vehicle-image-img">
             </div>
         </vue-slick-carousel>
@@ -35,12 +35,6 @@
                     "slidesToShow": 1,
                     "slidesToScroll": 1
                 }
-            }
-        },
-
-        methods: {
-            imageString(image) {
-                return '/' + image;
             }
         }
     }

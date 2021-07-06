@@ -102,11 +102,11 @@
                                 <!-- Total rating and review count -->
                                 <div>
                                     <div class="flex items-center">
-                                        <span class="font-boldnosans font-bold text-3xl mr-1">4.87</span>
+                                        <span class="font-boldnosans font-bold text-3xl mr-1">{{vehicleData.vehicle_rating}}</span>
                                         <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
                                     </div>
                                     <div class="text-sm text-gray-600">
-                                        (21 ratings)
+                                        ({{vehicleData.vehicle_review_count}} ratings)
                                     </div>
                                 </div>
 
