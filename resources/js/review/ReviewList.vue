@@ -8,11 +8,9 @@
             </div>
             <div>
                 <div class="flex">
-                    <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
-                    <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
-                    <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
-                    <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
-                    <span><i class="fas fa-star text-purple-500 text-lg"></i></span>
+                    <span v-for="rating in review.rating" :key="rating.id">
+                        <i class="fas fa-star text-purple-500 text-lg"></i>
+                    </span>
                 </div>
                 <div class="text-xs my-1">
                     <span>{{review.renter_name}}</span>
@@ -23,6 +21,17 @@
                 </div>
             </div>
         </div>
+
+        <div class="text-center mt-6" v-if="stillMoreResults">
+            <button class="bg-purple-500 text-white hover:bg-purple-400 px-4 py-2 font-bold
+                            transition-all duration-200"
+                    @click="loadMoreReviews">See more</button>
+        </div>
+
+        <div class="text-center mt-6 font-bold text-gray-500 text-sm" v-else>
+            No more reviews
+        </div>
+
     </div>
 </template>
 
@@ -35,7 +44,17 @@
 
         data() {
             return {
-                reviews: null
+                reviews: [],
+                page: 1,
+                lastPage: 1,
+            }
+        },
+
+        computed: {
+            stillMoreResults() {
+                if (this.page !== this.lastPage) {
+                    return true;
+                }
             }
         },
 
@@ -45,8 +64,22 @@
             },
 
             async fetchReviews() {
-                this.reviews = (await axios.get(`/api/reviews-vehicle/${this.$route.params.id}`)).data.data;
-            }
+                let reviews = (await axios.get(`/api/reviews-vehicle/${this.$route.params.id}?page=${this.page}`));
+
+                this.reviews.push(...reviews.data.data);
+
+                this.lastPage = reviews.data.meta.last_page;
+            },
+
+            loadMoreReviews() {
+                if (this.page >= this.lastPage) { 
+                    return;
+                };
+
+                this.page++;
+
+                this.fetchReviews();
+            },
         },
 
         created() {
