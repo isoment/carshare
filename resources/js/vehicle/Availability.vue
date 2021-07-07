@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="w-3/4 md:w-full">
         <div class="flex flex-col">
             <label for="start" class="font-bold text-xs tracking-wider">Trip start</label>
             <input type="text" class="border border-gray-300 mt-1 py-1 px-2 focus:outline-none">

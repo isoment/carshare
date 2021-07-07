@@ -14,17 +14,18 @@
             <vehicle-images-slider :vehicle-images="vehicleData.vehicle_images"></vehicle-images-slider>
 
             <div class="my-10 max-w-5xl mx-auto px-2 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-3">
+                <div class="grid grid-cols-1 md:grid-cols-3">
 
                     <!-- Left Pane -->
                     <div class="col-span-2 mr-4">
 
                         <div class="grid grid-cols-4">
-                            <div class="mx-3 text-right mt-2 font-boldnosans font-bold tracking-widest text-sm">
+                            <div class="mx-3 text-right mt-2 font-boldnosans font-bold tracking-widest text-sm
+                                        hidden sm:block">
                                 The car
                             </div>
                             <div class="col-span-3 flex flex-col mx-2">
-                                <h2 class="font-bold text-4xl font-boldnosans">
+                                <h2 class="font-bold text-2xl md:text-4xl font-boldnosans">
                                     {{vehicleData.vehicle_make}} {{vehicleData.vehicle_model}} {{vehicleData.year}}
                                 </h2>
                                 <div class="my-2">
@@ -37,7 +38,7 @@
                                         <div class="mr-1">
                                             <img src="/img/safety-seat.svg" alt="" class="h-7 w-7">
                                         </div>
-                                        <div>
+                                        <div class="text-sm sm:text-md">
                                             {{vehicleData.seats}} Seats
                                         </div>
                                     </div>
@@ -45,7 +46,7 @@
                                         <div class="mr-1">
                                             <img src="/img/car-door.svg" alt="" class="h-7 w-7">
                                         </div>
-                                        <div class="ml-1">
+                                        <div class="ml-1 text-sm sm:text-md">
                                             {{vehicleData.doors}} Doors
                                         </div>
                                     </div>
@@ -53,11 +54,12 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-4 mt-12">
-                            <div class="mx-3 text-right mt-2 font-boldnosans font-bold tracking-widest text-sm">
+                        <div class="grid grid-cols-1 sm:grid-cols-4 mt-12">
+                            <div class="mx-2 sm:mx-3 mb-3 sm:mb-0 text-left sm:text-right mt-2 font-boldnosans font-bold 
+                                        tracking-widest text-sm">
                                 Hosted by
                             </div>
-                            <div class="col-span-3 mx-2">
+                            <div class="sm:col-span-3 mx-2">
                                 <div class="flex items-center">
                                     <div class="relative">
                                         <img :src="avatar(vehicleData.host_avatar)" alt="avatar" 
@@ -83,22 +85,24 @@
                             </div>                        
                         </div>
 
-                        <div class="grid grid-cols-4 mt-12">
-                            <div class="mx-3 text-right mt-2 font-boldnosans font-bold tracking-widest text-sm">
+                        <div class="grid grid-cols-1 sm:grid-cols-4 mt-12">
+                            <div class="mx-2 sm:mx-3 mb-3 sm:mb-0 text-left sm:text-right mt-2 font-boldnosans font-bold tracking-widest
+                                        text-sm">
                                 Description
                             </div>
-                            <div class="col-span-3 mx-2">
+                            <div class="sm:col-span-3 mx-2">
                                 <p>
                                     {{vehicleData.description}}
                                 </p>
                             </div>                        
                         </div>
 
-                        <div class="grid grid-cols-4 mt-12">
-                            <div class="mx-3 text-right mt-2 font-boldnosans font-bold tracking-widest text-sm">
+                        <div class="grid grid-cols-1 sm:grid-cols-4 mt-12">
+                            <div class="mx-2 sm:mx-3 mb-3 sm:mb-0 text-left sm:text-right mt-2 font-boldnosans font-bold 
+                                        tracking-widest text-sm">
                                 Ratings and reviews
                             </div>
-                            <div class="col-span-3 mx-2">
+                            <div class="sm:col-span-3 mx-2">
                                 <!-- Total rating and review count -->
                                 <div>
                                     <div class="flex items-center">
@@ -121,7 +125,7 @@
                     </div>
 
                     <!-- Right Pane -->
-                    <div class="font-boldnosans">
+                    <div class="font-boldnosans row-start-1 md:row-auto mb-10 md:mb-0">
                         <div class="mb-1">
                             <span class="font-bold text-xl font-boldnosans">${{vehicleData.price}}</span>
                             <span>/</span>
@@ -131,7 +135,7 @@
                             $547 est total
                         </div>
                         <hr>
-                        <div class="mt-6">
+                        <div class="mt-6 flex justify-center">
                             <availability></availability>
                         </div>
                     </div>
