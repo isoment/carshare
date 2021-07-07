@@ -113,7 +113,7 @@
                                 <!-- Vehicle Reviews -->
                                 <div class="mt-6">
                                     <h5 class="font-bold uppercase font-boldnosans text-gray-500 text-sm">Reviews</h5>
-                                    <review-list></review-list>
+                                    <vehicle-review-list></vehicle-review-list>
                                 </div>
                             </div>                        
                         </div>
@@ -131,8 +131,10 @@
                             $547 est total
                         </div>
                         <hr>
+                        <div class="mt-6">
+                            <availability></availability>
+                        </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -143,13 +145,15 @@
 <script>
     import avatarHelper from './../shared/mixins/avatarHelper';
     import VehicleImagesSlider from './../sliders/VehicleImagesSlider';
-    import ReviewList from './../review/ReviewList';
+    import VehicleReviewList from './../review/VehicleReviewList';
+    import Availability from './Availability';
     import moment from 'moment';
 
     export default {   
         components: {
             VehicleImagesSlider,
-            ReviewList
+            VehicleReviewList,
+            Availability
         },
 
         mixins: [avatarHelper],
