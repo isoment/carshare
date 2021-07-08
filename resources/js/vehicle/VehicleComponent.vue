@@ -25,11 +25,11 @@
                                 The car
                             </div>
                             <div class="col-span-3 flex flex-col mx-2">
-                                <h2 class="font-bold text-2xl md:text-4xl font-boldnosans">
+                                <h2 class="font-bold text-xl md:text-4xl font-boldnosans">
                                     {{vehicleData.vehicle_make}} {{vehicleData.vehicle_model}} {{vehicleData.year}}
                                 </h2>
                                 <div class="my-2">
-                                    <span class="font-boldnosans font-bold text-xl">{{vehicleData.vehicle_rating}}</span>
+                                    <span class="font-boldnosans font-bold text-lg sm:text-xl">{{vehicleData.vehicle_rating}}</span>
                                     <span><i class="fas fa-star text-purple-500 text-md"></i></span>
                                     <span class="font-light text-sm">({{vehicleData.vehicle_trip_count}} trips)</span>
                                 </div>
@@ -125,7 +125,7 @@
                     </div>
 
                     <!-- Right Pane -->
-                    <div class="font-boldnosans row-start-1 md:row-auto mb-10 md:mb-0">
+                    <div class="row-start-1 md:row-auto mb-10 md:mb-0">
                         <div class="mb-1">
                             <span class="font-bold text-xl font-boldnosans">${{vehicleData.price}}</span>
                             <span>/</span>
