@@ -66,4 +66,20 @@ class Vehicle extends Model
         ];
     }
 
+    /**
+     *  Determine if the vehicle is available during the specified dates
+     * 
+     *  @param string $from
+     *  @param string $to
+     * 
+     *  @return boolean
+     */
+    public function isAvailable(string $from, string $to) : bool
+    {
+        $fromFromatted = Carbon::parse($from)->toDateString();
+        $toFormatted = Carbon::parse($to)->toDateString();
+
+        return $this->bookings()->betweenDates($fromFromatted, $toFormatted)
+            ->count() === 0;
+    }
 }

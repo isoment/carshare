@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class Booking extends Model
@@ -47,7 +48,7 @@ class Booking extends Model
     /**
      *  Calculate vehicle rating
      */
-    public function scopeCalculateVehicleRating($query, $vehicleId)
+    public function scopeCalculateVehicleRating(Builder $query, $vehicleId)
     {
         $bookings = $query->where('vehicle_id', $vehicleId)->get();
 
@@ -65,7 +66,7 @@ class Booking extends Model
      *  that we specify, this is kind of hard to visualize but we can do
      *  it using two where queries.
      */
-    public function scopeBetweenDates($query, $from, $to)
+    public function scopeBetweenDates(Builder $query, $from, $to)
     {
         return $query->where('to', '>=', $from)
             ->where('from', '<=', $to);

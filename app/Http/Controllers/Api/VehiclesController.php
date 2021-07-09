@@ -22,6 +22,8 @@ class VehiclesController extends Controller
      */
     public function index(VehicleIndexRequest $request)
     {
+        dd($request);
+
         return VehicleIndexResource::collection(
             $this->vehicleService->index($request->all())
         );
