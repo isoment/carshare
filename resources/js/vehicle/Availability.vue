@@ -22,7 +22,17 @@
         </date-picker>
 
         <div v-if="notAvailable" class="mt-4 -mb-2">
-            <h5 class="text-red-500 text-xs font-bold">Vehicle unavailable on these dates</h5>
+            <h5 class="text-red-400 text-xs flex items-center">
+                <span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span> 
+                <span class="ml-1">Vehicle unavailable on these dates!</span>
+            </h5>
+        </div>
+
+        <div v-if="available" class="mt-4 -mb-2">
+            <h5 class="text-green-400 text-xs flex items-center">
+                <span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span> 
+                <span class="ml-1">Vehicle available on these dates!</span>
+            </h5>
         </div>
 
         <div class="mt-6">
@@ -71,6 +81,10 @@
         computed: {
             notAvailable() {
                 return this.status === 404;
+            },
+
+            available() {
+                return this.status === 200;
             }
         },
 
@@ -111,6 +125,8 @@
             // Set the date range
             this.range.start = dateSetterStart(this.$store.state.searchDates.start);
             this.range.end = dateSetterEnd(this.$store.state.searchDates.end);
+
+            this.checkAvailability();
         }
     }
 </script>

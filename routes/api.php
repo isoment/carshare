@@ -41,6 +41,10 @@ Route::get('vehicle-show/{id}', [App\Http\Controllers\Api\VehiclesController::cl
 Route::get('vehicle-availability/{id}', [App\Http\Controllers\Api\AvailabilityController::class, 'check'])
     ->name('vehicle.availability.check');
 
+// Vehicle price
+Route::get('vehicle-price/{id}', [App\Http\Controllers\Api\AvailabilityController::class, 'price'])
+    ->name('vehicle.price');
+
 // Get reviews for a vehicle
 Route::get('reviews-vehicle/{id}', [App\Http\Controllers\Api\ReviewController::class, 'vehicleReviews'])
     ->name('reviews.vehicle');

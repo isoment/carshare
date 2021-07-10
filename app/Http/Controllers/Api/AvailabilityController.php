@@ -23,4 +23,19 @@ class AvailabilityController extends Controller
             ? response()->json([])
             : response()->json([], 404);
     }
+
+    /**
+     *  Calculate price of the rental
+     * 
+     *  @param int $vehicleId the vehicle id
+     *  @param Illuminate\Http\Request $request
+     */
+    public function price($vehicleId, AvailabilityCheckRequest $request)
+    {
+        $vehicle = Vehicle::findOrFail($vehicleId);
+
+        return response()->json([
+            'data' => $vehicle->calculatePrice($request['from'], $request['to'])
+        ]);
+    }
 }

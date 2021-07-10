@@ -82,4 +82,20 @@ class Vehicle extends Model
         return $this->bookings()->betweenDates($fromFromatted, $toFormatted)
             ->count() === 0;
     }
+
+    /**
+     *  Calculate the price of the vehicle
+     */
+    public function calculatePrice(string $from, string $to)
+    {
+        $days = Carbon::parse($from)->diffInDays(Carbon::parse($to)) + 1;
+
+        $totalPrice = $days * $this->price_day;
+
+        return [
+            'days' => $days,
+            'price_day' => $this->price_day,
+            'total' => $totalPrice
+        ];
+    }
 }
