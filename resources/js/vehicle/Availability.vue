@@ -106,6 +106,8 @@
                     this.status = (await axios.
                         get(`/api/vehicle-availability/${this.$route.params.id}?from=${this.$store.state.searchDates.start}&to=${this.$store.state.searchDates.end}`))
                         .status;
+
+                    this.$emit('renderPrice');
                 } catch (error) {
                     if (error.response && error.response.status && error.response.status === 422) {
                         this.$store.dispatch('addNotification', {
@@ -117,6 +119,8 @@
                     }
 
                     this.status = error.response.status;
+
+                    this.$emit('renderPrice');
                 }
             }
         },

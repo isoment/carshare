@@ -126,17 +126,9 @@
 
                     <!-- Right Pane -->
                     <div class="row-start-1 md:row-auto mb-10 md:mb-0">
-                        <div class="mb-1">
-                            <span class="font-bold text-xl font-boldnosans">${{vehicleData.price}}</span>
-                            <span>/</span>
-                            <span>day</span>
-                        </div>
-                        <div class="text-xs text-gray-600 underline mb-3">
-                            $547 est total
-                        </div>
-                        <hr>
+                        <pricing :pricing="pricing"></pricing>
                         <div class="mt-6 flex justify-center">
-                            <availability></availability>
+                            <availability @renderPrice="fetchPricing()"></availability>
                         </div>
                     </div>
                 </div>
@@ -151,21 +143,32 @@
     import VehicleImagesSlider from './../sliders/VehicleImagesSlider';
     import VehicleReviewList from './../review/VehicleReviewList';
     import Availability from './Availability';
+    import Pricing from './Pricing';
     import moment from 'moment';
+    import { mapState } from 'vuex'
 
     export default {   
         components: {
             VehicleImagesSlider,
             VehicleReviewList,
-            Availability
+            Availability,
+            Pricing
         },
 
         mixins: [avatarHelper],
 
+        computed: {
+            ...mapState({
+                start: state => state.searchDates.start,
+                end: state => state.searchDates.end
+            })
+        },
+
         data() {
             return {
                 loading: false,
-                vehicleData: null
+                vehicleData: null,
+                pricing: null,
             }
         },
 
@@ -184,11 +187,17 @@
                 this.vehicleData = (await axios.get(`/api/vehicle-show/${this.$route.params.id}`)).data.data
 
                 this.loading = false;
-            }
+            },
+
+            async fetchPricing() {
+                this.pricing = (await axios.get(`/api/vehicle-price/${this.$route.params.id}?from=${this.start}&to=${this.end}`))
+                .data.data
+            },
         },
 
         created() {
             this.fetchVehicle();
+            this.fetchPricing();
         }
     }
 </script>
