@@ -36,8 +36,15 @@
         </div>
 
         <div class="mt-6">
-            <button class="bg-purple-500 text-white font-bold py-2 w-full text-sm 
-                            tracking-widest hover:bg-purple-400 transition-all duration-200">Continue</button>
+            <button class="text-white font-bold py-2 w-full text-sm 
+                            tracking-widest transition-all duration-200"
+                    :disabled="notAvailable"
+                    :class="{ 
+                        'bg-gray-400': notAvailable || validationError, 
+                        'bg-purple-500 hover:bg-purple-400': available 
+                    }">
+                Book it!
+            </button>
         </div>
 
     </div>
@@ -85,6 +92,10 @@
 
             available() {
                 return this.status === 200;
+            },
+
+            validationError() {
+                return this.status === 422;
             }
         },
 

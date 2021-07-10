@@ -39,9 +39,14 @@
                                 Share my car
                             </a>
 
-                            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-bold">
+                            <!-- <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-bold">
                                 Find a car
-                            </a>
+                            </a> -->
+
+                            <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-bold"
+                                         :to="{ name: 'main-vehicle' }"> 
+                                Find a car
+                            </router-link>
 
                             <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-bold"
                                          :to="{ name: 'login' }"

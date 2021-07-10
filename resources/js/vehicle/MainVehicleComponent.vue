@@ -195,21 +195,15 @@
                 }
             },
 
-            updateDates() {
-                // Call the action to set local storage.
-                this.$store.dispatch('setSearchDates', {
-                    start: dateTypeCheck(this.range.start),
-                    end: dateTypeCheck(this.range.end)
-                });
-
+            // Redirect to same page to update query string
+            // Don't log the error router throws when navigating to
+            // same page if the query string isn't updated.
+            refeshPage() {
                 // Get and parse dates from local storage.
                 let dates = localStorage.getItem('searchDates');
                 let start = JSON.parse(dates).start;
                 let end = JSON.parse(dates).end;
 
-                // Redirect to same page to update query string
-                // Don't log the error router throws when navigating to
-                // same page if the query string isn't updated.
                 this.$router.push({
                     name: 'main-vehicle',
                     query: {
@@ -224,6 +218,16 @@
                         console.error(error);
                     }
                 });
+            },
+
+            updateDates() {
+                // Call the action to set local storage.
+                this.$store.dispatch('setSearchDates', {
+                    start: dateTypeCheck(this.range.start),
+                    end: dateTypeCheck(this.range.end)
+                });
+
+                this.refeshPage();
 
                 // Clear the vehicles array.
                 this.vehicles = [];
@@ -301,6 +305,8 @@
             // If there is no query string.
             this.range.start = dateSetterStart(this.$store.state.searchDates.start);
             this.range.end = dateSetterEnd(this.$store.state.searchDates.end);
+
+            this.refeshPage();
 
             // We need to get the min and max vehicle prices from the api.
             let prices = await axios.get('/api/vehicles/price-range');
