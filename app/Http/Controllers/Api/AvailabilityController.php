@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AvailabilityCheckRequest;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 
@@ -14,16 +15,11 @@ class AvailabilityController extends Controller
      *  @param int $vehicleId the vehicle id
      *  @param Illuminate\Http\Request $request
      */
-    public function check($vehicleId, Request $request)
+    public function check($vehicleId, AvailabilityCheckRequest $request)
     {
-        $data = $request->validate([
-            'from' => ['required', 'date', 'after_or_equal:yesterday'],
-            'to' => ['required', 'date', 'after_or_equal:from'],
-        ]);
-
         $vehicle = Vehicle::findOrFail($vehicleId);
 
-        return $vehicle->isAvailable($data['from'], $data['to'])
+        return $vehicle->isAvailable($request['from'], $request['to'])
             ? response()->json([])
             : response()->json([], 404);
     }

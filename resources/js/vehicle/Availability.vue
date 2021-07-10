@@ -21,10 +21,15 @@
             </template>
         </date-picker>
 
+        <div v-if="notAvailable" class="mt-4 -mb-2">
+            <h5 class="text-red-500 text-xs font-bold">Vehicle unavailable on these dates</h5>
+        </div>
+
         <div class="mt-6">
             <button class="bg-purple-500 text-white font-bold py-2 w-full text-sm 
                             tracking-widest hover:bg-purple-400 transition-all duration-200">Continue</button>
         </div>
+
     </div>
 </template>
 
@@ -32,12 +37,15 @@
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
     import { dateTypeCheck, dateSetterStart, dateSetterEnd } from './../shared/utils/dateHelpers';
+    import validationErrors from './../shared/mixins/validationErrors';
 
     export default {
         components: {
             Calendar,
             DatePicker
         },
+
+        mixins: [validationErrors],
 
         watch: {
             // Set a watcher to trigger the changedDate method when 
@@ -54,8 +62,15 @@
             return {
                 range: {
                     start: null,
-                    end: null
+                    end: null,
                 },
+                status: null,
+            }
+        },
+
+        computed: {
+            notAvailable() {
+                return this.status === 404;
             }
         },
 
@@ -66,6 +81,29 @@
                     start: dateTypeCheck(this.range.start),
                     end: dateTypeCheck(this.range.end)
                 });
+
+                this.checkAvailability();
+            },
+
+            async checkAvailability() {
+                this.validationErrors = null;
+
+                try {
+                    this.status = (await axios.
+                        get(`/api/vehicle-availability/${this.$route.params.id}?from=${this.$store.state.searchDates.start}&to=${this.$store.state.searchDates.end}`))
+                        .status;
+                } catch (error) {
+                    if (error.response && error.response.status && error.response.status === 422) {
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: 'The given dates are invalid!'
+                        });
+
+                        this.errors = error.response.data.errors;
+                    }
+
+                    this.status = error.response.status;
+                }
             }
         },
 
