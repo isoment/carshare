@@ -43,7 +43,7 @@
                         'bg-gray-400': notAvailable || validationError, 
                         'bg-purple-500 hover:bg-purple-400': available 
                     }">
-                Book it!
+                Add to cart
             </button>
         </div>
 

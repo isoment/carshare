@@ -4,6 +4,7 @@ export default {
     state: {
         isLoggedIn: false,
         user: {},
+        userAvatar: null,
         notifications: [],
         searchDates: {
             start: null,
@@ -54,6 +55,11 @@ export default {
         // Set the price range
         setPriceRange(state, payload) {
             state.priceRange = payload;
+        },
+
+        // Set user avatar
+        setUserAvatar(state, payload) {
+            state.userAvatar = payload;
         }
     },
 
@@ -78,6 +84,7 @@ export default {
                     const user = (await axios.get('/user')).data;
                     context.commit('setUser', user);
                     context.commit('setLoggedIn', true);
+                    context.dispatch('setUserAvatar', user.profile.image);
                 } catch (error) {
                     context.dispatch("logOut");
                 }
@@ -110,7 +117,12 @@ export default {
         // Set the price range and store in local storage.
         setPriceRange(context, payload) {
             context.commit('setPriceRange', payload);
-            // localStorage.setItem('priceRange', JSON.stringify(payload));
+        },
+
+        // Set the users avatar
+        setUserAvatar(context, payload) {
+            context.commit('setUserAvatar', payload);
+            localStorage.setItem('userAvatar', JSON.stringify(payload));
         }
     },
 }
