@@ -81,6 +81,7 @@
                     start: null,
                     end: null,
                 },
+                previousDates: null,
                 status: null,
             }
         },
@@ -121,6 +122,8 @@
                     this.$emit('renderPrice');
                 } catch (error) {
                     if (error.response && error.response.status && error.response.status === 422) {
+                        this.range = this.previousDates;
+
                         this.$store.dispatch('addNotification', {
                             type: 'error',
                             message: 'The given dates are invalid!'
@@ -140,6 +143,9 @@
             // Set the date range
             this.range.start = dateSetterStart(this.$store.state.searchDates.start);
             this.range.end = dateSetterEnd(this.$store.state.searchDates.end);
+
+            // Previous dates
+            this.previousDates = this.range;
 
             this.checkAvailability();
         }
