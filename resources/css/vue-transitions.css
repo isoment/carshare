@@ -34,8 +34,8 @@
 }
 
 .slide-fade-x-enter, .slide-fade-x-leave-to {
-    transform: translateX(10px);
-    opacity: 0;
+    transform: translateX(500px);
+    opacity: 100;
 }
 
 /* Vue.js bounce transition */

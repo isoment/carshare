@@ -1,0 +1,8 @@
+.mobile-nav {
+    z-index: 110;
+    box-shadow: 0 5px 3px 5px rgb(31, 41, 55);
+}
+
+.profile-dropdown {
+    z-index: 120;
+}
