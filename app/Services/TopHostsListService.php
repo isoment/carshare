@@ -16,7 +16,8 @@ class TopHostsListService
      */
     public function index()
     {
-        $collection = User::where('top_host', 1)
+        $collection = User::with('profile')
+            ->where('top_host', 1)
             ->join('host_reviews', 'users.id', '=', 'host_reviews.user_id')
             ->where('rating', '>=', 3)
             ->get(['users.*', 'host_reviews.id as review_id', 'host_reviews.rating', 'host_reviews.content']);
@@ -47,6 +48,7 @@ class TopHostsListService
         for ($i = 0; $i < $count; $i++) {
             $finalResult[$i]['id'] = $unique[$i]['id'];
             $finalResult[$i]['host_name'] = $unique[$i]['name'];
+            $finalResult[$i]['host_avatar'] = $unique[$i]['profile']['image'];
             $finalResult[$i]['created_at'] = $unique[$i]['created_at'];
             $finalResult[$i]['rating'] = $unique[$i]['rating'];
             $finalResult[$i]['content'] = $unique[$i]['content'];

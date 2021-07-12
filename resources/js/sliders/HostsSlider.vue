@@ -24,7 +24,7 @@
                             border-gray-100 duration-300 p-3">
                     <div class="flex">
                         <div>
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="profile" 
+                            <img :src="host.host_avatar" alt="profile" 
                                 class="rounded-full h-20 w-20">
                         </div>
                         <div class="flex flex-col ml-4">

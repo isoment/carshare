@@ -17,6 +17,7 @@ class TopHostsListResource extends JsonResource
         return [
             'id' => $this['id'],
             'host_name' => $this['host_name'],
+            'host_avatar' => $this['host_avatar'],
             'created_at' => $this['created_at'],
             'rating' => $this['rating'],
             'content' => $this['content'],
