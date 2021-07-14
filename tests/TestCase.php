@@ -23,7 +23,7 @@ abstract class TestCase extends BaseTestCase
         UserSeeder::run(20, 12, 4);
         TestingVehicleMakeModelSeeder::run();
         VehicleSeeder::run(1, 2);
-        BookingSeeder::run(1, 2);
+        BookingSeeder::run(5, 7);
         RenterReviewSeeder::run();
         HostReviewSeeder::run();
     }
