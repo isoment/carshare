@@ -52,6 +52,5 @@ class ReviewTest extends TestCase
                     'total'
                 ]
             ]);
-
     }
 }
