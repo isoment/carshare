@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Models\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -17,7 +18,7 @@ class VehicleTest extends TestCase
      *  The api route returns error 422 when the from and to query strings
      *  are absent.
      */
-    public function api_route_returns_422_when_from_and_to_are_absent()
+    public function api_route_returns_422_when_from_and_to_dates_are_absent()
     {
         $this->json('GET', '/api/vehicles-index')
             ->assertStatus(422);
@@ -96,6 +97,45 @@ class VehicleTest extends TestCase
                     'to',
                     'total'
                 ]
+            ]);
+    }
+
+    /**
+     *  @test
+     *  The vehicle show api route returns 200 repponse with correct JSON structure
+     */
+    public function the_vehicle_show_route_returns_the_correct_response_and_json_structure()
+    {
+        $this->createSmallDatabase();
+
+        $vehicle = Vehicle::inRandomOrder()->first();
+
+        $response = $this->json('GET', '/api/vehicle-show/' . $vehicle->id);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'vehicle_model',
+                    'vehicle_make',
+                    'year',
+                    'price',
+                    'description',
+                    'doors',
+                    'seats',
+                    'vehicle_images',
+                    'host_name',
+                    'top_host',
+                    'member_since',
+                    'host_avatar',
+                    'host_total_trips',
+                    'host_rating',
+                    'vehicle_rating',
+                    'vehicle_review_count',
+                    'vehicle_trip_count'
+                ]
+            ])->assertJsonFragment([
+                'id' => $vehicle->id
             ]);
     }
 }
