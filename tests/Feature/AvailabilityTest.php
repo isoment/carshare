@@ -70,7 +70,7 @@ class AvailabilityTest extends TestCase
     {
         $this->createSmallDatabase();
 
-        $vehicle = Vehicle::find(1);
+        $vehicle = Vehicle::inRandomOrder()->first();
 
         $booking = $vehicle->bookings->where('from', '>=', Carbon::now()->addDay())->first();
 
@@ -95,7 +95,7 @@ class AvailabilityTest extends TestCase
     {
         $this->createSmallDatabase();
 
-        $vehicle = Vehicle::find(1);
+        $vehicle = Vehicle::inRandomOrder()->first();
 
         // Delete all the bookings for the vehicle
         $vehicle->bookings()->delete();
@@ -170,7 +170,7 @@ class AvailabilityTest extends TestCase
     {
         $this->createSmallDatabase();
 
-        $vehicle = Vehicle::first();
+        $vehicle = Vehicle::inRandomOrder()->first();
 
         $randomDays = random_int(2, 7);
 

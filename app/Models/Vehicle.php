@@ -71,7 +71,6 @@ class Vehicle extends Model
      * 
      *  @param string $from
      *  @param string $to
-     * 
      *  @return boolean
      */
     public function isAvailable(string $from, string $to) : bool
@@ -85,6 +84,10 @@ class Vehicle extends Model
 
     /**
      *  Calculate the price of the vehicle
+     * 
+     *  @param string $from
+     *  @param string $to
+     *  @return array
      */
     public function calculatePrice(string $from, string $to)
     {
