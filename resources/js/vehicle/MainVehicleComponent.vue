@@ -300,12 +300,21 @@
                     end: this.$route.query.end
                 });
 
-            };
+            }
 
-            // If there is no query string.
-            this.range.start = dateSetterStart(this.$store.state.searchDates.start);
-            this.range.end = dateSetterEnd(this.$store.state.searchDates.end);
+            // Set the date range and dispatch an event to vuex to store them
+            let start = dateSetterStart(this.$store.state.searchDates.start);
+            let end = dateSetterEnd(this.$store.state.searchDates.end);
 
+            this.range.start = start;
+            this.range.end = end;
+
+            this.$store.dispatch('setSearchDates', {
+                start: start,
+                end: end
+            });
+
+            // We want to update the query strings each time the component is created
             this.refeshPage();
 
             // We need to get the min and max vehicle prices from the api.
