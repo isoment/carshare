@@ -36,15 +36,24 @@
         </div>
 
         <div class="mt-6">
-            <button class="text-white font-bold py-2 w-full text-sm 
-                            tracking-widest transition-all duration-200"
-                    :disabled="notAvailable"
-                    :class="{ 
-                        'bg-gray-400': notAvailable || validationError, 
-                        'bg-purple-500 hover:bg-purple-400': available 
-                    }">
-                Add to cart
-            </button>
+            <div v-if="isLoggedIn">
+                <button class="text-white font-bold py-2 w-full text-sm 
+                                tracking-widest transition-all duration-200"
+                        :disabled="notAvailable"
+                        :class="{ 
+                            'bg-gray-400': notAvailable || validationError, 
+                            'bg-purple-500 hover:bg-purple-400': available 
+                        }">
+                    Add to cart
+                </button>
+            </div>
+            <div v-else>
+                <button class="text-white font-bold py-2 w-full text-sm bg-purple-500 hover:bg-purple-400
+                                tracking-widest transition-all duration-200"
+                        @click="() => this.$router.push({ name: 'login' })">
+                    Login
+                </button>
+            </div>
         </div>
 
     </div>
@@ -55,6 +64,7 @@
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
     import { dateTypeCheck, dateSetterStart, dateSetterEnd } from './../shared/utils/dateHelpers';
     import validationErrors from './../shared/mixins/validationErrors';
+    import { mapState } from 'vuex';
 
     export default {
         components: {
@@ -87,6 +97,10 @@
         },
 
         computed: {
+            ...mapState({
+                isLoggedIn: state => state.isLoggedIn
+            }),
+
             notAvailable() {
                 return this.status === 404;
             },

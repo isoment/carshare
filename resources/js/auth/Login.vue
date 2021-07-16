@@ -96,13 +96,18 @@
 
                 try {
                     await axios.get('/sanctum/csrf-cookie');
+
                     await axios.post('/login', {
                         email: this.email,
                         password: this.password,
                     });
+
                     logIn();
+
                     this.$store.dispatch("loadUser");
-                    this.$router.push({ name: "main-page" });
+
+                    // Return to previous page in router history
+                    this.$router.go(-1);
                 } catch(error) {
                     this.validationErrors = error.response.data.errors;
                 }
