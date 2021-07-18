@@ -10,6 +10,8 @@
 @import 'main-page-component';
 @import 'main-vehicle-component';
 @import 'navigation-bar-main';
+@import 'customer-dashboard';
+
 @import 'vue-transitions';
 
 /* Router Link Active */

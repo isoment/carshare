@@ -7,6 +7,7 @@ import PasswordResetRequest from './auth/PasswordResetRequest';
 import PasswordResetEmail from './auth/PasswordResetEmail';
 import MainVehicleComponent from './vehicle/MainVehicleComponent';
 import VehicleComponent from './vehicle/VehicleComponent';
+import CustomerProfile from './dashboard/CustomerProfile';
 
 const routes = [
     {
@@ -14,6 +15,9 @@ const routes = [
         component: MainPage,
         name: "main-page"
     },
+
+    /** AUTHORIZATION **/
+    /////////////////////
     {
         path: "/auth/login",
         component: Login,
@@ -34,6 +38,9 @@ const routes = [
         component: PasswordResetEmail,
         name: "password-reset-email"
     },
+
+    /** VEHICLE **/
+    ///////////////
     {
         path: "/vehicles",
         component: MainVehicleComponent,
@@ -44,6 +51,17 @@ const routes = [
         component: VehicleComponent,
         name: "vehicle"
     },
+
+    /** DASHBOARD **/
+    /////////////////
+    {
+        path: "/dashboard/customer/profile",
+        component: CustomerProfile,
+        name: "customer-profile"
+    },
+
+    /** OTHER **/
+    /////////////
     {
         path: "*",
         component: Error404,

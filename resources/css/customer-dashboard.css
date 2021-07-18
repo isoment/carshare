@@ -1,0 +1,6 @@
+.customer-profile-banner {
+    background-image: url('/img/banner-background-1.png');
+    background-position: 50%;
+    background-position-y: center;
+    background-size: cover;
+}
