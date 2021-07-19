@@ -129,9 +129,12 @@
                 this.validationErrors = null;
 
                 try {
-                    this.status = (await axios.
-                        get(`/api/vehicle-availability/${this.$route.params.id}?from=${this.$store.state.searchDates.start}&to=${this.$store.state.searchDates.end}`))
-                        .status;
+                    this.status = (await axios.get(`/api/vehicle-availability/${this.$route.params.id}`, {
+                        params: {
+                            from: this.$store.state.searchDates.start,
+                            to: this.$store.state.searchDates.end
+                        }
+                    })).status
 
                     this.$emit('renderPrice');
                 } catch (error) {

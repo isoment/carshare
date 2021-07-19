@@ -190,8 +190,12 @@
             },
 
             async fetchPricing() {
-                this.pricing = (await axios.get(`/api/vehicle-price/${this.$route.params.id}?from=${this.start}&to=${this.end}`))
-                .data.data
+                this.pricing = (await axios.get(`/api/vehicle-price/${this.$route.params.id}`, {
+                    params: {
+                        from: this.start,
+                        to: this.end
+                    }
+                })).data.data
             },
         },
 

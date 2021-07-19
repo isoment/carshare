@@ -241,13 +241,15 @@
             async fetchVehicles() {
                 this.loading = true;
 
-                let vehicles = await axios.get(
-                    `/api/vehicles-index?page=${this.page}
-                    &from=${this.$store.state.searchDates.start}
-                    &to=${this.$store.state.searchDates.end}
-                    &min=${this.$store.state.priceRange.min}
-                    &max=${this.$store.state.priceRange.max}`
-                );
+                let vehicles = await axios.get('/api/vehicles-index', {
+                    params: {
+                        page: this.page,
+                        from: this.$store.state.searchDates.start,
+                        to: this.$store.state.searchDates.end,
+                        min: this.$store.state.priceRange.min,
+                        max: this.$store.state.priceRange.max
+                    }
+                });
 
                 // Each time this method is called we will push the 
                 // new page to the vehicles array.
