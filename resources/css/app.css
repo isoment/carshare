@@ -14,11 +14,6 @@
 
 @import 'vue-transitions';
 
-/* Router Link Active */
-.router-link-exact-active {
-    @apply bg-gray-700 text-white;
-}
-
 .slider-width {
     max-width: 76rem;
 }
