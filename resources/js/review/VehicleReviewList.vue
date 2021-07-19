@@ -31,7 +31,6 @@
         <div class="text-center mt-6 font-bold text-gray-500 text-sm" v-else>
             No more reviews
         </div>
-
     </div>
 </template>
 
