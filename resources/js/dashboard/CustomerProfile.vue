@@ -16,16 +16,15 @@
                                 <div v-if="!editProfileMode">
                                     <a href="#" 
                                        @click="editProfileMode = true"
-                                       class="bg-purple-500 hover:bg-purple-400 transition-all duration-200 
-                                              px-4 py-2 text-white font-bold border border-purple-500
-                                              hover:border-purple-400">
+                                       class="bg-white px-4 py-2 text-gray-800 border-2 border-gray-800 
+                                              font-bold mr-2">
                                         Edit profile
                                     </a>
                                 </div>
                                 <div v-else>
                                     <a href="#" 
                                        @click="editProfileMode = false"
-                                       class="bg-white px-4 py-2 text-gray-800 border border-gray-800 
+                                       class="bg-white px-6 py-2 text-gray-800 border-2 border-gray-800 
                                               font-bold mr-2">
                                         Cancel
                                     </a>

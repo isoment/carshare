@@ -8,7 +8,7 @@
             </div>
             <div class="mt-20">
                 <h3 class="text-3xl font-extrabold">{{user.name}}</h3>
-                <h5 class="text-sm mt-1">Joined {{dateFormat(user.created_at)}}</h5>
+                <h5 class="text-sm mt-1">Joined {{dateMonthYear(user.created_at)}}</h5>
             </div>
             <div class="mt-10">
                 <h6 class="uppercase font-bold font-boldnosans text-xs 
@@ -68,7 +68,7 @@
 
 <script>
     import NoReviews from "./../review/NoReviews.vue";
-    import moment from "moment";
+    import { dateFormatMonthYear } from './../shared/utils/dateFormats';
 
     export default {
         props: {
@@ -80,9 +80,9 @@
         },
 
         methods: {
-            dateFormat(date) {
-                return moment(date).format('MMMM YYYY');
-            },
+            dateMonthYear(date) {
+                return dateFormatMonthYear(date);
+            }
         }
     }
 </script>

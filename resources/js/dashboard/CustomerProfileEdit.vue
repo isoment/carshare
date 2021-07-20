@@ -7,19 +7,96 @@
                     class="rounded-full h-28 w-28 border-8 border-white">
             </div>
             <div class="mt-20">
-                <h3 class="text-3xl font-extrabold">{{user.name}}</h3>
+                <!-- Change photo -->
+                <div>
+                    <form>
+                        <div class="bg-purple-500 hover:bg-purple-400 transition-all duration-200 
+                                    px-4 py-2 text-white font-bold w-2/3 md:w-1/2 text-center cursor-pointer">
+                            Change profile photo
+                            <input type="file" accept="image/*" class="hidden">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-3">
+                            Add a face to your account. This makes it easier for hosts and renters to recognize
+                            each other.
+                        </p>
+                    </form>
+                </div>
+
+                <!-- Name -->
+                <div class="mt-6">
+                    <h3 class="text-3xl font-extrabold">{{user.name}}</h3>
+                </div>
+
+                <!-- Form -->
+                <div class="mt-6">
+                    <div class="flex flex-col">
+                        <label for="lives" 
+                               class="text-gray-400 text-xs font-bold uppercase 
+                                       tracking-wider mb-2">Lives</label>
+                        <input type="text" name="lives" placeholder="Chicago, IL / Reno, NV"
+                               class="px-2 py-1 border border-gray-300 text-sm">
+                        <h5 class="text-xs text-gray-500 my-2">Joined {{ dateMonthYear(user.created_at) }}</h5>
+                    </div>
+                    <h4 class="text-lg font-bold text-gray-700 mt-6 mb-2">Tell us more...</h4>
+                    <div class="flex flex-col mt-4 mb-3">
+                        <label for="languages" 
+                               class="text-gray-400 text-xs font-bold uppercase 
+                                       tracking-wider mb-2">Languages</label>
+                        <input type="text" name="languages"
+                               class="px-2 py-1 border border-gray-300 text-sm">
+                    </div>
+                    <div class="flex flex-col mb-3">
+                        <label for="work" 
+                               class="text-gray-400 text-xs font-bold uppercase 
+                                       tracking-wider mb-2">Work</label>
+                        <input type="text" name="work"
+                               class="px-2 py-1 border border-gray-300 text-sm">
+                    </div>
+                    <div class="flex flex-col mb-3">
+                        <label for="school" 
+                               class="text-gray-400 text-xs font-bold uppercase 
+                                       tracking-wider mb-2">School</label>
+                        <input type="text" name="school"
+                               class="px-2 py-1 border border-gray-300 text-sm">
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="mt-12 md:flex md:justify-center md:items-center md:mt-0">
-            Col 2
+        <div>
+            <div class="flex flex-col mb-2 mt-3 md:mt-20">
+                <label for="about"
+                        class="text-gray-400 text-xs font-bold uppercase 
+                                tracking-wider mb-2">About {{user.name}}</label>
+                <textarea name="about" rows="10"
+                          class="px-2 py-1 border border-gray-300 text-sm"></textarea>
+            </div>
+            <div class="mt-3">
+                <p class="text-xs text-gray-500">
+                    Tell other users about yourself and why you’re a responsible, trustworthy person. Share your favorite travel experiences, 
+                    your hobbies, your dream car, or your driving experience. Feel free to include links to your LinkedIn, 
+                    Twitter, or Facebook profiles so they get to know you even better.
+                </p>
+            </div>
+            <div class="md:text-right mt-3">
+                <button class="md:w-1/2 text-center bg-purple-500 hover:bg-purple-400 transition-all 
+                               duration-200 px-4 py-2 text-white font-bold">Save changes</button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import { dateFormatMonthYear } from './../shared/utils/dateFormats';
+
     export default {
         props: {
             user: Object
         },
+
+        methods: {
+            dateMonthYear(date) {
+                return dateFormatMonthYear(date);
+            }
+        }
     }
 </script>
