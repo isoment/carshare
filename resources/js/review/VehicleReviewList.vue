@@ -35,7 +35,7 @@
 </template>
 
 <script>
-    import moment from 'moment';
+    import { dateFormatMonthDayYear } from './../shared/utils/dateFormats';
     import avatarHelper from './../shared/mixins/avatarHelper';
 
     export default {
@@ -59,7 +59,7 @@
 
         methods: {
             dateFormat(date) {
-                return moment(date).format('MMMM D YYYY');
+                return dateFormatMonthDayYear(date);
             },
 
             async fetchReviews() {

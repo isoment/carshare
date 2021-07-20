@@ -35,7 +35,7 @@
                                 <div class="text-xs">
                                     <span>{{ host.host_review_count }} trips</span>
                                     <span>•</span>
-                                    <span>{{ dateConvert(host.created_at) }}</span>
+                                    <span>{{ dateFormat(host.created_at) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
     import VueSlickCarousel from 'vue-slick-carousel';
     import 'vue-slick-carousel/dist/vue-slick-carousel.css';
     import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css';
-    import moment from 'moment';
+    import { dateFormatMonthDayYear } from './../shared/utils/dateFormats';
 
     export default {
         components: {
@@ -129,8 +129,8 @@
         },
 
         methods: {
-            dateConvert(date) {
-                return moment(date).format('MMMM Do YYYY');
+            dateFormat(date) {
+                return dateFormatMonthDayYear(date);
             },
 
             truncateString(string, length) {

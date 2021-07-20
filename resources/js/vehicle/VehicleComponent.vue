@@ -78,7 +78,7 @@
                                         </h3>
                                         <div class="text-sm">
                                             <span>{{numberFormatComma(vehicleData.host_total_trips)}} trips</span> • 
-                                            <span>Joined {{dateMonthYear(vehicleData.member_since)}}</span>
+                                            <span>Joined {{dateFormat(vehicleData.member_since)}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -144,7 +144,7 @@
     import VehicleReviewList from './../review/VehicleReviewList';
     import Availability from './Availability';
     import Pricing from './Pricing';
-    import moment from 'moment';
+    import { dateFormatMonthYear } from './../shared/utils/dateFormats';
     import { mapState } from 'vuex'
 
     export default {   
@@ -173,8 +173,8 @@
         },
 
         methods: {
-            dateMonthYear(date) {
-                return moment(date).format('MMMM YYYY');
+            dateFormat(date) {
+                return dateFormatMonthYear(date);
             },
 
             numberFormatComma(number) {
