@@ -191,6 +191,8 @@
 
                     localStorage.removeItem('userAvatar');
 
+                    this.$router.push({ name: 'main-page' });
+
                     this.$store.dispatch('addNotification', {
                         type: 'success',
                         message: 'Logout successful'

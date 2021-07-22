@@ -48,3 +48,21 @@ Route::get('vehicle-price/{id}', [App\Http\Controllers\Api\AvailabilityControlle
 // Get reviews for a vehicle
 Route::get('reviews-vehicle/{id}', [App\Http\Controllers\Api\ReviewController::class, 'vehicleReviews'])
     ->name('reviews.vehicle');
+
+
+/**************************
+ *  Dashboard API Routes  *
+ *************************/
+
+// All authenticated users can access these api endpoints
+// Route::middleware('auth:sanctum')->group(function() {
+
+    // Change user avatar
+    Route::post(
+        'dashboard/change-avatar', 
+        [App\Http\Controllers\Api\Dashboard\ProfileController::class, 'updateAvatar']
+    );
+
+// });
+
+

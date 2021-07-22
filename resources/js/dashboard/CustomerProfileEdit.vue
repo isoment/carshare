@@ -9,17 +9,24 @@
             <div class="mt-20">
                 <!-- Change photo -->
                 <div>
-                    <form>
-                        <div class="bg-purple-500 hover:bg-purple-400 transition-all duration-200 
-                                    px-4 py-2 text-white font-bold w-2/3 md:w-1/2 text-center cursor-pointer">
-                            Change profile photo
-                            <input type="file" accept="image/*" class="hidden">
+                    <!-- <form> -->
+                        <div>
+                            <div class="bg-purple-500 hover:bg-purple-400 transition-all duration-200 
+                                    px-4 py-2 text-white font-bold w-2/3 md:w-1/2 cursor-pointer"
+                                 @click="pickImage">
+                                Change profile photo
+                            </div>
+                            <input type="file" 
+                                   accept="image/*" 
+                                   class="hidden"
+                                   ref="fileInput"
+                                   @change="changeAvatar">
                         </div>
                         <p class="text-xs text-gray-500 mt-3">
                             Add a face to your account. This makes it easier for hosts and renters to recognize
                             each other.
                         </p>
-                    </form>
+                    <!-- </form> -->
                 </div>
 
                 <!-- Name -->
@@ -93,9 +100,36 @@
             user: Object
         },
 
+        data() {
+            return {
+
+            }
+        },
+
         methods: {
             dateMonthYear(date) {
                 return dateFormatMonthYear(date);
+            },
+
+            pickImage() {
+                this.$refs.fileInput.click();
+            },
+
+            async changeAvatar(event) {
+                let image = event.target.files[0];
+
+                const formData = new FormData();
+
+                formData.set('image', image);
+
+                try {
+                    await axios.post('/api/dashboard/change-avatar', formData);
+
+                    this.$store.dispatch("loadUser");
+                } catch(error) {
+                    // Do some validation
+                    console.log(error);
+                }
             }
         }
     }
