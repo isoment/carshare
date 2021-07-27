@@ -20,12 +20,17 @@ class ProfileController extends Controller
 
         $image = $request->file('image');
 
-        $filePath = $image->store('user-avatars/', 'public');
+        $filePath = $image->store('user-avatars', 'public');
 
         $user->profile->update([
             'image' => '/storage/' . $filePath
         ]);
 
-        return response()->json([], 204);
+        return response()->json('/storage/' . $filePath, 200);
+    }
+
+    public function updateProfile()
+    {
+        $user = auth()->user();
     }
 }

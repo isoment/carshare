@@ -41,7 +41,8 @@
                                class="text-gray-400 text-xs font-bold uppercase 
                                        tracking-wider mb-2">Lives</label>
                         <input type="text" name="lives" placeholder="Chicago, IL / Reno, NV"
-                               class="px-2 py-1 border border-gray-300 text-sm">
+                               class="px-2 py-1 border border-gray-300 text-sm"
+                               v-model="profile.location">
                         <h5 class="text-xs text-gray-500 my-2">Joined {{ dateMonthYear(user.created_at) }}</h5>
                     </div>
                     <h4 class="text-lg font-bold text-gray-700 mt-6 mb-2">Tell us more...</h4>
@@ -50,21 +51,24 @@
                                class="text-gray-400 text-xs font-bold uppercase 
                                        tracking-wider mb-2">Languages</label>
                         <input type="text" name="languages"
-                               class="px-2 py-1 border border-gray-300 text-sm">
+                               class="px-2 py-1 border border-gray-300 text-sm"
+                               v-model="profile.languages">
                     </div>
                     <div class="flex flex-col mb-3">
                         <label for="work" 
                                class="text-gray-400 text-xs font-bold uppercase 
                                        tracking-wider mb-2">Work</label>
                         <input type="text" name="work"
-                               class="px-2 py-1 border border-gray-300 text-sm">
+                               class="px-2 py-1 border border-gray-300 text-sm"
+                               v-model="profile.work">
                     </div>
                     <div class="flex flex-col mb-3">
                         <label for="school" 
                                class="text-gray-400 text-xs font-bold uppercase 
                                        tracking-wider mb-2">School</label>
                         <input type="text" name="school"
-                               class="px-2 py-1 border border-gray-300 text-sm">
+                               class="px-2 py-1 border border-gray-300 text-sm"
+                               v-model="profile.school">
                     </div>
                 </div>
             </div>
@@ -75,7 +79,8 @@
                         class="text-gray-400 text-xs font-bold uppercase 
                                 tracking-wider mb-2">About {{user.name}}</label>
                 <textarea name="about" rows="10"
-                          class="px-2 py-1 border border-gray-300 text-sm"></textarea>
+                          class="px-2 py-1 border border-gray-300 text-sm"
+                          v-model="profile.about"></textarea>
             </div>
             <div class="mt-3">
                 <p class="text-xs text-gray-500">
@@ -102,7 +107,13 @@
 
         data() {
             return {
-
+                profile: {
+                    location: null,
+                    languages: null,
+                    work: null,
+                    school: null,
+                    about: null
+                }
             }
         },
 
@@ -123,14 +134,25 @@
                 formData.set('image', image);
 
                 try {
-                    await axios.post('/api/dashboard/change-avatar', formData);
+                    let result = (await axios.post('/api/dashboard/change-avatar', formData));
 
-                    this.$store.dispatch("loadUser");
+                    // Emit event to parent to refresh avatar
+                    this.$emit('refreshAvatar');
+
+                    this.$store.dispatch('setUserAvatar', result.data);
                 } catch(error) {
                     // Do some validation
                     console.log(error);
                 }
             }
+        },
+
+        created() {
+            this.profile.location = null ?? this.user.profile.location;
+            this.profile.languages = null ?? this.user.profile.languages;
+            this.profile.work = null ?? this.user.profile.work;
+            this.profile.school = null ?? this.user.profile.school;
+            this.profile.about = null ?? this.user.profile.about;
         }
     }
 </script>

@@ -41,7 +41,7 @@
                          <customer-profile-info :user="user"></customer-profile-info>
                      </div>
                     <div v-if="editProfileMode">
-                        <customer-profile-edit :user="user"></customer-profile-edit>
+                        <customer-profile-edit :user="user" @refreshAvatar="getUser()"></customer-profile-edit>
                     </div>
                 </div>
                 <div class="text-center mt-8" v-else>
