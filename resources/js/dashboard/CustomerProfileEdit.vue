@@ -91,7 +91,8 @@
             </div>
             <div class="md:text-right mt-3">
                 <button class="md:w-1/2 text-center bg-purple-500 hover:bg-purple-400 transition-all 
-                               duration-200 px-4 py-2 text-white font-bold">Save changes</button>
+                               duration-200 px-4 py-2 text-white font-bold"
+                        @click="profileUpdate">Save changes</button>
             </div>
         </div>
     </div>
@@ -118,6 +119,14 @@
         },
 
         methods: {
+            setProfileState() {
+                this.profile.location = null ?? this.user.profile.location;
+                this.profile.languages = null ?? this.user.profile.languages;
+                this.profile.work = null ?? this.user.profile.work;
+                this.profile.school = null ?? this.user.profile.school;
+                this.profile.about = null ?? this.user.profile.about;
+            },
+
             dateMonthYear(date) {
                 return dateFormatMonthYear(date);
             },
@@ -144,15 +153,21 @@
                     // Do some validation
                     console.log(error);
                 }
+            },
+
+            async profileUpdate() {
+                try {
+                    await axios.put('/api/dashboard/update-profile', this.profile);
+
+                    this.$emit('profileWasEdited');
+                } catch(error) {
+                    console.log(error);
+                }
             }
         },
 
         created() {
-            this.profile.location = null ?? this.user.profile.location;
-            this.profile.languages = null ?? this.user.profile.languages;
-            this.profile.work = null ?? this.user.profile.work;
-            this.profile.school = null ?? this.user.profile.school;
-            this.profile.about = null ?? this.user.profile.about;
+            this.setProfileState();
         }
     }
 </script>

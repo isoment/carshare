@@ -63,6 +63,7 @@ Route::get('reviews-vehicle/{id}', [App\Http\Controllers\Api\ReviewController::c
         [App\Http\Controllers\Api\Dashboard\ProfileController::class, 'updateAvatar']
     );
 
+    // Update user profile
     Route::put(
         'dashboard/update-profile',
         [App\Http\Controllers\Api\Dashboard\ProfileController::class, 'updateProfile']

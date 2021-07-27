@@ -7,7 +7,12 @@ use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
-{
+{   
+    /**
+     *  Update the authorized users avatar
+     * 
+     *  @param Illuminate\Http\Request $request
+     */
     public function updateAvatar(Request $request)
     {
         $user = User::findOrFail(auth()->id());
@@ -29,8 +34,31 @@ class ProfileController extends Controller
         return response()->json('/storage/' . $filePath, 200);
     }
 
-    public function updateProfile()
+    /**
+     *  Update the authorized users profile
+     * 
+     *  @param Illuminate\Http\Request $request
+     */
+    public function updateProfile(Request $request)
     {
         $user = auth()->user();
+
+        $request->validate([
+            'location' => 'string|nullable',
+            'languages' => 'string|nullable',
+            'work' => 'string|nullable',
+            'school' => 'string|nullable',
+            'about' => 'string|nullable'
+        ]);
+
+        $user->profile->update([
+            'location' => $request->location,
+            'languages' => $request->languages,
+            'work' => $request->work,
+            'school' => $request->school,
+            'about' => $request->about
+        ]);
+
+        return response()->json([], 204);
     }
 }

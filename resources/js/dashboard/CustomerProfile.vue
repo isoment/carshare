@@ -41,7 +41,10 @@
                          <customer-profile-info :user="user"></customer-profile-info>
                      </div>
                     <div v-if="editProfileMode">
-                        <customer-profile-edit :user="user" @refreshAvatar="getUser()"></customer-profile-edit>
+                        <customer-profile-edit :user="user" 
+                                               @refreshAvatar="getUser()"
+                                               @profileWasEdited="onProfileEdit()">
+                        </customer-profile-edit>
                     </div>
                 </div>
                 <div class="text-center mt-8" v-else>
@@ -74,6 +77,12 @@
         methods: {
             async getUser() {
                 this.user = (await axios.get('/user')).data;
+            },
+
+            onProfileEdit() {
+                this.editProfileMode = false;
+
+                this.getUser();
             }
         },
 
