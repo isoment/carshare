@@ -17,7 +17,7 @@ class ProfileController extends Controller
     {
         $user = User::findOrFail(auth()->id());
 
-        $customMessage = ['image' => 'Only image allowed'];
+        $customMessage = ['image' => 'Profile photo must be an image!'];
 
         $request->validate([
             'image' => 'required|image'

@@ -150,8 +150,10 @@
 
                     this.$store.dispatch('setUserAvatar', result.data);
                 } catch(error) {
-                    // Do some validation
-                    console.log(error);
+                    this.$store.dispatch('addNotification', {
+                        type: 'error',
+                        message: error.response.data.errors.image[0]
+                    })
                 }
             },
 
