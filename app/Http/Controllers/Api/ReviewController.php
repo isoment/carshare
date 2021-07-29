@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ReviewUserCollection;
 use App\Http\Resources\ReviewVehicleCollection;
 use App\Models\Vehicle;
 use App\Services\ReviewService;
@@ -30,4 +31,17 @@ class ReviewController extends Controller
             $this->reviewService->vehicleReviews($vehicleId)
         );
     }
+
+    /**
+     *  A paginated index of a users reviews from hosts
+     * 
+     *  @param int $userId
+     */
+    public function reviewsFromHosts(int $userId)
+    {
+        return new ReviewUserCollection(
+            $this->reviewService->reviewsFromHosts($userId)
+        );
+    }
+
 }

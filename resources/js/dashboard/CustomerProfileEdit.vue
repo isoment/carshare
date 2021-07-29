@@ -143,7 +143,7 @@
                 formData.set('image', image);
 
                 try {
-                    let result = (await axios.post('/api/dashboard/change-avatar', formData));
+                    let result = (await axios.post('/api/dashboard/update-avatar', formData));
 
                     // Emit event to parent to refresh avatar
                     this.$emit('refreshAvatar');
@@ -162,6 +162,11 @@
                     await axios.put('/api/dashboard/update-profile', this.profile);
 
                     this.$emit('profileWasEdited');
+
+                    this.$store.dispatch('addNotification', {
+                        type: 'success',
+                        message: 'Profile updated'
+                    });
                 } catch(error) {
                     console.log(error);
                 }

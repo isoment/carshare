@@ -49,26 +49,34 @@ Route::get('vehicle-price/{id}', [App\Http\Controllers\Api\AvailabilityControlle
 Route::get('reviews-vehicle/{id}', [App\Http\Controllers\Api\ReviewController::class, 'vehicleReviews'])
     ->name('reviews.vehicle');
 
+// Reviews of a user from hosts
+Route::get('reviews-from-hosts/{id}', [App\Http\Controllers\Api\ReviewController::class, 'reviewsFromHosts'])
+    ->name('reviews.from-host');
+
+// Reviews of a user from renters
+Route::get('reviews-from-renters/{id}', [App\Http\Controllers\Api\ReviewController::class, 'reviewsFromRenters'])
+    ->name('reviews.from-renters');
+
 
 /**************************
  *  Dashboard API Routes  *
  *************************/
 
 // All authenticated users can access these api endpoints
-// Route::middleware('auth:sanctum')->group(function() {
+Route::middleware('auth:sanctum')->group(function() {
 
     // Change user avatar
     Route::post(
-        'dashboard/change-avatar', 
+        'dashboard/update-avatar', 
         [App\Http\Controllers\Api\Dashboard\ProfileController::class, 'updateAvatar']
-    );
+    )->name('dashboard.update-avatar');
 
     // Update user profile
     Route::put(
         'dashboard/update-profile',
         [App\Http\Controllers\Api\Dashboard\ProfileController::class, 'updateProfile']
-    );
+    )->name('dashboard.update-profile');
 
-// });
+});
 
 
