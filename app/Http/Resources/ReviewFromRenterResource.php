@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ReviewUserResource extends JsonResource
+class ReviewFromRenterResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,8 +20,8 @@ class ReviewUserResource extends JsonResource
             'content' => $this->content,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'name' => $this->booking->vehicle->user->name,
-            'avatar' => $this->booking->vehicle->user->profile->image
+            'reviewer_name' => $this->booking->user->name,
+            'reviewer_avatar' => $this->booking->user->profile->image
         ];
     }
 }

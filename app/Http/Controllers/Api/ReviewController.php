@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ReviewUserCollection;
+use App\Http\Resources\ReviewsFromRenterCollection;
+use App\Http\Resources\ReviewsFromHostCollection;
 use App\Http\Resources\ReviewVehicleCollection;
-use App\Models\Vehicle;
 use App\Services\ReviewService;
 use Illuminate\Http\Request;
 
@@ -19,14 +19,12 @@ class ReviewController extends Controller
     }
 
     /**
-     *  Get a paginated index of reviews for a vehicle
+     *  A paginated index of reviews for a vehicle
      * 
-     *  @param int $id
+     *  @param int $vehicleId
      */
-    public function vehicleReviews(int $id)
+    public function vehicleReviews(int $vehicleId)
     {
-        $vehicleId = Vehicle::findOrFail($id)->id;
-
         return new ReviewVehicleCollection(
             $this->reviewService->vehicleReviews($vehicleId)
         );
@@ -39,9 +37,20 @@ class ReviewController extends Controller
      */
     public function reviewsFromHosts(int $userId)
     {
-        return new ReviewUserCollection(
+        return new ReviewsFromHostCollection(
             $this->reviewService->reviewsFromHosts($userId)
         );
     }
 
+    /**
+     *  A paginated index of a users reviews from renters
+     * 
+     *  @param int $userId
+     */
+    public function reviewsFromRenters(int $userId)
+    {
+        return new ReviewsFromRenterCollection(
+            $this->reviewService->reviewsFromRenters($userId)
+        );
+    }
 }

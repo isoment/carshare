@@ -49,11 +49,11 @@ Route::get('vehicle-price/{id}', [App\Http\Controllers\Api\AvailabilityControlle
 Route::get('reviews-vehicle/{id}', [App\Http\Controllers\Api\ReviewController::class, 'vehicleReviews'])
     ->name('reviews.vehicle');
 
-// Reviews of a user from hosts
+// Reviews of a renter from hosts
 Route::get('reviews-from-hosts/{id}', [App\Http\Controllers\Api\ReviewController::class, 'reviewsFromHosts'])
     ->name('reviews.from-host');
 
-// Reviews of a user from renters
+// Reviews of a host from renters
 Route::get('reviews-from-renters/{id}', [App\Http\Controllers\Api\ReviewController::class, 'reviewsFromRenters'])
     ->name('reviews.from-renters');
 

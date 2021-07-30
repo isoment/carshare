@@ -30,8 +30,8 @@ class ReviewTest extends TestCase
                         'content',
                         'created_at',
                         'updated_at',
-                        'renter_name',
-                        'renter_avatar'
+                        'reviewer_name',
+                        'reviewer_avatar'
                     ]
                 ],
                 'links' => [
