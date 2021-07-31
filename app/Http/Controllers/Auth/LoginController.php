@@ -45,6 +45,6 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        return 'Please use log in page';
+        return redirect('/');
     }
 }

@@ -185,7 +185,7 @@
 
             async logout() {
                 try {
-                    axios.post('/logout');
+                    await axios.post('/logout');
 
                     this.$store.dispatch('logOut');
 

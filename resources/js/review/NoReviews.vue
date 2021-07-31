@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex pb-5 items-center">
+        <div class="flex pb-5">
             <div class="flex-shrink-0 mr-4">
                 <img src="/storage/avatar-seeder-img/default.svg" alt="avatar" 
                     class="h-12 w-12 rounded-full">

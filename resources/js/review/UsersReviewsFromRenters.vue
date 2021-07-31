@@ -18,12 +18,12 @@
 
         methods: {
             async fetchReviews() {
-                let reviews = (await axios.get(`/api/reviews-vehicle/${this.$route.params.id}?page=${this.page}`));
+                let reviews = (await axios.get(`/api/reviews-from-renters/${this.$store.state.user.id}?page=${this.page}`));
 
                 this.reviews.push(...reviews.data.data);
 
                 this.lastPage = reviews.data.meta.last_page;
-            },
+            }
         },
 
         created() {

@@ -54,13 +54,20 @@
                 </div>
             </div>
         </div>
-        <div class="mt-12 md:flex md:justify-center md:items-center md:mt-0">
-            <div>
+        <div class="mt-12 md:flex-col md:justify-center md:items-center md:mt-0">
+            <div class="pt-12">
                 <h6 class="uppercase font-bold font-boldnosans text-sm 
                         text-gray-600 tracking-widest mb-2">
                     Reviews from hosts
                 </h6>
-                <no-reviews :message="user.name + ' has no reviews yet'"></no-reviews>
+                <users-reviews-from-hosts></users-reviews-from-hosts>
+            </div>
+            <div class="pt-12">
+                <h6 class="uppercase font-bold font-boldnosans text-sm 
+                        text-gray-600 tracking-widest mb-2">
+                    Reviews from renters
+                </h6>
+                <users-reviews-from-renters></users-reviews-from-renters>
             </div>
         </div>
     </div>
@@ -68,6 +75,8 @@
 
 <script>
     import NoReviews from "./../review/NoReviews.vue";
+    import UsersReviewsFromHosts from './../review/UsersReviewsFromHosts.vue';
+    import UsersReviewsFromRenters from './../review/UsersReviewsFromRenters.vue';
     import { dateFormatMonthYear } from './../shared/utils/dateFormats';
 
     export default {
@@ -76,7 +85,8 @@
         },
 
         components: {
-            NoReviews
+            UsersReviewsFromHosts,
+            UsersReviewsFromRenters
         },
 
         methods: {
