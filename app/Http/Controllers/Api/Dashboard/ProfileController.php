@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class ProfileController extends Controller
 {   
@@ -13,9 +14,35 @@ class ProfileController extends Controller
      * 
      *  @param Illuminate\Http\Request $request
      */
+    // public function updateAvatar(Request $request)
+    // {
+    //     $user = User::findOrFail(auth()->id());
+
+    //     $customMessage = ['image' => 'Profile photo must be an image!'];
+
+    //     $request->validate([
+    //         'image' => 'required|image'
+    //     ], $customMessage);
+
+    //     $image = $request->file('image');
+        
+        // $filePath = $image->store('user-avatars', 'public');
+
+    //     $user->profile->update([
+    //         'image' => '/storage/' . $filePath
+    //     ]);
+
+    //     return response()->json('/storage/' . $filePath, 200);
+    // }
+
+    /**
+     *  Update the authorized users avatar
+     * 
+     *  @param Illuminate\Http\Request $request
+     */
     public function updateAvatar(Request $request)
     {
-        $user = User::findOrFail(auth()->id());
+        $user = auth()->user();
 
         $customMessage = ['image' => 'Profile photo must be an image!'];
 
@@ -24,14 +51,18 @@ class ProfileController extends Controller
         ], $customMessage);
 
         $image = $request->file('image');
+        $imageName = time() . '_' . $user->name . $image->getClientOriginalName();
 
-        $filePath = $image->store('user-avatars', 'public');
+        $resize = Image::make($image)
+            ->fit(200);
+
+        Storage::disk('public')->put('user-avatars/' . $imageName, $resize->encode());
 
         $user->profile->update([
-            'image' => '/storage/' . $filePath
+            'image' => '/storage/user-avatars/' . $imageName
         ]);
 
-        return response()->json('/storage/' . $filePath, 200);
+        return response()->json('/storage/user-avatars/' . $imageName, 200);
     }
 
     /**

@@ -9,7 +9,7 @@
             <div class="mt-20">
                 <!-- Change photo -->
                 <div>
-                    <!-- <form> -->
+                    <form>
                         <div>
                             <div class="bg-purple-500 hover:bg-purple-400 transition-all duration-200 
                                     px-4 py-2 text-white font-bold w-2/3 md:w-1/2 cursor-pointer"
@@ -26,7 +26,7 @@
                             Add a face to your account. This makes it easier for hosts and renters to recognize
                             each other.
                         </p>
-                    <!-- </form> -->
+                    </form>
                 </div>
 
                 <!-- Name -->
@@ -34,7 +34,7 @@
                     <h3 class="text-3xl font-extrabold">{{user.name}}</h3>
                 </div>
 
-                <!-- Form -->
+                <!-- Edit profile -->
                 <div class="mt-6">
                     <div class="flex flex-col">
                         <label for="lives" 
@@ -138,7 +138,7 @@
             async changeAvatar(event) {
                 let image = event.target.files[0];
 
-                const formData = new FormData();
+                const formData = new FormData;
 
                 formData.set('image', image);
 
