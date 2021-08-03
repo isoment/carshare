@@ -14,32 +14,6 @@ class ProfileController extends Controller
      * 
      *  @param Illuminate\Http\Request $request
      */
-    // public function updateAvatar(Request $request)
-    // {
-    //     $user = User::findOrFail(auth()->id());
-
-    //     $customMessage = ['image' => 'Profile photo must be an image!'];
-
-    //     $request->validate([
-    //         'image' => 'required|image'
-    //     ], $customMessage);
-
-    //     $image = $request->file('image');
-        
-        // $filePath = $image->store('user-avatars', 'public');
-
-    //     $user->profile->update([
-    //         'image' => '/storage/' . $filePath
-    //     ]);
-
-    //     return response()->json('/storage/' . $filePath, 200);
-    // }
-
-    /**
-     *  Update the authorized users avatar
-     * 
-     *  @param Illuminate\Http\Request $request
-     */
     public function updateAvatar(Request $request)
     {
         $user = auth()->user();
@@ -51,12 +25,12 @@ class ProfileController extends Controller
         ], $customMessage);
 
         $image = $request->file('image');
-        $imageName = time() . '_' . $user->name . $image->getClientOriginalName();
+        $imageName = time() . $user->id . sha1(rand()) . '.jpeg';
 
         $resize = Image::make($image)
             ->fit(200);
 
-        Storage::disk('public')->put('user-avatars/' . $imageName, $resize->encode());
+        Storage::disk('public')->put('user-avatars/' . $imageName, $resize->encode('jpg'));
 
         $user->profile->update([
             'image' => '/storage/user-avatars/' . $imageName
