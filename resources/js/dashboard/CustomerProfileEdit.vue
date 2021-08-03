@@ -43,6 +43,7 @@
                         <input type="text" name="lives" placeholder="Chicago, IL / Reno, NV"
                                class="px-2 py-1 border border-gray-300 text-sm"
                                v-model="profile.location">
+                        <validation-errors :errors="errorFor('location')"></validation-errors>
                         <h5 class="text-xs text-gray-500 my-2">Joined {{ dateMonthYear(user.created_at) }}</h5>
                     </div>
                     <h4 class="text-lg font-bold text-gray-700 mt-6 mb-2">Tell us more...</h4>
@@ -53,6 +54,7 @@
                         <input type="text" name="languages"
                                class="px-2 py-1 border border-gray-300 text-sm"
                                v-model="profile.languages">
+                        <validation-errors :errors="errorFor('languages')"></validation-errors>
                     </div>
                     <div class="flex flex-col mb-3">
                         <label for="work" 
@@ -61,6 +63,7 @@
                         <input type="text" name="work"
                                class="px-2 py-1 border border-gray-300 text-sm"
                                v-model="profile.work">
+                        <validation-errors :errors="errorFor('work')"></validation-errors>
                     </div>
                     <div class="flex flex-col mb-3">
                         <label for="school" 
@@ -69,6 +72,7 @@
                         <input type="text" name="school"
                                class="px-2 py-1 border border-gray-300 text-sm"
                                v-model="profile.school">
+                        <validation-errors :errors="errorFor('school')"></validation-errors>
                     </div>
                 </div>
             </div>
@@ -81,6 +85,7 @@
                 <textarea name="about" rows="10"
                           class="px-2 py-1 border border-gray-300 text-sm"
                           v-model="profile.about"></textarea>
+                <validation-errors :errors="errorFor('about')"></validation-errors>
             </div>
             <div class="mt-3">
                 <p class="text-xs text-gray-500">
@@ -100,11 +105,14 @@
 
 <script>
     import { dateFormatMonthYear } from './../shared/utils/dateFormats';
+    import validationErrors from './../shared/mixins/validationErrors';
 
     export default {
         props: {
             user: Object
         },
+
+        mixins: [validationErrors],
 
         data() {
             return {
@@ -168,7 +176,9 @@
                         message: 'Profile updated'
                     });
                 } catch(error) {
-                    console.log(error);
+                    if (error.response.status === 422) {
+                        this.validationErrors = error.response.data.errors;
+                    }
                 }
             }
         },

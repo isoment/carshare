@@ -49,11 +49,11 @@ class ProfileController extends Controller
         $user = auth()->user();
 
         $request->validate([
-            'location' => 'string|nullable',
-            'languages' => 'string|nullable',
-            'work' => 'string|nullable',
-            'school' => 'string|nullable',
-            'about' => 'string|nullable'
+            'location' => 'string|min:2|nullable',
+            'languages' => 'string|min:2|nullable',
+            'work' => 'string|min:2|nullable',
+            'school' => 'string|min:2|nullable',
+            'about' => 'string|min:2|nullable'
         ]);
 
         $user->profile->update([
