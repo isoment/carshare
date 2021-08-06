@@ -2,7 +2,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2">
         <div class="relative md:mr-20">
             <div class="absolute -top-14 mb-12">
-                <img :src="user.profile.image" 
+                <img :src="avatar(user.profile.image)" 
                     alt="avatar"
                     class="rounded-full h-28 w-28 border-8 border-white">
             </div>
@@ -20,9 +20,10 @@
                         <div class="text-sm">
                             Approved to drive
                         </div>
-                        <a href="#" class="text-purple-500 font-bold text-sm">
-                            Verify license
-                        </a>
+                        <router-link class="text-purple-500 font-bold text-sm"
+                                     :to="{ name: 'drivers-license' }">
+                            Verify ID
+                        </router-link>
                     </div>
                     <div class="flex justify-between items-center mt-2">
                         <div class="text-sm">
@@ -74,15 +75,17 @@
 </template>
 
 <script>
-    import NoReviews from "./../review/NoReviews.vue";
     import UsersReviewsFromHosts from './../review/UsersReviewsFromHosts.vue';
     import UsersReviewsFromRenters from './../review/UsersReviewsFromRenters.vue';
     import { dateFormatMonthYear } from './../shared/utils/dateFormats';
+    import avatarHelper from './../shared/mixins/avatarHelper';
 
     export default {
         props: {
             user: Object
         },
+
+        mixins: [avatarHelper],
 
         components: {
             UsersReviewsFromHosts,

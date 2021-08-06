@@ -2,7 +2,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2">
         <div class="relative md:mr-20">
             <div class="absolute -top-14 mb-12">
-                <img :src="user.profile.image" 
+                <img :src="avatar(user.profile.image)" 
                     alt="avatar"
                     class="rounded-full h-28 w-28 border-8 border-white">
             </div>
@@ -106,13 +106,14 @@
 <script>
     import { dateFormatMonthYear } from './../shared/utils/dateFormats';
     import validationErrors from './../shared/mixins/validationErrors';
+    import avatarHelper from './../shared/mixins/avatarHelper';
 
     export default {
         props: {
             user: Object
         },
 
-        mixins: [validationErrors],
+        mixins: [validationErrors, avatarHelper],
 
         data() {
             return {

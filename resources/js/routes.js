@@ -8,6 +8,7 @@ import PasswordResetEmail from './auth/PasswordResetEmail';
 import MainVehicleComponent from './vehicle/MainVehicleComponent';
 import VehicleComponent from './vehicle/VehicleComponent';
 import CustomerProfile from './dashboard/CustomerProfile';
+import DriversLicense from './dashboard/DriversLicense';
 
 const routes = [
     {
@@ -58,6 +59,11 @@ const routes = [
         path: "/dashboard/customer/profile",
         component: CustomerProfile,
         name: "customer-profile"
+    },
+    {
+        path: "/dashboard/customer/license",
+        component: DriversLicense,
+        name: "drivers-license"
     },
 
     /** OTHER **/
