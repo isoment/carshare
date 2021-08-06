@@ -12,7 +12,7 @@
                     <form>
                         <div>
                             <div class="bg-purple-500 hover:bg-purple-400 transition-all duration-200 
-                                    px-4 py-2 text-white font-bold w-2/3 md:w-1/2 cursor-pointer"
+                                    px-4 py-2 text-white font-bold w-2/3 md:w-1/2 cursor-pointer text-center"
                                  @click="pickImage">
                                 Change profile photo
                             </div>
@@ -170,6 +170,8 @@
                     await axios.put('/api/dashboard/update-profile', this.profile);
 
                     this.$emit('profileWasEdited');
+
+                    window.scrollTo(0, 0);
 
                     this.$store.dispatch('addNotification', {
                         type: 'success',
