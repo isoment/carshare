@@ -7,7 +7,7 @@
                     class="rounded-full h-28 w-28 border-8 border-white">
             </div>
             <div class="mt-20">
-                <!-- Change photo -->
+                <!-- Update Avatar -->
                 <div>
                     <form>
                         <div>

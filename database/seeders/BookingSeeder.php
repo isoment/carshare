@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Booking;
 use App\Models\User;
 use App\Models\Vehicle;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class BookingSeeder extends Seeder
@@ -33,11 +34,14 @@ class BookingSeeder extends Seeder
 
                 $to = (clone $from)->addDays(random_int(0, 14));
 
+                $days = Carbon::parse($from)->diffInDays($to) + 1;
+
                 $booking = Booking::make([
-                    'user_id' => User::where('host', 0)->get()->random()->id,
+                    // 'user_id' => User::where('host', 0)->get()->random()->id,
+                    'user_id' => User::get()->random()->id,
                     'from' => $from,
                     'to' => $to,
-                    'price_total' => random_int(200, 5000)
+                    'price_total' => $days * $vehicle->price_day
                 ]);
 
                 $bookings->push($booking);

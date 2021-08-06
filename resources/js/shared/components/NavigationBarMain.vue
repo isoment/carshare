@@ -191,7 +191,14 @@
 
                     localStorage.removeItem('userAvatar');
 
-                    this.$router.push({ name: 'main-page' });
+                    this.$router.push({ name: 'main-page' }).catch(error => {
+                        if (
+                            error.name !== 'NavigationDuplicated' &&
+                            !error.message.includes('Avoided redundant navigation to current location')
+                        ) {
+                            console.error(error);
+                        }
+                    });
 
                     this.$store.dispatch('addNotification', {
                         type: 'success',
