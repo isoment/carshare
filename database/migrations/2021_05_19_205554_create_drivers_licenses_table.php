@@ -17,13 +17,14 @@ class CreateDriversLicensesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
             $table->string('number');
+            $table->string('state');
             $table->date('issued');
             $table->date('expiration');
             $table->date('dob');
             $table->string('street');
-            $table->string('unit');
             $table->string('city');
             $table->string('zip');
+            $table->string('license_image');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

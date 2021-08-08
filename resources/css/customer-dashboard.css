@@ -3,4 +3,5 @@
     background-position: 50%;
     background-position-y: center;
     background-size: cover;
+    z-index: -5;
 }
