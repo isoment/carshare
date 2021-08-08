@@ -25,7 +25,7 @@
             <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
                 <div class="grid grid-cols-1 md:grid-cols-2">
                     <div class="md:relative">
-                        <div class="md:absolute mt-2 md:mt-0 md:-top-10 bg-white border-2 border-purple-200 rounded-lg p-8 w-full">
+                        <div class="md:absolute mt-2 md:mt-0 md:-top-10 bg-white md:border-2 border-purple-200 rounded-lg p-8 w-full">
                             <h4 class="font-extrabold text-2xl">Drivers License</h4>
 
                             <!-- License Number -->
@@ -102,14 +102,14 @@
                         </div>
                     </div>
                     <div class="mt-4 md:mt-6 md:ml-20">
-                        <div class="text-center mt-12">
-                            <h6 class="font-extrabold text-gray-500">Please provide your license information and image for verification.</h6>
+                        <div class="md:mt-6 px-3 md:px-0">
+                            <h6 class="font-extrabold text-black">Upload license image</h6>
                             
-                            <div class="rounded-md border-2 border-purple-300 mt-8 relative">
+                            <div class="rounded-md border border-purple-300 mt-6 relative">
                                 <div class="">
                                     <div v-if="licenseImagePreview"
                                          class="p-6 flex items-center justify-center">
-                                        <img :src="licenseImagePreview" class="max-h-40">
+                                        <img :src="licenseImagePreview" class="h-40">
                                     </div>
                                     <div v-else
                                          class="p-6 flex items-center justify-center">
@@ -123,12 +123,30 @@
                                        class="hidden"
                                        ref="fileInput"
                                        @change="imageSelected">
-                                <button class="absolute text-center text-purple-300 border-2 border-purple-300 bg-white
+                                <!-- <button class="absolute text-center text-purple-300 border border-purple-300 bg-white
                                                hover:text-white hover:bg-purple-400 hover:border-purple-400 transition-all duration-200 
-                                               font-bold py-1 px-2 top-48 right-6 focus:outline-none tracking-wider"
+                                               py-1 px-2 top-48 right-6 focus:outline-none tracking-wider"
+                                        @click="pickImage">
+                                    Select Image
+                                </button> -->
+                                <button class="absolute text-center border border-black bg-white font-semibold
+                                               hover:text-white hover:bg-purple-400 hover:border-purple-400 transition-all duration-200 
+                                               py-1 px-2 top-48 right-6 focus:outline-none tracking-wider"
                                         @click="pickImage">
                                     Select Image
                                 </button>
+                            </div>
+
+                            <p class="mt-8 text-gray-600 text-sm">
+                                Please ensure that the photo of your license is clear and readable. 
+                                If it is not this may delay the verification process.
+                            </p>
+
+                            <div class="mt-6 w-full text-center relative">
+                                <button class="border bg-white border-black py-1 px-3 font-semibold w-full submit-buton">
+                                    Submit
+                                </button>
+                                <div class="hidden lg:block absolute bg-purple-200 submit-button-bar"></div>
                             </div>
 
                         </div>
@@ -170,14 +188,30 @@
             },
 
             imageSelected(event) {
-                if (event.target.files[0]) {
-                    this.licenseImage = event.target.files[0];
+                let file = event.target.files[0];
+                let allowedExtensions = /(\jpg|\jpeg|\bmp|\png|\.gif)$/i;
 
-                    let reader = new FileReader;
-                    reader.readAsDataURL(this.licenseImage);
-                    reader.onload = event => {
-                        this.licenseImagePreview = event.target.result;
-                    };
+                if (file) {
+                    if (allowedExtensions.exec(file.type)) {
+
+                        this.licenseImage = file;
+
+                        let reader = new FileReader;
+
+                        reader.readAsDataURL(this.licenseImage);
+
+                        reader.onload = event => {
+                            this.licenseImagePreview = event.target.result;
+                        };
+                        
+                    } else {
+
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: 'Please select a valid image'
+                        });
+                    
+                    }
                 }
             }
         }
@@ -196,6 +230,18 @@
         width: 8.5rem;
         z-index: 0;
         bottom: 0.5rem;
+        left: 1.5rem;
+    }
+
+    .submit-button {
+        z-index: 90;
+    }
+
+    .submit-button-bar {
+        height: 2rem;
+        width: 24rem;
+        z-index: -1;
+        bottom: -0.5rem;
         left: 1.5rem;
     }
 
