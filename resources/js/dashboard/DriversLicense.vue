@@ -25,7 +25,7 @@
             <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
                 <div class="grid grid-cols-1 md:grid-cols-2">
                     <div class="md:relative">
-                        <div class="md:absolute mt-2 md:mt-0 md:-top-10 mb-12 bg-white border-2 border-purple-200 rounded-lg p-8 w-full">
+                        <div class="md:absolute mt-2 md:mt-0 md:-top-10 bg-white border-2 border-purple-200 rounded-lg p-8 w-full">
                             <h4 class="font-extrabold text-2xl">Drivers License</h4>
 
                             <!-- License Number -->
@@ -101,9 +101,36 @@
                             </div>                                                                                                   
                         </div>
                     </div>
-                    <div class="mt-12 md:mt-6 md:ml-20">
-                        <div class="text-center">
+                    <div class="mt-4 md:mt-6 md:ml-20">
+                        <div class="text-center mt-12">
                             <h6 class="font-extrabold text-gray-500">Please provide your license information and image for verification.</h6>
+                            
+                            <div class="rounded-md border-2 border-purple-300 mt-8 relative">
+                                <div class="">
+                                    <div v-if="licenseImagePreview"
+                                         class="p-6 flex items-center justify-center">
+                                        <img :src="licenseImagePreview" class="max-h-40">
+                                    </div>
+                                    <div v-else
+                                         class="p-6 flex items-center justify-center">
+                                        <svg class="h-40 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <input type="file"
+                                       accept="image/*"
+                                       class="hidden"
+                                       ref="fileInput"
+                                       @change="imageSelected">
+                                <button class="absolute text-center text-purple-300 border-2 border-purple-300 bg-white
+                                               hover:text-white hover:bg-purple-400 hover:border-purple-400 transition-all duration-200 
+                                               font-bold py-1 px-2 top-48 right-6 focus:outline-none tracking-wider"
+                                        @click="pickImage">
+                                    Select Image
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -121,7 +148,37 @@
         data() {
             return {
                 isLoggedIn: this.$store.state.isLoggedIn,
-                isLoading: false
+                isLoading: false,
+                driversLicense: {
+                    number: null,
+                    state: null,
+                    dateIssued: null,
+                    expirationDate: null,
+                    birthdate: null,
+                    street: null,
+                    city: null,
+                    zip: null
+                },
+                licenseImage: null,
+                licenseImagePreview: null
+            }
+        },
+
+        methods: {
+            pickImage() {
+                this.$refs.fileInput.click();
+            },
+
+            imageSelected(event) {
+                if (event.target.files[0]) {
+                    this.licenseImage = event.target.files[0];
+
+                    let reader = new FileReader;
+                    reader.readAsDataURL(this.licenseImage);
+                    reader.onload = event => {
+                        this.licenseImagePreview = event.target.result;
+                    };
+                }
             }
         }
         
