@@ -77,6 +77,12 @@ Route::middleware('auth:sanctum')->group(function() {
         [App\Http\Controllers\Api\Dashboard\ProfileController::class, 'updateProfile']
     )->name('dashboard.update-profile');
 
+    // Create a new drivers license
+    Route::post(
+        'dashboard/create-drivers-license',
+        [App\Http\Controllers\Api\Dashboard\DriversLicenseController::class, 'create']
+    )->name('dashboard.create-driverse-license');
+
 });
 
 

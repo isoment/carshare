@@ -34,7 +34,8 @@
                                     class="text-gray-400 text-xs font-bold uppercase 
                                             tracking-wider mb-2">License #</label>
                                 <input type="text" name="license_number"
-                                    class="px-2 py-1 border border-gray-300 text-sm">
+                                    class="px-2 py-1 border border-gray-300 text-sm"
+                                    v-model="driversLicense.number">
                             </div>
 
                             <!-- Issuing State -->
@@ -42,8 +43,10 @@
                                 <label for="state" 
                                     class="text-gray-400 text-xs font-bold uppercase 
                                             tracking-wider mb-2">Issuing State</label>
-                                <input type="text" name="state"
-                                    class="px-2 py-1 border border-gray-300 text-sm">
+                                <v-select class="style-chooser" 
+                                          :options="statesList"
+                                          v-model="driversLicense.state">
+                                </v-select>
                             </div>    
 
                             <!-- Date Issued -->
@@ -51,8 +54,16 @@
                                 <label for="date_issued" 
                                     class="text-gray-400 text-xs font-bold uppercase 
                                             tracking-wider mb-2">Date Issued</label>
-                                <input type="text" name="date_issued"
-                                    class="px-2 py-1 border border-gray-300 text-sm">
+                                <date-picker v-model="driversLicense.dateIssued"
+                                             color="purple">
+                                    <template v-slot="{ inputValue, inputEvents }">
+                                        <input
+                                        class="px-2 py-1 border border-gray-300 text-sm w-full"
+                                        :value="inputValue"
+                                        v-on="inputEvents"
+                                        />
+                                    </template>
+                                </date-picker>
                             </div> 
 
                             <!-- Expiration Date -->
@@ -60,8 +71,16 @@
                                 <label for="expiration_date" 
                                     class="text-gray-400 text-xs font-bold uppercase 
                                             tracking-wider mb-2">Expiration Date</label>
-                                <input type="text" name="expiration_date"
-                                    class="px-2 py-1 border border-gray-300 text-sm">
+                                <date-picker v-model="driversLicense.expirationDate"
+                                             color="purple">
+                                    <template v-slot="{ inputValue, inputEvents }">
+                                        <input
+                                        class="px-2 py-1 border border-gray-300 text-sm w-full"
+                                        :value="inputValue"
+                                        v-on="inputEvents"
+                                        />
+                                    </template>
+                                </date-picker>
                             </div>   
 
                             <!-- Birthdate -->
@@ -69,8 +88,16 @@
                                 <label for="birthdate" 
                                     class="text-gray-400 text-xs font-bold uppercase 
                                             tracking-wider mb-2">Birthdate</label>
-                                <input type="text" name="birthdate"
-                                    class="px-2 py-1 border border-gray-300 text-sm">
+                                <date-picker v-model="driversLicense.birthdate"
+                                             color="purple">
+                                    <template v-slot="{ inputValue, inputEvents }">
+                                        <input
+                                        class="px-2 py-1 border border-gray-300 text-sm w-full"
+                                        :value="inputValue"
+                                        v-on="inputEvents"
+                                        />
+                                    </template>
+                                </date-picker>
                             </div>   
 
                             <!-- Street -->
@@ -79,16 +106,18 @@
                                     class="text-gray-400 text-xs font-bold uppercase 
                                             tracking-wider mb-2">Street</label>
                                 <input type="text" name="street"
-                                    class="px-2 py-1 border border-gray-300 text-sm">
+                                    class="px-2 py-1 border border-gray-300 text-sm"
+                                    v-model="driversLicense.street">
                             </div>  
 
-                            <!-- Date Issued -->
+                            <!-- City -->
                             <div class="flex flex-col mt-4 mb-3">
                                 <label for="city" 
                                     class="text-gray-400 text-xs font-bold uppercase 
                                             tracking-wider mb-2">City</label>
                                 <input type="text" name="city"
-                                    class="px-2 py-1 border border-gray-300 text-sm">
+                                    class="px-2 py-1 border border-gray-300 text-sm"
+                                    v-model="driversLicense.city">
                             </div>     
 
                             <!-- Zipcode -->
@@ -97,7 +126,8 @@
                                     class="text-gray-400 text-xs font-bold uppercase 
                                             tracking-wider mb-2">ZIP</label>
                                 <input type="text" name="zip"
-                                    class="px-2 py-1 border border-gray-300 text-sm">
+                                    class="px-2 py-1 border border-gray-300 text-sm"
+                                    v-model="driversLicense.zip">
                             </div>                                                                                                   
                         </div>
                     </div>
@@ -123,12 +153,6 @@
                                        class="hidden"
                                        ref="fileInput"
                                        @change="imageSelected">
-                                <!-- <button class="absolute text-center text-purple-300 border border-purple-300 bg-white
-                                               hover:text-white hover:bg-purple-400 hover:border-purple-400 transition-all duration-200 
-                                               py-1 px-2 top-48 right-6 focus:outline-none tracking-wider"
-                                        @click="pickImage">
-                                    Select Image
-                                </button> -->
                                 <button class="absolute text-center border border-black bg-white font-semibold
                                                hover:text-white hover:bg-purple-400 hover:border-purple-400 transition-all duration-200 
                                                py-1 px-2 top-48 right-6 focus:outline-none tracking-wider"
@@ -143,7 +167,9 @@
                             </p>
 
                             <div class="mt-6 w-full text-center relative">
-                                <button class="border bg-white border-black py-1 px-3 font-semibold w-full submit-buton">
+                                <button class="border bg-white border-black py-1 px-3 font-semibold w-full 
+                                               hover:border-purple-400 hover:text-purple-400 transition-all duration-200 submit-buton"
+                                        @click="submit">
                                     Submit
                                 </button>
                                 <div class="hidden lg:block absolute bg-purple-200 submit-button-bar"></div>
@@ -161,7 +187,21 @@
 </template>
 
 <script>
+    import validationErrors from './../shared/mixins/validationErrors';
+    import { dateFormatForPhpValidation } from './../shared/utils/dateFormats';
+    import Calendar from 'v-calendar/lib/components/calendar.umd';
+    import DatePicker from 'v-calendar/lib/components/date-picker.umd';
+    import vSelect from "vue-select";
+    import 'vue-select/dist/vue-select.css';
+
     export default {
+        components: {
+            Calendar,
+            DatePicker,
+            vSelect
+        },
+
+        mixins: [validationErrors],
 
         data() {
             return {
@@ -178,7 +218,16 @@
                     zip: null
                 },
                 licenseImage: null,
-                licenseImagePreview: null
+                licenseImagePreview: null,
+                statesList: ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado', 
+                    'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 
+                    'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 
+                    'Michigan', 'Minnesota', 'Minor Outlying Islands', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 
+                    'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 
+                    'Northern Mariana Islands', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 
+                    'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'U.S. Virgin Islands', 'Utah', 'Vermont', 
+                    'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+                ]
             }
         },
 
@@ -213,13 +262,34 @@
                     
                     }
                 }
+            },
+
+            async submit() {
+                const formData = new FormData;
+
+                formData.append('license_image', this.licenseImage);
+                formData.append('license_number', this.driversLicense.number);
+                formData.append('state', this.driversLicense.state);
+                formData.append('date_issued', dateFormatForPhpValidation(this.driversLicense.dateIssued));
+                formData.append('expiration_date', dateFormatForPhpValidation(this.driversLicense.expirationDate));
+                formData.append('birthdate', dateFormatForPhpValidation(this.driversLicense.birthdate));
+                formData.append('street', this.driversLicense.street);
+                formData.append('city', this.driversLicense.city);
+                formData.append('zip', this.driversLicense.zip);
+
+                try {
+                    await axios.post('/api/dashboard/create-drivers-license', formData);
+                } catch(error) {
+                    if (error.response.status === 422) {
+                        this.validationErrors = error.response.data.errors;
+                    }
+                }  
             }
         }
-        
     }
 </script>
 
-<style>
+<style scoped>
 
     .verify-id-text-wrap {
         z-index: 90;
