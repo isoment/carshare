@@ -36,6 +36,7 @@
                                 <input type="text" name="license_number"
                                     class="px-2 py-1 border border-gray-300 text-sm"
                                     v-model="driversLicense.number">
+                                <validation-errors :errors="errorFor('license_number')"></validation-errors>
                             </div>
 
                             <!-- Issuing State -->
@@ -47,6 +48,7 @@
                                           :options="statesList"
                                           v-model="driversLicense.state">
                                 </v-select>
+                                <validation-errors :errors="errorFor('state')"></validation-errors>
                             </div>    
 
                             <!-- Date Issued -->
@@ -64,6 +66,7 @@
                                         />
                                     </template>
                                 </date-picker>
+                                <validation-errors :errors="errorFor('date_issued')"></validation-errors>
                             </div> 
 
                             <!-- Expiration Date -->
@@ -81,6 +84,7 @@
                                         />
                                     </template>
                                 </date-picker>
+                                <validation-errors :errors="errorFor('expiration_date')"></validation-errors>
                             </div>   
 
                             <!-- Birthdate -->
@@ -98,6 +102,7 @@
                                         />
                                     </template>
                                 </date-picker>
+                                <validation-errors :errors="errorFor('birthdate')"></validation-errors>
                             </div>   
 
                             <!-- Street -->
@@ -108,9 +113,10 @@
                                 <input type="text" name="street"
                                     class="px-2 py-1 border border-gray-300 text-sm"
                                     v-model="driversLicense.street">
+                                <validation-errors :errors="errorFor('street')"></validation-errors>
                             </div>  
 
-                            <!-- City -->
+                            <!-- Street -->
                             <div class="flex flex-col mt-4 mb-3">
                                 <label for="city" 
                                     class="text-gray-400 text-xs font-bold uppercase 
@@ -118,7 +124,8 @@
                                 <input type="text" name="city"
                                     class="px-2 py-1 border border-gray-300 text-sm"
                                     v-model="driversLicense.city">
-                            </div>     
+                                <validation-errors :errors="errorFor('city')"></validation-errors>
+                            </div>    
 
                             <!-- Zipcode -->
                             <div class="flex flex-col mt-4 mb-3">
@@ -128,6 +135,7 @@
                                 <input type="text" name="zip"
                                     class="px-2 py-1 border border-gray-300 text-sm"
                                     v-model="driversLicense.zip">
+                                <validation-errors :errors="errorFor('zip')"></validation-errors>
                             </div>                                                                                                   
                         </div>
                     </div>
@@ -160,6 +168,8 @@
                                     Select Image
                                 </button>
                             </div>
+
+                            <validation-errors :errors="errorFor('license_image')"></validation-errors>
 
                             <p class="mt-8 text-gray-600 text-sm">
                                 Please ensure that the photo of your license is clear and readable. 
@@ -208,14 +218,14 @@
                 isLoggedIn: this.$store.state.isLoggedIn,
                 isLoading: false,
                 driversLicense: {
-                    number: null,
-                    state: null,
-                    dateIssued: null,
-                    expirationDate: null,
-                    birthdate: null,
-                    street: null,
-                    city: null,
-                    zip: null
+                    number: '',
+                    state: '',
+                    dateIssued: '',
+                    expirationDate: '',
+                    birthdate: '',
+                    street: '',
+                    city: '',
+                    zip: ''
                 },
                 licenseImage: null,
                 licenseImagePreview: null,
@@ -265,6 +275,8 @@
             },
 
             async submit() {
+                this.validationErrors = null
+
                 const formData = new FormData;
 
                 formData.append('license_image', this.licenseImage);
