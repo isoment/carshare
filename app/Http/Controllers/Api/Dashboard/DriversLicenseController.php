@@ -21,7 +21,6 @@ class DriversLicenseController extends Controller
 
         $messages = [
             'birthdate.before' => 'You must be 18 or older to use carshare',
-            'expiration_date:after' => 'Your license must not be expired',
             'zip' => 'Zip must be 5 numbers'
         ];
 

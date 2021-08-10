@@ -44,8 +44,7 @@
                                 <label for="state" 
                                     class="text-gray-400 text-xs font-bold uppercase 
                                             tracking-wider mb-2">Issuing State</label>
-                                <v-select class="style-chooser" 
-                                          :options="statesList"
+                                <v-select :options="statesList"
                                           v-model="driversLicense.state">
                                 </v-select>
                                 <validation-errors :errors="errorFor('state')"></validation-errors>
@@ -142,6 +141,8 @@
                     <div class="mt-4 md:mt-6 md:ml-20">
                         <div class="md:mt-6 px-3 md:px-0">
                             <h6 class="font-extrabold text-black">Upload license image</h6>
+
+                            <validation-errors :errors="errorFor('license_image')"></validation-errors>
                             
                             <div class="rounded-md border border-purple-300 mt-6 relative">
                                 <div class="">
@@ -169,15 +170,13 @@
                                 </button>
                             </div>
 
-                            <validation-errors :errors="errorFor('license_image')"></validation-errors>
-
                             <p class="mt-8 text-gray-600 text-sm">
                                 Please ensure that the photo of your license is clear and readable. 
                                 If it is not this may delay the verification process.
                             </p>
 
                             <div class="mt-6 w-full text-center relative">
-                                <button class="border bg-white border-black py-1 px-3 font-semibold w-full 
+                                <button class="border bg-white border-black py-1 px-3 font-semibold w-full focus:outline-none
                                                hover:border-purple-400 hover:text-purple-400 transition-all duration-200 submit-buton"
                                         @click="submit">
                                     Submit
@@ -294,6 +293,11 @@
                 } catch(error) {
                     if (error.response.status === 422) {
                         this.validationErrors = error.response.data.errors;
+                    } else {
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: 'Unknown error. Try again later'
+                        });
                     }
                 }  
             }
@@ -301,7 +305,18 @@
     }
 </script>
 
-<style scoped>
+<style>
+    .vs__dropdown-toggle {
+        border-radius: 0px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        color: black;
+    }
+
+    .vs__selected {
+        margin-top: 0;
+        font: 0.875rem;
+    }
 
     .verify-id-text-wrap {
         z-index: 90;
