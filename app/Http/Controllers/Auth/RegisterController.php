@@ -71,9 +71,9 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        Profile::create([
-            'user_id' => $user->id
-        ]);
+        $profile = new Profile;
+        $profile->user_id = $user->id;
+        $profile->save();
 
         return $user;
     }

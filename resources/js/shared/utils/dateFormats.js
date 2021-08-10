@@ -9,6 +9,11 @@ export function dateFormatMonthDayYear(date) {
 }
 
 // MM/DD/YYYY Format
-export function dateFormatForPhpValidation(date) {
+export function monthDayYearNumbericSlash(date) {
     return moment(date).format('L');
+}
+
+// YYYY-MM-DD Format
+export function yearMonthDayNumericHyphen(date) {
+    return moment(date).format('YYYY-MM-DD')
 }

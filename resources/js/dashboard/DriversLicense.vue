@@ -197,7 +197,7 @@
 
 <script>
     import validationErrors from './../shared/mixins/validationErrors';
-    import { dateFormatForPhpValidation } from './../shared/utils/dateFormats';
+    import { yearMonthDayNumericHyphen } from './../shared/utils/dateFormats';
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
     import vSelect from "vue-select";
@@ -281,9 +281,9 @@
                 formData.append('license_image', this.licenseImage);
                 formData.append('license_number', this.driversLicense.number);
                 formData.append('state', this.driversLicense.state);
-                formData.append('date_issued', dateFormatForPhpValidation(this.driversLicense.dateIssued));
-                formData.append('expiration_date', dateFormatForPhpValidation(this.driversLicense.expirationDate));
-                formData.append('birthdate', dateFormatForPhpValidation(this.driversLicense.birthdate));
+                formData.append('date_issued', yearMonthDayNumericHyphen(this.driversLicense.dateIssued));
+                formData.append('expiration_date', yearMonthDayNumericHyphen(this.driversLicense.expirationDate));
+                formData.append('birthdate', yearMonthDayNumericHyphen(this.driversLicense.birthdate));
                 formData.append('street', this.driversLicense.street);
                 formData.append('city', this.driversLicense.city);
                 formData.append('zip', this.driversLicense.zip);

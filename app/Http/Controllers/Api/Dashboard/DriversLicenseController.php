@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\DriversLicense;
 use App\Rules\States;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,6 +18,8 @@ class DriversLicenseController extends Controller
      */
     public function create(Request $request)
     {
+        $user = auth()->user();
+
         $minBirthDate = Carbon::now()->subYears(18)->toDateString();
 
         $messages = [
@@ -35,6 +38,29 @@ class DriversLicenseController extends Controller
             'zip' => 'digits:5',
             'city' => 'required'
         ], $messages);
+
+        $image = $request->license_image;
+
+        $newName = time() . sha1(random_bytes(10)) . auth()->id() . sha1(random_bytes(8)) . '.' . $image->extension();
+
+        $image->storeAs('license-images', $newName, 'public');
+
+        $fullPath = '/storage/license-images/' . $newName;
+
+        DriversLicense::create([
+            'user_id' => $user->id,
+            'number' => $request->license_number,
+            'state' => $request->state,
+            'issued' => $request->date_issued,
+            'expiration' => $request->expiration_date,
+            'dob' => $request->birthdate,
+            'street' => $request->street,
+            'city' => $request->city,
+            'zip' => $request->zip,
+            'license_image' => $fullPath,
+        ]);
+
+        return response()->json(['Drivers license submitted'], 201);
     }
     
     /**
