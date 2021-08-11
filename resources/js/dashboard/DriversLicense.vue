@@ -289,7 +289,14 @@
                 formData.append('zip', this.driversLicense.zip);
 
                 try {
-                    await axios.post('/api/dashboard/create-drivers-license', formData);
+                    let response = await axios.post('/api/dashboard/create-drivers-license', formData);
+
+                    this.$store.dispatch('addNotification', {
+                        type: 'success',
+                        message: response.data
+                    });
+
+                    this.$router.push({ name: "customer-profile" });
                 } catch(error) {
                     if (error.response.status === 422) {
                         this.validationErrors = error.response.data.errors;
