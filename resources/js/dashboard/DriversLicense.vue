@@ -307,7 +307,25 @@
                         });
                     }
                 }  
+            },
+
+            async showLicense() {
+                try {
+                    let response = await axios.get('/api/dashboard/show-drivers-license');
+                    this.driversLicense.number = response.data.data.number;
+                    this.driversLicense.city = response.data.data.city;
+                    this.driversLicense.birthdate = response.data.data.dob;
+                    this.driversLicense.dateIssued = response.data.data.issued;
+                    this.driversLicense.expirationDate = response.data.data.expiration;
+                    this.driversLicense.state = response.data.data.state;
+                    this.driversLicense.street = response.data.data.street;
+                    this.driversLicense.zip = response.data.data.zip;
+                } catch(error) {}
             }
+        },
+
+        created() {
+            this.showLicense();
         }
     }
 </script>

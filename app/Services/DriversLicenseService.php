@@ -21,18 +21,20 @@ class DriversLicenseService
 
         $fullPath = '/storage/license-images/' . $newName;
 
-        DriversLicense::create([
-            'user_id' => $user->id,
-            'number' => $request->license_number,
-            'state' => $request->state,
-            'issued' => $request->date_issued,
-            'expiration' => $request->expiration_date,
-            'dob' => $request->birthdate,
-            'street' => $request->street,
-            'city' => $request->city,
-            'zip' => $request->zip,
-            'license_image' => $fullPath,
-        ]);
+        DriversLicense::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'number' => $request->license_number,
+                'state' => $request->state,
+                'issued' => $request->date_issued,
+                'expiration' => $request->expiration_date,
+                'dob' => $request->birthdate,
+                'street' => $request->street,
+                'city' => $request->city,
+                'zip' => $request->zip,
+                'license_image' => $fullPath,
+            ]
+        );
 
         return response()->json('Drivers license submitted', 201);
     }

@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DriversLicenseRequest;
+use App\Http\Resources\ShowLicenseResource;
 use App\Models\DriversLicense;
-use App\Rules\States;
 use App\Services\DriversLicenseService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DriversLicenseController extends Controller
@@ -30,20 +29,10 @@ class DriversLicenseController extends Controller
     }
     
     /**
-     *  Update a users drivers license
-     * 
-     *  @param Illuminate\Http\Request $request
-     */
-    public function update(Request $request)
-    {
-
-    }
-
-    /**
      *  Show a users license
      */
     public function show()
     {
-        
+        return new ShowLicenseResource(DriversLicense::showLicense());
     }
 }

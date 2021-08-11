@@ -15,7 +15,7 @@ class CreateDriversLicensesTable extends Migration
     {
         Schema::create('drivers_licenses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->index();
+            $table->unsignedBigInteger('user_id')->index()->unique();
             $table->string('number');
             $table->string('state');
             $table->date('issued');
@@ -25,6 +25,7 @@ class CreateDriversLicensesTable extends Migration
             $table->string('city');
             $table->string('zip');
             $table->string('license_image');
+            $table->boolean('verified')->default(0);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
