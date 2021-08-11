@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\DriversLicense;
+use Illuminate\Support\Facades\Storage;
 
 class DriversLicenseService
 {
@@ -12,6 +13,11 @@ class DriversLicenseService
     public function createDriversLicense($request)
     {
         $user = auth()->user();
+
+        // Check if the user has a license on record
+        if ($user->driversLicense) {
+            $this->licenseImageCleanup($user->driversLicense->license_image);
+        }
 
         $image = $request->license_image;
 
@@ -37,5 +43,19 @@ class DriversLicenseService
         );
 
         return response()->json('Drivers license submitted', 201);
+    }
+
+    /**
+     *  Delete the old uploaded image of the users license if it exists
+     * 
+     *  @param string $imagePath
+     */
+    private function licenseImageCleanup($imagePath)
+    {
+        $fileName = explode("/", $imagePath);
+
+        $file = $fileName[2] . '/' . $fileName[3];
+
+        Storage::disk('public')->delete($file);
     }
 }
