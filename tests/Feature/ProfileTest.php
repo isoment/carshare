@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -48,6 +49,8 @@ class ProfileTest extends TestCase
 
         $this->actingAs($user);
 
+        Storage::fake('public');
+
         $this->json('POST', '/api/dashboard/update-avatar', [
             'image' => 'String'
         ])->assertStatus(422);
@@ -61,7 +64,7 @@ class ProfileTest extends TestCase
         ])->assertStatus(422);
 
         $fakePDF = UploadedFile::fake()->create(
-            'fake.pdf', '50000', 'application/pdf'
+            'fake.pdf', 500000, 'application/pdf'
         );
 
         $this->json('POST', '/api/dashboard/update-avatar', [
@@ -78,6 +81,8 @@ class ProfileTest extends TestCase
         $user = User::factory()->create();
 
         $this->actingAs($user);
+
+        Storage::fake('public');
 
         $image = UploadedFile::fake()->image('avatar.jpg', 200, 200)->size(200);
 
