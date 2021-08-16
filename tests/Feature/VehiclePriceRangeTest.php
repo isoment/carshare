@@ -5,10 +5,11 @@ namespace Tests\Feature;
 use App\Models\Vehicle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Tests\Trait\UserTrait;
 
 class VehiclePriceRangeTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, UserTrait;
 
     /**
      *  @test

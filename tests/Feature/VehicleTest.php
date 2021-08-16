@@ -2,15 +2,15 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Tests\Trait\UserTrait;
 
 class VehicleTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, UserTrait;
 
     /**
      *  @test

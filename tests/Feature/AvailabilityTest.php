@@ -8,10 +8,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Tests\TestCase;
+use Tests\Trait\UserTrait;
 
 class AvailabilityTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, UserTrait;
 
     /**
      *  @test

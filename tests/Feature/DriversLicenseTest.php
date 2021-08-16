@@ -4,14 +4,14 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Tests\Trait\DriversLicenseTrait;
 use Tests\TestCase;
 
 class DriversLicenseTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, DriversLicenseTrait;
 
     /**
      *  @test
@@ -146,6 +146,80 @@ class DriversLicenseTest extends TestCase
             'street' => $updatedData['street'],
             'city' => $updatedData['city'],
             'zip' => $updatedData['zip']
+        ]);
+    }
+
+    /**
+     *  @test
+     *  Unauthorized users cannot access the show drivers license api endpoint
+     */
+    public function unauthorized_users_cannot_access_the_show_drivers_license_api()
+    {
+        $this->json('POST', '/api/dashboard/create-drivers-license')
+            ->assertStatus(401);
+    }
+
+    /**
+     *  @test
+     *  The show drivers license api has the correct json structure
+     */
+    public function the_show_drivers_license_api_endpoint_returns_the_correct_json_structure()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        Storage::fake('public');
+
+        $data = $this->validLicenseData();
+
+        $this->json('POST', '/api/dashboard/create-drivers-license', $data);
+
+        $response = $this->json('GET', '/api/dashboard/show-drivers-license');
+
+        $response->assertJsonStructure([
+            'data' => [
+                'city',
+                'dob',
+                'expiration',
+                'issued',
+                'number',
+                'state',
+                'street',
+                'zip'
+            ]
+        ]);
+    }
+
+    /**
+     *  @test
+     *  The show drivers license api returns the correct data
+     */
+    public function the_show_drivers_license_api_endpoint_returns_the_correct_data()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        Storage::fake('public');
+
+        $data = $this->validLicenseData();
+
+        $this->json('POST', '/api/dashboard/create-drivers-license', $data);
+
+        $response = $this->json('GET', '/api/dashboard/show-drivers-license');
+
+        $response->assertExactJson([
+            'data' => [
+                'city' => $data['city'],
+                'dob' => $data['birthdate'],
+                'expiration' => $data['expiration_date'],
+                'issued' => $data['date_issued'],
+                'number' => $data['license_number'],
+                'state' => $data['state'],
+                'street' => $data['street'],
+                'zip' => $data['zip']
+            ]
         ]);
     }
 }

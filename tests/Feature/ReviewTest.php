@@ -6,10 +6,11 @@ use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Tests\Trait\UserTrait;
 
 class ReviewTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, UserTrait;
 
     /**
      *  The format we expect to see for an index of reviews
