@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\DriversLicense;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -54,6 +55,10 @@ class DriversLicenseTest extends TestCase
         $this->json('POST', '/api/dashboard/create-drivers-license', $data)
             ->assertStatus(201);
 
+        $image = DriversLicense::where('user_id', $user->id)->first()->license_image;
+
+        $path = explode("/", $image)[2] . "/" . explode("/", $image)[3];
+
         $this->assertDatabaseHas('drivers_licenses', [
             'user_id' => $user->id,
             'number' => $data['license_number'],
@@ -63,8 +68,11 @@ class DriversLicenseTest extends TestCase
             'dob' => $data['birthdate'],
             'street' => $data['street'],
             'city' => $data['city'],
-            'zip' => $data['zip']
+            'zip' => $data['zip'],
+            'license_image' => $image
         ]);
+
+        Storage::disk('public')->assertExists($path);
     }
 
     /**

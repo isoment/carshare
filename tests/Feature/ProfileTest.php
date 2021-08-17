@@ -89,7 +89,16 @@ class ProfileTest extends TestCase
             'image' => $image
         ])->assertStatus(200);
 
-        $this->assertTrue(Str::contains($user->profile->image, '.jpeg'));
+        $avatar = $user->profile->image;
+
+        // Explode the avatar path from the database and remove the '/storage/' prefix
+        $path = explode("/", $avatar)[2] . "/" . explode("/", $avatar)[3];
+
+        $this->assertDatabaseHas('profiles', [
+            'image' => $avatar
+        ]);
+
+        Storage::disk('public')->assertExists($path);
     }
 
     /**
