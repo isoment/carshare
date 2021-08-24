@@ -18,6 +18,10 @@ use Illuminate\Support\Facades\Route;
  *  Public API Routes  *
  ***********************/
 
+// Authenticated user details
+Route::get('user-details', 'App\Http\Controllers\Api\Auth\UserDetailController')
+    ->name('user-details');
+
 // List vehicle makes
 Route::get('vehicle-make/list', 'App\Http\Controllers\Api\VehicleMakeListController')
     ->name('vehicle-make.list');
