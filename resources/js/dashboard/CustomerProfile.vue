@@ -76,7 +76,7 @@
 
         methods: {
             async getUser() {
-                this.user = (await axios.get('/user')).data;
+                this.user = (await axios.get('/api/user-details')).data.data;
             },
 
             onProfileEdit() {

@@ -152,12 +152,13 @@
                 formData.set('image', image);
 
                 try {
-                    let result = (await axios.post('/api/dashboard/update-avatar', formData));
+                    await axios.post('/api/dashboard/update-avatar', formData);
 
                     // Emit event to parent to refresh avatar
                     this.$emit('refreshAvatar');
 
                     // Update vuex store
+                    this.$store.dispatch('loadUser');
                 } catch(error) {
                     this.$store.dispatch('addNotification', {
                         type: 'error',
