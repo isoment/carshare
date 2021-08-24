@@ -4,7 +4,6 @@ export default {
     state: {
         isLoggedIn: false,
         user: {},
-        userAvatar: null,
         notifications: [],
         searchDates: {
             start: null,
@@ -56,11 +55,6 @@ export default {
         setPriceRange(state, payload) {
             state.priceRange = payload;
         },
-
-        // Set user avatar
-        setUserAvatar(state, payload) {
-            state.userAvatar = payload;
-        }
     },
 
     actions: {
@@ -81,12 +75,10 @@ export default {
         async loadUser(context) {
             if (isLoggedIn()) {
                 try {
-                    // const user = (await axios.get('/user')).data;
                     const user = (await axios.get('/api/user-details')).data.data;
                     console.log(user);
                     context.commit('setUser', user);
                     context.commit('setLoggedIn', true);
-                    context.dispatch('setUserAvatar', user.profile.image);
                 } catch (error) {
                     context.dispatch("logOut");
                 }
@@ -120,11 +112,5 @@ export default {
         setPriceRange(context, payload) {
             context.commit('setPriceRange', payload);
         },
-
-        // Set the users avatar
-        setUserAvatar(context, payload) {
-            context.commit('setUserAvatar', payload);
-            localStorage.setItem('userAvatar', JSON.stringify(payload));
-        }
     },
 }

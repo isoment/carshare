@@ -157,7 +157,7 @@
                     // Emit event to parent to refresh avatar
                     this.$emit('refreshAvatar');
 
-                    this.$store.dispatch('setUserAvatar', result.data);
+                    // Update vuex store
                 } catch(error) {
                     this.$store.dispatch('addNotification', {
                         type: 'error',

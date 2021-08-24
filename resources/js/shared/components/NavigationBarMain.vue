@@ -69,7 +69,7 @@
                         </button>
 
                         <!-- Profile dropdown -->
-                        <div class="ml-3 relative">
+                        <div class="ml-3 relative" v-if="user.profile">
                             <div>
                                 <button type="button" 
                                         class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-purple-400" 
@@ -78,7 +78,7 @@
                                         v-on-clickaway="profileMenuAway">
                                     <span class="sr-only">Open user menu</span>
                                     <img class="h-8 w-8 rounded-full"
-                                        :src="avatar(userAvatar)"
+                                        :src="avatar(user.profile.image)"
                                         alt="avatar">
                                 </button>
                             </div>
@@ -160,13 +160,13 @@
             return {
                 profileMenu: false,
                 mobileMenu: false,
-                userAvatar: null
             }
         },
 
         computed: {
             ...mapState({
-                isLoggedIn: "isLoggedIn"
+                isLoggedIn: "isLoggedIn",
+                user: "user"
             }),
         },
 
@@ -189,8 +189,6 @@
 
                     this.$store.dispatch('logOut');
 
-                    localStorage.removeItem('userAvatar');
-
                     this.$router.push({ name: 'main-page' }).catch(error => {
                         if (
                             error.name !== 'NavigationDuplicated' &&
@@ -209,11 +207,5 @@
                 }
             },
         },
-
-        created() {
-            if (localStorage.getItem('userAvatar')) {
-                this.userAvatar = JSON.parse(localStorage.getItem('userAvatar'));
-            }
-        }
     }
 </script>
