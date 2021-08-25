@@ -119,28 +119,26 @@
                 <div class="sm:hidden absolute w-full bg-gray-800 mobile-nav" id="mobile-menu"
                     v-show="mobileMenu">
                     <div class="px-2 pt-2 pb-3 space-y-1">
-                    <!-- <a href="#" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" aria-current="page">Active</a> -->
+                        <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                            Share my car
+                        </a>
 
-                    <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
-                        Share my car
-                    </a>
+                        <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                                    :to="{ name: 'main-vehicle' }"> 
+                            Find a car
+                        </router-link>
 
-                    <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                                :to="{ name: 'main-vehicle' }"> 
-                        Find a car
-                    </router-link>
+                        <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                                    :to="{ name: 'login' }"
+                                    v-if="!isLoggedIn">
+                            Log in
+                        </router-link>
 
-                    <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                                :to="{ name: 'login' }"
-                                v-if="!isLoggedIn">
-                        Log in
-                    </router-link>
-
-                    <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                                :to="{ name: 'register' }"
-                                v-if="!isLoggedIn">
-                        Sign up
-                    </router-link>
+                        <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                                    :to="{ name: 'register' }"
+                                    v-if="!isLoggedIn">
+                            Sign up
+                        </router-link>
                     </div>
                 </div>
             </transition>

@@ -42,7 +42,6 @@
                      </div>
                     <div v-if="editProfileMode">
                         <customer-profile-edit :user="user" 
-                                               @refreshAvatar="getUser()"
                                                @profileWasEdited="onProfileEdit()">
                         </customer-profile-edit>
                     </div>
@@ -57,6 +56,7 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex';
     import CustomerProfileEdit from './CustomerProfileEdit.vue';
     import CustomerProfileInfo from './CustomerProfileInfo.vue';
 
@@ -66,30 +66,23 @@
             CustomerProfileEdit 
         },
 
+        computed: {
+            ...mapState({
+                isLoggedIn: "isLoggedIn",
+                user: "user"
+            }),
+        },
+
         data() {
             return {
-                isLoggedIn: null,
-                user: null,
                 editProfileMode: false,
             }
         },
 
         methods: {
-            async getUser() {
-                this.user = (await axios.get('/api/user-details')).data.data;
-            },
-
             onProfileEdit() {
                 this.editProfileMode = false;
-
-                this.getUser();
             }
         },
-
-        created() {
-            this.isLoggedIn = this.$store.state.isLoggedIn;
-
-            this.getUser();
-        }
     }
 </script>

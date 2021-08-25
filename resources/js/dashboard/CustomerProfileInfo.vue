@@ -1,8 +1,8 @@
 <template>
-    <div class="grid grid-cols-1 md:grid-cols-2">
+    <div class="grid grid-cols-1 md:grid-cols-2" v-if="user.profile">
         <div class="relative md:mr-20">
             <div class="absolute -top-14 mb-12">
-                <img :src="avatar(user.profile.image)" 
+                <img :src="avatar(user.profile.image)"
                     alt="avatar"
                     class="rounded-full h-28 w-28 border-8 border-white">
             </div>
