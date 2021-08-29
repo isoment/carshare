@@ -9,6 +9,7 @@ import MainVehicleComponent from './vehicle/MainVehicleComponent';
 import VehicleComponent from './vehicle/VehicleComponent';
 import CustomerProfile from './dashboard/CustomerProfile';
 import DriversLicense from './dashboard/DriversLicense';
+import ShoppingCart from './cart/ShoppingCart';
 
 const routes = [
     {
@@ -64,6 +65,14 @@ const routes = [
         path: "/dashboard/customer/license",
         component: DriversLicense,
         name: "drivers-license"
+    },
+
+    /** CART **/
+    ////////////
+    {
+        path: "/cart",
+        component: ShoppingCart,
+        name: "shopping-cart"
     },
 
     /** OTHER **/
