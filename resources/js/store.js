@@ -5,6 +5,9 @@ export default {
         isLoggedIn: false,
         user: {},
         notifications: [],
+        cart: {
+            items: []
+        },
         searchDates: {
             start: null,
             end: null
@@ -16,12 +19,12 @@ export default {
     },
 
     mutations: {
-        setUser(state, payload) {
-            state.user = payload;
-        },
-
         setLoggedIn(state, payload) {
             state.isLoggedIn = payload;
+        },
+
+        setUser(state, payload) {
+            state.user = payload;
         },
 
         /*
@@ -46,12 +49,22 @@ export default {
             })
         },
 
-        // Set the search dates.
+        addToCart(state, payload) {
+            state.cart.items.push(payload);
+        },
+
+        removeFromCart(state, payload) {
+            state.cart.items = state.cart.items.filter(item => item.vehicle.id !== payload);
+        },
+
+        setCart(state, payload) {
+            state.cart = payload;
+        },
+
         setSearchDates(state, payload) {
             state.searchDates = payload;
         },
 
-        // Set the price range
         setPriceRange(state, payload) {
             state.priceRange = payload;
         },
@@ -68,6 +81,10 @@ export default {
 
             if (lastSearchDates) {
                 context.commit('setSearchDates', JSON.parse(lastSearchDates));
+            }
+
+            if (localStorage.getItem('cart')) {
+                context.commit('setCart', JSON.parse(cart));
             }
         },
 
@@ -92,14 +109,27 @@ export default {
             logOut();
         },
 
-        // Add a notification.
         addNotification(context, payload) {
             context.commit('pushNotification', payload);
         },
 
-        // Remove a notification.
         removeNotification(context, payload) {
             context.commit('removeNotification', payload);
+        },
+
+        addToCart(context, payload) {
+            context.commit('addToCart', payload);
+            localStorage.setItem('cart', JSON.stringify(context.state.cart));
+        },
+
+        removeFromBasket(context, payload) {
+            context.commit('removeFromCart', payload);
+            localStorage.setItem('cart', JSON.stringify(context.state.cart));
+        },
+
+        clearCart(context) {
+            context.commit('setCart', { items: [] });
+            localStorage.setItem('cart', JSON.stringify(context.state.cart));
         },
 
         // Set the search dates and store in local storage.

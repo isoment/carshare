@@ -43,7 +43,8 @@
                         :class="{ 
                             'bg-gray-400': notAvailable || validationError, 
                             'bg-purple-500 hover:bg-purple-400': available 
-                        }">
+                        }"
+                        @click="addToCart">
                     Add to cart
                 </button>
             </div>
@@ -153,6 +154,12 @@
 
                     this.$emit('renderPrice');
                 }
+            },
+
+            addToCart() {
+                this.$store.dispatch('addToCart', {
+
+                });
             }
         },
 
