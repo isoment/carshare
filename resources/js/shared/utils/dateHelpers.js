@@ -1,3 +1,5 @@
+import moment from "moment";
+
 /*
     Check if the date is a string or date object.
     If its a string already return it else if its a
@@ -31,4 +33,12 @@ export function dateSetterEnd(end) {
     return end ?
         end :
         new Date(today.getTime() + (24 * 60 * 60 * 1000)).toLocaleDateString();
+}
+
+/*
+    Check if a date is valid
+*/
+export function dateValid(date) {
+    let toCheck = moment(date);
+    return toCheck.isValid();
 }

@@ -126,9 +126,36 @@
 
                     <!-- Right Pane -->
                     <div class="row-start-1 md:row-auto mb-10 md:mb-0">
+                        <!-- Pricing -->
                         <pricing :pricing="pricing"></pricing>
+
+                        <!-- Check Availability -->
                         <div class="mt-6 flex justify-center">
-                            <availability @renderPrice="fetchPricing()"></availability>
+                            <availability @renderPrice="fetchPricing()"
+                                          @availability="setAvailability($event)"></availability>
+                        </div>
+
+                        <!-- Add to cart -->
+                        <div class="mt-6">
+                            <div v-if="isLoggedIn">
+                                <button class="text-white font-bold py-2 w-full text-sm 
+                                                tracking-widest transition-all duration-200"
+                                        :disabled="!availability"
+                                        :class="{ 
+                                            'bg-gray-400': !availability, 
+                                            'bg-purple-500 hover:bg-purple-400': availability 
+                                        }"
+                                        @click="addToCart">
+                                    Add to cart
+                                </button>
+                            </div>
+                            <div v-else>
+                                <button class="text-white font-bold py-2 w-full text-sm bg-purple-500 hover:bg-purple-400
+                                                tracking-widest transition-all duration-200"
+                                        @click="() => this.$router.push({ name: 'login' })">
+                                    Login
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -159,6 +186,7 @@
 
         computed: {
             ...mapState({
+                isLoggedIn: state => state.isLoggedIn,
                 start: state => state.searchDates.start,
                 end: state => state.searchDates.end
             })
@@ -169,6 +197,7 @@
                 loading: false,
                 vehicleData: null,
                 pricing: null,
+                availability: null
             }
         },
 
@@ -197,6 +226,21 @@
                     }
                 })).data.data
             },
+
+            setAvailability(availability) {
+                this.availability = availability;
+            },
+
+            addToCart() {
+                console.log({
+                    vehicle: this.vehicleData,
+                    price: this.pricing,
+                    dates: {
+                        start: this.start,
+                        end: this.end
+                    }
+                });
+            }
         },
 
         created() {
