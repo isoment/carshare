@@ -7,12 +7,19 @@
             <main-navigation></main-navigation>
 
             <div class="md:py-12">
-                <div class="max-w-md mx-auto bg-gray-100 shadow-lg md:rounded-lg md:max-w-5xl">
+                <div class="max-w-md mx-auto bg:white md:bg-gray-100 shadow-lg md:rounded-lg md:max-w-6xl">
                     <div class="md:flex ">
                         <div class="w-full p-4 px-5 py-5">
                             <div class="md:grid md:grid-cols-3 gap-2 ">
                                 <div class="col-span-2 md:p-5">
-                                    <h1 class="text-xl font-medium">Shopping Cart</h1>
+                                    <div class="flex justify-between items-center">
+                                        <h1 class="text-2xl font-boldnosans font-bold">Shopping Cart</h1>
+                                        <button class="text-xs font-bold border border-red-400 text-red-400 hover:border-red-500 
+                                                      hover:text-red-500 p-1 cursor-pointer focus:outline-none transition-all duration-200"
+                                                @click="clearCart()">
+                                            Clear Cart
+                                        </button>
+                                    </div>
 
                                     <!-- Cart Items -->
                                     <div v-for="item in cart.items" :key="item.id">
@@ -34,21 +41,31 @@
                                                             }}
                                                         </span>
                                                     </span> 
-                                                    <span class="text-xs font-light text-gray-400">
-
-                                                    </span>
-                                                    <span class="text-xs font-light text-gray-400">
+                                                    <span class="text-xs font-light text-gray-500">
                                                         {{ 
                                                             formatDate(item.dates.start) + 
                                                             ' - ' + formatDate(item.dates.end) 
                                                         }}
                                                     </span> 
+                                                    <span class="text-xs font-light text-purple-500">
+                                                        {{ 
+                                                            formatMoney(item.price.price_day) + ' / ' + 
+                                                            item.price.days + ' days' 
+                                                        }}
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <div class="md:pr-6">
-                                                <div> 
-                                                    <span class="text-xs md:text-sm font-medium text-purple-500">
+                                            <div class="mt-1 md:mt-0 md:pr-6">
+                                                <div class="flex items-center"> 
+                                                    <span class="md:text-sm font-light md:font-medium text-purple-500">
                                                         Total: {{formatMoney(item.price.total)}}
+                                                    </span>
+                                                    <span class="ml-1 cursor-pointer"
+                                                          @click="removeFromCart(item.id)">
+                                                        <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" 
+                                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                        </svg>
                                                     </span> 
                                                 </div>
                                             </div>
@@ -67,7 +84,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="p-5 bg-gray-800 rounded overflow-visible card-input-element"> 
+                                <div class="p-5 mt-6 md:mt-0 bg-gray-800 rounded overflow-visible card-input-element"> 
                                     <span class="text-xl font-medium text-gray-100 block pb-3">Card Details</span> 
                                     <span class="text-xs text-gray-400 ">Card Type</span>
                                     <div class="overflow-visible flex justify-between items-center mt-2">
@@ -119,7 +136,7 @@
                                             </div>
                                         </div>
                                     </div> 
-                                    <button class="h-12 w-full bg-purple-500 rounded focus:outline-none text-white hover:bg-purple-400">Check Out</button>
+                                    <button class="h-12 w-full bg-purple-500 focus:outline-none text-white hover:bg-purple-400">Check Out</button>
                                 </div>
                             </div>
                         </div>
@@ -159,6 +176,26 @@
                 this.cart.items.forEach(element => arr.push(element.price.total));
 
                 return dollarFormat(arr.reduce((a, b) => a + b, 0));
+            },
+
+            clearCart() {
+                if (confirm('Do you really want to clear the cart?')) {
+                    this.$store.dispatch('clearCart');
+
+                    this.$store.dispatch('addNotification', {
+                        type: 'success',
+                        message: 'Cart cleared!'
+                    })
+                }
+            },
+
+            removeFromCart(itemId) {
+                this.$store.dispatch('removeFromBasket', itemId);
+
+                this.$store.dispatch('addNotification', {
+                    type: 'success',
+                    message: 'Removed from cart!'
+                });
             }
         }
     }

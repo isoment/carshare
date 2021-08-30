@@ -50,11 +50,14 @@ export default {
         },
 
         addToCart(state, payload) {
-            state.cart.items.push(payload);
+            state.cart.items.push({
+                ...payload,
+                id: (Math.random().toString(36) + Date.now().toString(36)).substr(2)
+            });
         },
 
         removeFromCart(state, payload) {
-            state.cart.items = state.cart.items.filter(item => item.vehicle.id !== payload);
+            state.cart.items = state.cart.items.filter(item => item.id !== payload);
         },
 
         setCart(state, payload) {
