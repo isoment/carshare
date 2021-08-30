@@ -11,47 +11,49 @@
                     <div class="md:flex ">
                         <div class="w-full p-4 px-5 py-5">
                             <div class="md:grid md:grid-cols-3 gap-2 ">
-                                <div class="col-span-2 p-5">
-                                    <h1 class="text-xl font-medium ">Shopping Cart</h1>
+                                <div class="col-span-2 md:p-5">
+                                    <h1 class="text-xl font-medium">Shopping Cart</h1>
 
-                                    <!-- Cart Item -->
-                                    <div class="flex justify-between items-center mt-6 pt-6">
-                                        <div class="flex items-center"> 
-                                            <img src="/img/vehicle-makes/ford.jpg" class="rounded-full w-14 h-14">
-                                            <div class="flex flex-col ml-3"> 
-                                                <span class="md:text-md font-medium">Vehicle Name</span> 
-                                                <span class="text-xs font-light text-gray-400">Dates</span> 
+                                    <!-- Cart Items -->
+                                    <div v-for="item in cart.items" :key="item.id">
+                                        <div class="flex flex-col md:flex-row md:justify-between md:items-center 
+                                                    mt-6 pt-6">
+                                            <div class="flex items-center"> 
+                                                <img :src="item.vehicle.vehicle_images[0]" 
+                                                     class="h-14 w-20 rounded-sm">
+                                                <div class="flex flex-col ml-3"> 
+                                                    <span class="flex flex-col md:text-md font-medium">
+                                                        <span class="text-purple-500 text-sm">
+                                                            {{ item.vehicle.host_name + '\'s' }}
+                                                        </span>
+                                                        <span>
+                                                            {{
+                                                                item.vehicle.year + 
+                                                                ' ' + item.vehicle.vehicle_make + 
+                                                                ' ' + item.vehicle.vehicle_model
+                                                            }}
+                                                        </span>
+                                                    </span> 
+                                                    <span class="text-xs font-light text-gray-400">
+
+                                                    </span>
+                                                    <span class="text-xs font-light text-gray-400">
+                                                        {{ 
+                                                            formatDate(item.dates.start) + 
+                                                            ' - ' + formatDate(item.dates.end) 
+                                                        }}
+                                                    </span> 
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="flex justify-center items-center">
-                                            <div class="pr-8 "> 
-                                                <span class="text-xs font-medium">$10.50</span> 
-                                            </div>
-                                            <div> 
-                                                <i class="fa fa-close text-xs font-medium"></i> 
+                                            <div class="md:pr-6">
+                                                <div> 
+                                                    <span class="text-xs md:text-sm font-medium text-purple-500">
+                                                        Total: {{formatMoney(item.price.total)}}
+                                                    </span> 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!-- Cart Item -->
-                                    <div class="flex justify-between items-center mt-6 pt-6">
-                                        <div class="flex items-center"> 
-                                            <img src="/img/vehicle-makes/ford.jpg" class="rounded-full w-14 h-14">
-                                            <div class="flex flex-col ml-3"> 
-                                                <span class="md:text-md font-medium">Vehicle Name</span> 
-                                                <span class="text-xs font-light text-gray-400">Dates</span> 
-                                            </div>
-                                        </div>
-                                        <div class="flex justify-center items-center">
-                                            <div class="pr-8 "> 
-                                                <span class="text-xs font-medium">$10.50</span> 
-                                            </div>
-                                            <div> 
-                                                <i class="fa fa-close text-xs font-medium"></i> 
-                                            </div>
-                                        </div>
-                                    </div>
-
 
                                     <div class="flex justify-between items-center mt-6 pt-6 border-t">
                                         <router-link class="flex items-center"
@@ -59,9 +61,9 @@
                                             <i class="fa fa-arrow-left text-sm pr-2"></i> 
                                             <span class="text-md font-medium text-purple-500">Back to Vehicles</span>
                                         </router-link>
-                                        <div class="flex justify-center items-end"> 
-                                            <span class="text-sm font-medium text-gray-400 mr-1">Subtotal:</span> 
-                                            <span class="text-lg font-bold text-gray-800 "> $24.90</span> 
+                                        <div class="flex justify-center items-end pr-6"> 
+                                            <span class="font-medium text-gray-400 mr-1">Total:</span> 
+                                            <span class="font-bold text-gray-800 "> {{cartTotal()}}</span> 
                                         </div>
                                     </div>
                                 </div>
@@ -131,13 +133,34 @@
 
 <script>
     import { mapState } from 'vuex';
+    import { dollarFormat } from './../shared/utils/currency';
+    import { monthDayYearNumbericSlash } from './../shared/utils/dateFormats';
 
     export default {
         computed: {
             ...mapState({
-                isLoggedIn: "isLoggedIn"
+                isLoggedIn: "isLoggedIn",
+                cart: "cart"
             }),
         },
+
+        methods: {
+            formatMoney(value) {
+                return dollarFormat(value);
+            },
+
+            formatDate(value) {
+                return monthDayYearNumbericSlash(value);
+            },
+
+            cartTotal() {
+                let arr = [];
+
+                this.cart.items.forEach(element => arr.push(element.price.total));
+
+                return dollarFormat(arr.reduce((a, b) => a + b, 0));
+            }
+        }
     }
 </script>
 

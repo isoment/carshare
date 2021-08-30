@@ -30,14 +30,16 @@
                                                     md:border-b-0 my-2 md:my-0">
                                             <label for="from" class="text-xs font-bold text-gray-500">From</label>
                                             <input class="focus:outline-none search-input-width"
-                                                    :value="inputValue.start"
-                                                    v-on="inputEvents.start">
+                                                   :value="inputValue.start"
+                                                   v-on="inputEvents.start"
+                                                   readonly>
                                         </div>
                                         <div class="flex flex-col md:px-3 border-b md:border-b-0 border-gray-300 my-2 md:my-0">
                                             <label for="until" class="text-xs font-bold text-gray-500">Until</label>
                                             <input class="focus:outline-none search-input-width"
-                                                    :value="inputValue.end"
-                                                    v-on="inputEvents.end">
+                                                   :value="inputValue.end"
+                                                   v-on="inputEvents.end"
+                                                   readonly>
                                         </div>
                                     </div>
                                 </template>

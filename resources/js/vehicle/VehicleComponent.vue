@@ -18,7 +18,6 @@
 
                     <!-- Left Pane -->
                     <div class="col-span-2 mr-4">
-
                         <div class="grid grid-cols-4">
                             <div class="mx-3 text-right mt-2 font-boldnosans font-bold tracking-widest text-sm
                                         hidden sm:block">
@@ -121,7 +120,6 @@
                                 </div>
                             </div>                        
                         </div>
-
                     </div>
 
                     <!-- Right Pane -->
@@ -158,6 +156,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -232,13 +231,18 @@
             },
 
             addToCart() {
-                console.log({
+                this.$store.dispatch('addToCart', {
                     vehicle: this.vehicleData,
                     price: this.pricing,
                     dates: {
                         start: this.start,
                         end: this.end
                     }
+                });
+
+                this.$store.dispatch('addNotification', {
+                    type: 'success',
+                    message: 'Booking added to cart!'
                 });
             }
         },
