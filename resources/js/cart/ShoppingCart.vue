@@ -119,12 +119,12 @@
                                             </div>
                                         </div>
                                         <div class="my-4 text-white text-sm lg:text-base">
-                                            <h6>Make any changes to you bookings here and continue to the payment page. All major credit cards
-                                                are accepted through our payment processor Stripe
+                                            <h6>Make any changes to your bookings here then continue to the payment page. All major credit cards
+                                                are accepted through our payment processor Stripe.
                                             </h6>
                                         </div>
                                     </div>
-                                    <router-link :to="{ name: 'payment' }"
+                                    <router-link :to="{ name: 'payment', params: { total: cartTotal() } }"
                                             class="w-full focus:outline-none text-white text-center py-2 font-semibold"
                                             :disabled="!cart.items.length"
                                             :class="{

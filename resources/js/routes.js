@@ -77,7 +77,7 @@ const routes = [
     },
 
     {
-        path: "cart/payment",
+        path: "/cart/payment",
         component: Payment,
         name: "payment"
     },

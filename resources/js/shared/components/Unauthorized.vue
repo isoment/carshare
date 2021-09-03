@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="text-gray-600 h-screen flex items-center justify-center">
+        <div class="text-gray-600 h-screen flex items-center justify-center margin-adjust-403">
             <div class="text-center">
                 <div class="text-7xl">
                     <i class="fas fa-exclamation-circle"></i>
@@ -19,3 +19,9 @@
         </div>
     </div>
 </template>
+
+<style>
+    .margin-adjust-403 {
+        margin-top: -64px;
+    }
+</style>
