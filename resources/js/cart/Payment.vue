@@ -17,21 +17,22 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                             </svg>
                         </div>
+                        <router-link class="flex cursor-pointer" :to="{name: 'shopping-cart'}">
+                            <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                            <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        </router-link>
                     </div>
                     <div class="mb-10">
                         <h1 class="text-center font-bold text-xl font-boldnosans">Total Charge</h1>
                         <h3 class="text-center font-bold text-3xl text-purple-500 font-boldnosans">{{ total }}</h3>
                     </div>
-                    <!-- <div class="mb-3">
-                        <label class="text-gray-400 text-xs font-bold uppercase tracking-wider">Name on card</label>
-                        <div>
-                            <input class="px-2 py-2 border border-gray-300 text-sm w-full" placeholder="John Smith" type="text"/>
-                        </div>
-                    </div> -->
+                    <div class="mb-1 text-red-400 text-xs font-semibold">
+                        {{ stripeValidationErrors }}
+                    </div>
                     <div class="mb-3">
                         <label class="text-gray-400 text-xs font-bold uppercase tracking-wider">Card number</label>
                         <div>
-                            <div id="card-number-element" ></div>
+                            <div id="card-number-element"></div>
                         </div>
                     </div>
                     <div class="mb-3 -mx-2 flex items-end">
@@ -74,7 +75,8 @@
                 stripe: null,
                 cardNumberElement: null,
                 cardExpiryElement: null,
-                cardCVCElement: null
+                cardCVCElement: null,
+                stripeValidationErrors: null
             }
         },
 
@@ -114,11 +116,19 @@
                     }
                 });
                 this.cardCvcElement.mount("#card-cvc-element");
+
+                this.cardNumberElement.on("change", this.setValidationError);
+                this.cardExpiryElement.on("change", this.setValidationError);
+                this.cardCvcElement.on("change", this.setValidationError);
+            },
+
+            setValidationError(event) {
+                this.stripeValidationErrors = event.error ? event.error.message : "";
             },
 
             inputTailwindClasses() {
                 return "px-2 py-2 border border-gray-300 text-sm w-full";
-            }
+            },
         },
 
         async mounted() {
