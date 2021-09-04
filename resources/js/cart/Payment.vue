@@ -22,31 +22,29 @@
                         <h1 class="text-center font-bold text-xl font-boldnosans">Total Charge</h1>
                         <h3 class="text-center font-bold text-3xl text-purple-500 font-boldnosans">{{ total }}</h3>
                     </div>
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label class="text-gray-400 text-xs font-bold uppercase tracking-wider">Name on card</label>
                         <div>
                             <input class="px-2 py-2 border border-gray-300 text-sm w-full" placeholder="John Smith" type="text"/>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="mb-3">
                         <label class="text-gray-400 text-xs font-bold uppercase tracking-wider">Card number</label>
                         <div>
-                            <input class="px-2 py-2 border border-gray-300 text-sm w-full" placeholder="0000 0000 0000 0000" type="text"/>
+                            <div id="card-number-element" ></div>
                         </div>
                     </div>
                     <div class="mb-3 -mx-2 flex items-end">
                         <div class="px-2 w-1/2">
                             <label class="text-gray-400 text-xs font-bold uppercase tracking-wider">Expiration Date</label>
                             <div>
-                                <input class="px-2 py-2 border border-gray-300 text-sm w-full" 
-                                       placeholder="xx/xx" type="text"/>
+                                <div id="card-expiry-element"></div>
                             </div>
                         </div>
                         <div class="px-2 w-1/2">
                             <label class="text-gray-400 text-xs font-bold uppercase tracking-wider">CCV</label>
                             <div>
-                                <input class="px-2 py-2 border border-gray-300 text-sm w-full" 
-                                       placeholder="XXX" type="text"/>
+                                <div id="card-cvc-element"></div>
                             </div>
                         </div>
                     </div>
@@ -71,6 +69,15 @@
     import { mapState } from 'vuex';
 
     export default {
+        data() {
+            return {
+                stripe: null,
+                cardNumberElement: null,
+                cardExpiryElement: null,
+                cardCVCElement: null
+            }
+        },
+
         computed: {
             ...mapState({
                 isLoggedIn: "isLoggedIn",
@@ -81,6 +88,44 @@
                 return this.$route.params.total;
             }
         },
+
+        methods: {
+            // Insert the Stripe inputs inot the DOM
+            inputElements() {
+                let elements = this.stripe.elements();
+
+                this.cardNumberElement = elements.create("cardNumber", {
+                    classes: {
+                        base: this.inputTailwindClasses()
+                    }
+                });
+                this.cardNumberElement.mount("#card-number-element");
+
+                this.cardExpiryElement = elements.create("cardExpiry", {
+                    classes: {
+                        base: this.inputTailwindClasses()
+                    }
+                });
+                this.cardExpiryElement.mount("#card-expiry-element");
+
+                this.cardCvcElement = elements.create("cardCvc", {
+                    classes: {
+                        base: this.inputTailwindClasses()
+                    }
+                });
+                this.cardCvcElement.mount("#card-cvc-element");
+            },
+
+            inputTailwindClasses() {
+                return "px-2 py-2 border border-gray-300 text-sm w-full";
+            }
+        },
+
+        async mounted() {
+            this.stripe = Stripe(process.env.MIX_STRIPE_KEY);
+
+            this.inputElements();
+        }
     }
 </script>
 
