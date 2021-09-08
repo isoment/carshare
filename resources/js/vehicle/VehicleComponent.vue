@@ -172,6 +172,7 @@
     import Pricing from './Pricing';
     import { dateFormatMonthYear } from './../shared/utils/dateFormats';
     import { mapState } from 'vuex'
+    import moment from 'moment';
 
     export default {   
         components: {
@@ -187,7 +188,8 @@
             ...mapState({
                 isLoggedIn: state => state.isLoggedIn,
                 start: state => state.searchDates.start,
-                end: state => state.searchDates.end
+                end: state => state.searchDates.end,
+                cart: state => state.cart
             })
         },
 
@@ -231,19 +233,55 @@
             },
 
             addToCart() {
-                this.$store.dispatch('addToCart', {
-                    vehicle: this.vehicleData,
-                    price: this.pricing,
-                    dates: {
-                        start: this.start,
-                        end: this.end
+                // We need to check and see if there is already a booking with
+                // the date in the cart.
+                if (this.dateRangeConfirmation()) {
+                    this.$store.dispatch('addToCart', {
+                        vehicle: this.vehicleData,
+                        price: this.pricing,
+                        dates: {
+                            start: this.start,
+                            end: this.end
+                        }
+                    });
+
+                    this.$store.dispatch('addNotification', {
+                        type: 'success',
+                        message: 'Booking added to cart!'
+                    });
+                } else {
+                    this.$store.dispatch('addNotification', {
+                        type: 'error',
+                        message: 'You already have a vehicle on this date!'
+                    });
+                }
+            },
+
+            // Confirm that the customer doesn't have any bookings for this dates
+            dateRangeConfirmation() {
+                if (this.cart.items.length === 0) {
+                    return true;
+                }
+
+                // If there is a cart item for the booking the customer is trying to
+                // create this will be iterated above 0
+                let count = null;
+
+                this.cart.items.forEach(item => {
+                    // The cart dates we are checking against
+                    const start = new Date(item.dates.start);
+                    const end = new Date(item.dates.end);
+
+                    // The attempted booking dates
+                    const bookingStart = new Date(this.start);
+                    const bookingEnd = new Date(this.end)
+
+                    if (moment(end).isSameOrAfter(bookingStart) && moment(start).isSameOrBefore(bookingEnd)) {
+                        count++;
                     }
                 });
 
-                this.$store.dispatch('addNotification', {
-                    type: 'success',
-                    message: 'Booking added to cart!'
-                });
+                return count ? false : true;
             }
         },
 
