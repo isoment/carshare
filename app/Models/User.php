@@ -88,4 +88,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(DriversLicense::class);
     }
+
+    /**
+     *  Relationship to orders
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

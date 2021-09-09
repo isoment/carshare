@@ -233,8 +233,6 @@
             },
 
             addToCart() {
-                // We need to check and see if there is already a booking with
-                // the date in the cart.
                 if (this.dateRangeConfirmation()) {
                     this.$store.dispatch('addToCart', {
                         vehicle: this.vehicleData,

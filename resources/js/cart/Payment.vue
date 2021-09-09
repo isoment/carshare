@@ -50,7 +50,8 @@
                     </div>
                     <div class="mt-8">
                         <button class="block w-full max-w-xs mx-auto bg-purple-500 hover:bg-purple-400 focus:bg-purple-700 
-                                      text-white px-3 py-3 transition-all duration-200">
+                                      text-white px-3 py-3 transition-all duration-200"
+                                @click="processPayment">
                             <div class="flex justify-center items-center">
                                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
@@ -75,7 +76,8 @@
                 cardNumberElement: null,
                 cardExpiryElement: null,
                 cardCVCElement: null,
-                stripeValidationErrors: null
+                stripeValidationErrors: null,
+                processingPayment: false
             }
         },
 
@@ -91,7 +93,6 @@
         },
 
         methods: {
-            // Insert the Stripe inputs inot the DOM
             inputElements() {
                 let elements = this.stripe.elements();
 
@@ -128,11 +129,19 @@
             inputTailwindClasses() {
                 return "px-2 py-2 border border-gray-300 text-sm w-full";
             },
+
+            processPayment() {
+                this.processingPayment = true;
+
+                
+            }
         },
 
         async mounted() {
+            // Init stripe with the key
             this.stripe = Stripe(process.env.MIX_STRIPE_KEY);
 
+            // Mount the stripe elements to the DOM
             this.inputElements();
         }
     }
