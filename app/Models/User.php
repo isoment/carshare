@@ -50,14 +50,6 @@ class User extends Authenticatable
     }
 
     /**
-     *  Relationship to bookings
-     */
-    public function bookings()
-    {
-        return $this->hasMany(Booking::class);
-    }
-
-    /**
      *  Relationship to renter reviews
      */
     public function renterReviews()

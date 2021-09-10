@@ -22,11 +22,11 @@ class Booking extends Model
     }
 
     /**
-     *  Relationship to user
+     *  Relationship to order
      */
-    public function user()
+    public function order()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Order::class, 'order_id');
     }
 
     /**

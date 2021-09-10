@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Booking;
+use App\Models\Order;
 use App\Models\User;
 use App\Models\Vehicle;
 use Carbon\Carbon;
@@ -37,8 +38,11 @@ class BookingSeeder extends Seeder
                 $days = Carbon::parse($from)->diffInDays($to) + 1;
 
                 $booking = Booking::make([
-                    // 'user_id' => User::where('host', 0)->get()->random()->id,
-                    'user_id' => User::get()->random()->id,
+                    // 'user_id' => User::get()->random()->id,
+                    'order_id' => Order::factory()->create([
+                        'user_id' => User::get()->random()->id,
+                        'total' => $days * $vehicle->price_day
+                    ])->id,
                     'from' => $from,
                     'to' => $to,
                     'price_total' => $days * $vehicle->price_day

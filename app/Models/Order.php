@@ -18,4 +18,12 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     *  Relationship to bookings
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

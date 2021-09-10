@@ -20,8 +20,8 @@ class ReviewVehicleResource extends JsonResource
             'content' => $this->content,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'reviewer_name' => $this->booking->user->name,
-            'reviewer_avatar' => $this->booking->user->profile->image
+            'reviewer_name' => $this->booking->order->user->name,
+            'reviewer_avatar' => $this->booking->order->user->profile->image
         ];
     }
 }

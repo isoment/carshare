@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Booking;
 use App\Models\HostReview;
+use App\Models\Order;
 use App\Models\RenterReview;
 use App\Models\User;
 use App\Models\Vehicle;
@@ -30,7 +31,7 @@ class BookingFactory extends Factory
         $to = (clone $from)->addDays(random_int(0, 14));
 
         return [
-            'user_id' => User::where('host', 0)->get()->random()->id,
+            'order_id' => Order::factory()->create()->id,
             'vehicle_id' => Vehicle::all()->random()->id,
             'from' => $from,
             'to' => $to,

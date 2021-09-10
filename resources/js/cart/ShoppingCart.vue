@@ -127,6 +127,7 @@
                                     <router-link :to="{ name: 'payment', params: { total: cartTotal() } }"
                                             class="w-full focus:outline-none text-white text-center py-2 font-semibold"
                                             :disabled="!cart.items.length"
+                                            :event="cart.items.length ? 'click' : ''"
                                             :class="{
                                                 'bg-gray-400': !cart.items.length,
                                                 'bg-purple-500 hover:bg-purple-400 transition-all duration-200': cart.items.length

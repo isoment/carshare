@@ -34,7 +34,7 @@ class TopHostsListService
 
             $hostReviewToAdd = [
                 'host_review_count' => HostReview::where('user_id', $u['id'])->count(),
-                'renter_name' => $hostReview->booking->user->name
+                'renter_name' => $hostReview->booking->order->user->name
             ];
 
             array_push($hostReviewInfo, $hostReviewToAdd);

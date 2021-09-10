@@ -23,7 +23,7 @@ class ReviewService
             ->get()
             ->pluck('host_review_key');
 
-        return HostReview::with('booking.user.profile')
+        return HostReview::with('booking.order.user.profile')
             ->whereIn('id', $bookings)
             ->whereNotNull('rating')
             ->paginate(4);
@@ -53,7 +53,7 @@ class ReviewService
     {
         $id = User::findOrFail($userId)->id;
 
-        return HostReview::with('booking.user.profile')
+        return HostReview::with('booking.order.user.profile')
             ->where('user_id', $id)
             ->whereNotNull('rating')
             ->paginate(4);

@@ -24,7 +24,7 @@ class RenterReviewSeeder extends Seeder
 
             RenterReview::factory()->create([
                 'id' => $booking->renter_review_key,
-                'user_id' => $booking->user_id
+                'user_id' => $booking->order->user_id
             ]);
             
         });
