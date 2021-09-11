@@ -111,6 +111,7 @@ export default {
         logOut(context) {
             context.commit("setUser", {});
             context.commit("setLoggedIn", false);
+            context.dispatch("clearCart");
             logOut();
         },
 

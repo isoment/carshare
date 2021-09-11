@@ -186,6 +186,7 @@
 
         computed: {
             ...mapState({
+                user: state => state.user,
                 isLoggedIn: state => state.isLoggedIn,
                 start: state => state.searchDates.start,
                 end: state => state.searchDates.end,
@@ -233,25 +234,32 @@
             },
 
             addToCart() {
-                if (this.dateRangeConfirmation()) {
-                    this.$store.dispatch('addToCart', {
-                        vehicle: this.vehicleData,
-                        price: this.pricing,
-                        dates: {
-                            start: this.start,
-                            end: this.end
-                        }
-                    });
-
-                    this.$store.dispatch('addNotification', {
-                        type: 'success',
-                        message: 'Booking added to cart!'
-                    });
-                } else {
+                if (!this.user.drivers_license) {
                     this.$store.dispatch('addNotification', {
                         type: 'error',
-                        message: 'You already have a vehicle on this date!'
+                        message: 'Please verify your ID in your profile'
                     });
+                } else {
+                    if (this.dateRangeConfirmation()) {
+                        this.$store.dispatch('addToCart', {
+                            vehicle: this.vehicleData,
+                            price: this.pricing,
+                            dates: {
+                                start: this.start,
+                                end: this.end
+                            }
+                        });
+
+                        this.$store.dispatch('addNotification', {
+                            type: 'success',
+                            message: 'Booking added to cart!'
+                        });
+                    } else {
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: 'You already have a vehicle on this date!'
+                        });
+                    }
                 }
             },
 

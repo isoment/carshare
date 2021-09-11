@@ -291,6 +291,8 @@
                 try {
                     let response = await axios.post('/api/dashboard/create-drivers-license', formData);
 
+                    this.$store.dispatch('loadUser');
+
                     this.$store.dispatch('addNotification', {
                         type: 'success',
                         message: response.data
