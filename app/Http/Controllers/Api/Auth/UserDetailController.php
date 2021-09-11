@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserDetailResource;
+use App\Http\Resources\UserDetailResourceWithLicense;
 use App\Models\User;
 
 class UserDetailController extends Controller
@@ -20,10 +21,18 @@ class UserDetailController extends Controller
             return response()->json('Unauthorized', 403);
         }
 
-        return new UserDetailResource(
-            User::where('id', auth()->id())
-                ->with('profile')
-                ->firstOrFail()
-        );
+        if (auth()->user()->driversLicense) {
+            return new UserDetailResourceWithLicense(
+                User::where('id', auth()->id())
+                    ->with(['profile', 'driversLicense'])
+                    ->firstOrFail()
+            );
+        } else {
+            return new UserDetailResource(
+                User::where('id', auth()->id())
+                    ->with('profile')
+                    ->firstOrFail()
+            );
+        }
     }
 }

@@ -83,6 +83,7 @@
 
         computed: {
             ...mapState({
+                user: "user",
                 isLoggedIn: "isLoggedIn",
                 cart: "cart"
             }),
@@ -130,10 +131,16 @@
                 return "px-2 py-2 border border-gray-300 text-sm w-full";
             },
 
-            processPayment() {
+            async processPayment() {
                 this.processingPayment = true;
 
-                
+                const {paymentMethod, error} = await this.stripe.createPaymentMethod(
+                    'card', this.cardNumberElement, {
+                        billing_details: {
+                            name: ''
+                        }
+                    }
+                ) 
             }
         },
 
