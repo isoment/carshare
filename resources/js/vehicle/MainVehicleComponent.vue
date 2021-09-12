@@ -160,7 +160,7 @@
                 page: 1,
                 lastPage: 1,
                 endOfResults: false,
-                datesMenu: false,
+                datesMenu: true,
                 priceMenu: false,
                 priceRange: [],
                 maxPrice: 1000,

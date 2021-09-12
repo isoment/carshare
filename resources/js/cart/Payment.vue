@@ -134,13 +134,52 @@
             async processPayment() {
                 this.processingPayment = true;
 
+                // User stripe.js to create the paymentMethod
                 const {paymentMethod, error} = await this.stripe.createPaymentMethod(
                     'card', this.cardNumberElement, {
                         billing_details: {
-                            name: ''
+                            name: this.user.name,
+                            email: this.user.email,
+                            address: {
+                                line1: this.user.drivers_license.street,
+                                city: this.user.drivers_license.city,
+                                state: this.user.drivers_license.state,
+                                postal_code: this.user.drivers_license.zip
+                            }
                         }
                     }
-                ) 
+                );
+                
+                if (error) {
+                    this.processingPayment = false;
+
+                    console.log(error);
+                } else {
+                    console.log(paymentMethod);
+
+                    const customer = {
+                        name: this.user.name,
+                        email: this.user.email,
+                        street: this.user.drivers_license.street,
+                        city: this.user.drivers_license.city,
+                        state: this.user.drivers_license.state,
+                        postal_code: this.user.drivers_license.zip,
+                        payment_method_id: paymentMethod.id,
+                        cart: JSON.stringify(this.cart)
+                    }
+
+                    axios.post('/api/checkout', customer)
+                        .then((response) => {
+                            this.processingPayment = false;
+
+                            console.log(response);
+                        })
+                        .catch((error) => {
+                            this.processingPayment = false;
+
+                            console.log(error);
+                        });
+                }
             }
         },
 

@@ -61,12 +61,12 @@ Route::get('reviews-from-hosts/{id}', [App\Http\Controllers\Api\ReviewController
 Route::get('reviews-from-renters/{id}', [App\Http\Controllers\Api\ReviewController::class, 'reviewsFromRenters'])
     ->name('reviews.from-renters');
 
-/**************************
- *  Dashboard API Routes  *
- *************************/
-
 // All authenticated users can access these api endpoints
 Route::middleware('auth:sanctum')->group(function() {
+
+    /**************************
+     *  Dashboard API Routes  *
+     *************************/
 
     // Change user avatar
     Route::post(
@@ -91,6 +91,16 @@ Route::middleware('auth:sanctum')->group(function() {
         'dashboard/show-drivers-license',
         [App\Http\Controllers\Api\Dashboard\DriversLicenseController::class, 'show']
     )->name('dashboard.show-drivers-license');
+
+    /*************************
+     *  Checkout API Routes  *
+     ************************/
+
+    // Checkout
+    Route::post(
+        'checkout',
+        [App\Http\Controllers\Api\Checkout::class, 'store']
+    )->name('checkout');
     
 });
 
