@@ -158,14 +158,14 @@
                     console.log(paymentMethod);
 
                     const customer = {
-                        name: this.user.name,
-                        email: this.user.email,
-                        street: this.user.drivers_license.street,
-                        city: this.user.drivers_license.city,
-                        state: this.user.drivers_license.state,
-                        postal_code: this.user.drivers_license.zip,
                         payment_method_id: paymentMethod.id,
-                        cart: JSON.stringify(this.cart)
+                        cart: this.cart.items.map(cartItem => {
+                            return {
+                                vehicle_id: cartItem.vehicle.id,
+                                price: cartItem.price,
+                                dates: cartItem.dates
+                            }
+                        })
                     }
 
                     axios.post('/api/checkout', customer)
@@ -176,6 +176,10 @@
                         })
                         .catch((error) => {
                             this.processingPayment = false;
+
+                            if (error.response.status === 422) {
+                                console.log(error.response);
+                            }
 
                             console.log(error);
                         });
