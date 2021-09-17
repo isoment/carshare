@@ -11,6 +11,7 @@ import CustomerProfile from './dashboard/CustomerProfile';
 import DriversLicense from './dashboard/DriversLicense';
 import ShoppingCart from './cart/ShoppingCart';
 import Payment from './cart/Payment';
+import Confirmation from './cart/Confirmation';
 
 const routes = [
     {
@@ -75,11 +76,15 @@ const routes = [
         component: ShoppingCart,
         name: "shopping-cart"
     },
-
     {
         path: "/cart/payment",
         component: Payment,
         name: "payment"
+    },
+    {
+        path: "/confirmation",
+        component: Confirmation,
+        name: "confirmation"
     },
 
     /** OTHER **/

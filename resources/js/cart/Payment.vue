@@ -172,7 +172,9 @@
                         .then((response) => {
                             this.processingPayment = false;
 
-                            console.log(response);
+                            this.$store.dispatch('clearCart');
+
+                            this.$router.push({ name: 'confirmation', params: { pid: paymentMethod.id } });
                         })
                         .catch((error) => {
                             this.processingPayment = false;
