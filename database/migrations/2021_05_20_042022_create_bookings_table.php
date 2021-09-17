@@ -20,6 +20,7 @@ class CreateBookingsTable extends Migration
             $table->date('from');
             $table->date('to');
             $table->decimal('price_total');
+            $table->decimal('price_day');
             $table->uuid('renter_review_key');
             $table->uuid('host_review_key');
             $table->timestamps();

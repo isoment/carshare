@@ -35,7 +35,8 @@ class BookingFactory extends Factory
             'vehicle_id' => Vehicle::all()->random()->id,
             'from' => $from,
             'to' => $to,
-            'price_total' => random_int(200, 5000)
+            'price_total' => random_int(200, 5000),
+            'price_day' => random_int(30, 400)
         ];
     }
 }

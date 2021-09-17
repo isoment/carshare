@@ -22,7 +22,9 @@ class BookingSeeder extends Seeder
     {
         Vehicle::all()->each(function ($vehicle) use ($min, $max) {
             // The initial booking
-            $booking = Booking::factory()->make();
+            $booking = Booking::factory()->make([
+                'price_day' => $vehicle->price_day
+            ]);
 
             // Create a collection that we will push bookings to from the loop below
             $bookings = collect([$booking]);
@@ -38,14 +40,14 @@ class BookingSeeder extends Seeder
                 $days = Carbon::parse($from)->diffInDays($to) + 1;
 
                 $booking = Booking::make([
-                    // 'user_id' => User::get()->random()->id,
                     'order_id' => Order::factory()->create([
                         'user_id' => User::get()->random()->id,
                         'total' => $days * $vehicle->price_day
                     ])->id,
                     'from' => $from,
                     'to' => $to,
-                    'price_total' => $days * $vehicle->price_day
+                    'price_total' => $days * $vehicle->price_day,
+                    'price_day' => $vehicle->price_day
                 ]);
 
                 $bookings->push($booking);

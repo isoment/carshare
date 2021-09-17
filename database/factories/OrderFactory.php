@@ -25,7 +25,7 @@ class OrderFactory extends Factory
         return [
             'user_id' => User::where('host', 0)->get()->random()->id,
             'transaction_id' => uniqid('id_', true),
-            'total' => $this->faker->numberBetween(100, 9999)
+            'total' => $this->faker->numberBetween(100, 9999),
         ];
     }
 }
