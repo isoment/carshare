@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Order;
 use App\Models\Vehicle;
+use App\Notifications\OrderConfirmation;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -75,7 +76,7 @@ class Checkout extends Controller
                     'price_day' => $vehicle->price_day
                 ]);
             }
-
+            
             // Update the order total
             $order->update([
                 'total' => $totalPrice
@@ -86,6 +87,9 @@ class Checkout extends Controller
                 $totalPrice * 100,
                 $data['payment_method_id'],
             );
+
+            // Email confirmation
+            $user->notify(new OrderConfirmation());
 
             return response()->json($data, 201);
         } catch(Exception $e) {
