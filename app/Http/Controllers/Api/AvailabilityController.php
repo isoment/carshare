@@ -19,9 +19,15 @@ class AvailabilityController extends Controller
     {
         $vehicle = Vehicle::findOrFail($vehicleId);
 
-        return $vehicle->isAvailable($request['from'], $request['to'])
-            ? response()->json([])
-            : response()->json([], 404);
+        if (!$vehicle->isAvailable($request['from'], $request['to'])) {
+            return response()->json('Vehicle unavailable on these dates.', 404);
+        }
+
+        if (!auth()->user()->hasNoBooking($request['from'], $request['to'])) {
+            return response()->json('You already have a booking on these dates.', 404);
+        }
+
+        return response()->json();
     }
 
     /**

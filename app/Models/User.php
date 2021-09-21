@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -88,5 +89,24 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    /**
+     *  Determine if user is free to book on the given date range
+     * 
+     *  @param string $from
+     *  @param string $to
+     *  @return boolean
+     */
+    public function hasNoBooking(string $from, string $to) : bool
+    {
+        $fromFromatted = Carbon::parse($from)->toDateString();
+        $toFormatted = Carbon::parse($to)->toDateString();
+
+        $orders = auth()->user()->orders->pluck('id');
+
+        return Booking::whereIn('order_id', $orders)
+            ->where('to', '>=', $fromFromatted)
+            ->where('from', '<=', $toFormatted)->count() === 0;
     }
 }
