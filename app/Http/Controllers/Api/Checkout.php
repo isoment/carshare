@@ -33,15 +33,25 @@ class Checkout extends Controller
             'cart.*.dates.end' => 'required|date|after_or_equal:cart.*.dates.start'
         ]);
 
-        // Check if available
+        // Check if available and user is free to book
         $data = array_merge($data, $request->validate([
             'cart.*' => [
                 'required',
+                // Check availability
                 function($attribute, $value, $fail) {
                     $vehicle = Vehicle::findOrFail($value['vehicle_id']);
 
                     if (!$vehicle->isAvailable($value['dates']['start'], $value['dates']['end'])) {
                         $fail($vehicle->year . ' ' . $vehicle->vehicleModel->model . " is not available on these dates");
+                    }
+                },
+                // Check if user is free to book
+                function($attribute, $value, $fail) {
+                    $readableStart = Carbon::parse($value['dates']['start'])->format('m/d/Y');
+                    $readableEnd = Carbon::parse($value['dates']['end'])->format('m/d/Y');
+
+                    if (!auth()->user()->hasNoBooking($value['dates']['start'], $value['dates']['end'])) {
+                        $fail("You alread have a booking between {$readableStart} and {$readableEnd}");
                     }
                 }
             ]

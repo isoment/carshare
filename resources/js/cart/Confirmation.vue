@@ -2,9 +2,9 @@
     <div>
         <main-navigation></main-navigation>
 
-        <!-- <div v-if="!isLoggedIn || !pid">
+        <div v-if="!isLoggedIn || !pid">
             <unauthorized></unauthorized>
-        </div> -->
+        </div>
 
         <div>
             <div class="md:mt-8 flex items-center justify-center px-5 pb-10 pt-16">
@@ -17,7 +17,7 @@
                     </div>
                     <div class="text-center mb-6">
                         <h3 class="text-2xl sm:text-3xl font-boldnosans font-bold text-center">Confirmation:</h3>
-                        <h3 class="text-green-400 md:text-2xl font-boldnosans font-bold">{{ pid }} pm_D83r9ufajdaos</h3>
+                        <h3 class="text-green-400 md:text-2xl font-boldnosans font-bold">{{ pid }}</h3>
                     </div>
                     <div class="text-center">
                         <h3 class="text-xl sm:text-2xl font-boldnosans font-bold">Thank you for booking with us!</h3>
