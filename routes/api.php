@@ -99,7 +99,7 @@ Route::middleware('auth:sanctum')->group(function() {
     // Checkout
     Route::post(
         'checkout',
-        [App\Http\Controllers\Api\Checkout::class, 'store']
+        [App\Http\Controllers\Api\CheckoutController::class, 'store']
     )->name('checkout');
     
 });

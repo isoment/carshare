@@ -7,12 +7,14 @@ use App\Models\Booking;
 use App\Models\Order;
 use App\Models\Vehicle;
 use App\Notifications\OrderConfirmation;
+use App\Rules\BookingDatesAvailable;
+use App\Rules\VehicleAvailabe;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class Checkout extends Controller
+class CheckoutController extends Controller
 {
     public function store(Request $request) 
     {
@@ -33,27 +35,10 @@ class Checkout extends Controller
             'cart.*.dates.end' => 'required|date|after_or_equal:cart.*.dates.start'
         ]);
 
-        // Check if available and user is free to book
+        // Check if vehicle is available and user is free to book
         $data = array_merge($data, $request->validate([
             'cart.*' => [
-                'required',
-                // Check availability
-                function($attribute, $value, $fail) {
-                    $vehicle = Vehicle::findOrFail($value['vehicle_id']);
-
-                    if (!$vehicle->isAvailable($value['dates']['start'], $value['dates']['end'])) {
-                        $fail($vehicle->year . ' ' . $vehicle->vehicleModel->model . " is not available on these dates");
-                    }
-                },
-                // Check if user is free to book
-                function($attribute, $value, $fail) {
-                    $readableStart = Carbon::parse($value['dates']['start'])->format('m/d/Y');
-                    $readableEnd = Carbon::parse($value['dates']['end'])->format('m/d/Y');
-
-                    if (!auth()->user()->hasNoBooking($value['dates']['start'], $value['dates']['end'])) {
-                        $fail("You alread have a booking between {$readableStart} and {$readableEnd}");
-                    }
-                }
+                'required', new BookingDatesAvailable, new VehicleAvailabe
             ]
         ]));
 

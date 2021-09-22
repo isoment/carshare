@@ -6,7 +6,7 @@
             <unauthorized></unauthorized>
         </div>
 
-        <div>
+        <div v-else>
             <div class="md:mt-8 flex items-center justify-center px-5 pb-10 pt-16">
                 <div class="w-full mx-auto rounded-lg bg-white shadow-lg border p-5 text-gray-700" style="max-width: 600px">
                     <div class="w-full pt-1 pb-5">
