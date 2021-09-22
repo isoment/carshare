@@ -78,7 +78,7 @@ class CheckoutController extends Controller
             ]);
 
             // Charge the user
-            $payment = $user->charge(
+            $user->charge(
                 $totalPrice * 100,
                 $data['payment_method_id'],
             );
@@ -86,9 +86,15 @@ class CheckoutController extends Controller
             // Email confirmation
             $user->notify(new OrderConfirmation());
 
-            return response()->json($data, 201);
+            return response()->json('Success', 201);
         } catch(Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            // If there is an error we want to delete bookings...
+            Booking::where('order_id', $order->id)->delete();
+
+            // And also the order...
+            $order->delete();
+
+            return response()->json('Error processing payment', 500);
         }
     }
 }

@@ -189,8 +189,14 @@
                             this.processingPayment = false;
 
                             if (error.response.status === 422) {
-                                // console.log(error.response);
                                 this.$router.push({ name: 'shopping-cart', params: { errors: error.response.data.errors } });
+                            }
+
+                            if (error.response.status === 500) {
+                                this.$store.dispatch('addNotification', {
+                                    type: 'error',
+                                    message: error.response.data
+                                })
                             }
 
                             console.log(error);
