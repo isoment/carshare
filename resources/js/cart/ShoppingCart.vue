@@ -22,6 +22,14 @@
                                         </button>
                                     </div>
 
+                                    <!-- Validation Errors -->
+                                    <div class="mt-2 -mb-6" v-if="errors">
+                                        <div v-for="error in errors" :key="error.id"
+                                             class="text-red-400 text-xs my-1">
+                                            {{error[0]}}
+                                        </div>
+                                    </div>
+
                                     <!-- Cart Items -->
                                     <div v-for="item in cart.items" :key="item.id">
                                         <div class="flex flex-col md:flex-row md:justify-between md:items-center 
@@ -156,6 +164,10 @@
                 isLoggedIn: "isLoggedIn",
                 cart: "cart"
             }),
+
+            errors() {
+                return this.$route.params.errors;
+            }
         },
 
         methods: {
