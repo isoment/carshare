@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AvailabilityCheckRequest;
 use App\Models\Vehicle;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class AvailabilityController extends Controller
 {
@@ -26,8 +25,11 @@ class AvailabilityController extends Controller
             return response()->json('Vehicle unavailable on these dates.', 404);
         }
 
-        if (!auth()->user()->hasNoBooking($request['from'], $request['to'])) {
-            return response()->json('You already have a booking on these dates.', 404);
+        // Only check for previous bookings if a user is logged in
+        if (current_user()) {
+            if (!auth()->user()->hasNoBooking($request['from'], $request['to'])) {
+                return response()->json('You already have a booking on these dates.', 404);
+            }
         }
 
         return response()->json();
