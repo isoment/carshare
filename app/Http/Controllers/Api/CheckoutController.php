@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CheckoutStoreRequest;
 use App\Models\Booking;
 use App\Models\Order;
 use App\Models\Vehicle;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
-    public function store(Request $request) 
+    public function store(CheckoutStoreRequest $request) 
     {
         $user = auth()->user();
 
@@ -25,28 +26,11 @@ class CheckoutController extends Controller
             return response()->json('You must verify ID prior to booking', 403);
         }
 
-        // Need to check that there are items in the cart and then that 
-        // the dates given are valid.
-        $data = $request->validate([
-            'payment_method_id' => 'required',
-            'cart' => 'required|array|min:1',
-            'cart.*.vehicle_id' => 'required|exists:vehicles,id',
-            'cart.*.dates.start' => 'required|date|after_or_equal:today',
-            'cart.*.dates.end' => 'required|date|after_or_equal:cart.*.dates.start'
-        ]);
-
-        // Check if vehicle is available and user is free to book
-        $data = array_merge($data, $request->validate([
-            'cart.*' => [
-                'required', new BookingDatesAvailable, new VehicleAvailabe
-            ]
-        ]));
-
         try {
             // Create the order
             $order = Order::create([
                 'user_id' => $user->id,
-                'transaction_id' => $data['payment_method_id'],
+                'transaction_id' => $request['payment_method_id'],
                 'total' => 0,
             ]);
 
@@ -55,7 +39,7 @@ class CheckoutController extends Controller
 
             // Calculate the pricing based on the desired booking dates for a vehicle
             // and then create a booking.
-            foreach ($data['cart'] as $item) {
+            foreach ($request['cart'] as $item) {
                 $vehicle = Vehicle::findOrFail($item['vehicle_id']);
 
                 $vehicleTotal = $vehicle->calculatePrice($item['dates']['start'], $item['dates']['end'])['total'];
@@ -80,7 +64,7 @@ class CheckoutController extends Controller
             // Charge the user
             $user->charge(
                 $totalPrice * 100,
-                $data['payment_method_id'],
+                $request['payment_method_id'],
             );
 
             // Email confirmation
