@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services;
 
@@ -10,7 +11,6 @@ use App\Notifications\OrderConfirmation;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 
 class CheckoutService
 {
@@ -18,6 +18,7 @@ class CheckoutService
      *  Charge the customer and store order information in Model
      * 
      *  @param CheckoutStoreRequest $request
+     * 
      *  @return Illuminate\Http\JsonResponse
      */
     public function store(CheckoutStoreRequest $request) : JsonResponse
@@ -31,7 +32,7 @@ class CheckoutService
             $order = $this->createOrder($request);
 
             // Total price of the order
-            $totalPrice = $this->createBookings($request, $order);
+            $totalPrice = $this->totalPrice($request, $order);
 
             // Update the order total
             $order->update([
@@ -55,8 +56,9 @@ class CheckoutService
     /**
      *  Create an order model
      * 
-     *  @param CheckoutStoreRequest $request
-     *  @return Order
+     *  @param App\Http\Requests\CheckoutStoreRequest $request
+     * 
+     *  @return App\Models\Order
      */
     private function createOrder(CheckoutStoreRequest $request) : Order
     {
@@ -68,13 +70,14 @@ class CheckoutService
     }
 
     /**
-     *  Create Bookings and calculate price returning the total price
+     *  Calculate price returning the total price
      * 
-     *  @param CheckoutStoreRequest $request
-     *  @param Order $order
+     *  @param App\Http\Requests\CheckoutStoreRequest $request
+     *  @param App\Models\Order $order
+     * 
      *  @return int
      */
-    private function createBookings(CheckoutStoreRequest $request, Order $order) : int
+    private function totalPrice(CheckoutStoreRequest $request, Order $order) : int
     {
         $totalPrice = 0;
 
@@ -85,24 +88,41 @@ class CheckoutService
 
             $totalPrice += $vehicleTotal;
 
-            Booking::create([
-                'vehicle_id' => $vehicle->id,
-                'order_id' => $order->id,
-                'from' => Carbon::parse($item['dates']['start']),
-                'to' => Carbon::parse($item['dates']['end']),
-                'price_total' => $vehicleTotal,
-                'price_day' => $vehicle->price_day
-            ]);
+            $this->createBooking($vehicle, $order, $item, $vehicleTotal);
         }
 
         return $totalPrice;
     }
 
     /**
+     *  Create a booking
+     * 
+     *  @param App\Models\Vehicle $vehicle
+     *  @param App\Models\Order $order
+     *  @param array $item
+     *  @param int $vehilceTotal
+     * 
+     *  @return void
+     */
+    private function createBooking(Vehicle $vehicle, Order $order, array $item, int $vehicleTotal) : void
+    {
+        Booking::create([
+            'vehicle_id' => $vehicle->id,
+            'order_id' => $order->id,
+            'from' => Carbon::parse($item['dates']['start']),
+            'to' => Carbon::parse($item['dates']['end']),
+            'price_total' => $vehicleTotal,
+            'price_day' => $vehicle->price_day
+        ]);
+    }
+
+    /**
      *  Charge a user one time
      * 
-     *  @param CheckoutStoreRequest $request
+     *  @param App\Http\Requests\CheckoutStoreRequest $request
      *  @param int $totalPrice
+     * 
+     *  @return void
      */
     private function oneTimeCharge(CheckoutStoreRequest $request, int $totalPrice) : void
     {
@@ -115,7 +135,8 @@ class CheckoutService
     /**
      *  Revert models if there is a payment error.
      * 
-     *  @param Order $order
+     *  @param App\Models\Order $order
+     * 
      *  @return void
      */
     private function revertModels(Order $order) : void

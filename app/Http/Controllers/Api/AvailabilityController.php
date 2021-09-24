@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AvailabilityCheckRequest;
 use App\Models\Vehicle;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AvailabilityController extends Controller
@@ -14,8 +15,10 @@ class AvailabilityController extends Controller
      * 
      *  @param int $vehicleId the vehicle id
      *  @param Illuminate\Http\Request $request
+     * 
+     *  @return Illuminate\Http\JsonResponse
      */
-    public function check($vehicleId, AvailabilityCheckRequest $request)
+    public function check(int $vehicleId, AvailabilityCheckRequest $request) : JsonResponse
     {
         $vehicle = Vehicle::findOrFail($vehicleId);
 
@@ -35,8 +38,10 @@ class AvailabilityController extends Controller
      * 
      *  @param int $vehicleId the vehicle id
      *  @param Illuminate\Http\Request $request
+     * 
+     *  @return Illuminate\Http\JsonResponse
      */
-    public function price($vehicleId, AvailabilityCheckRequest $request)
+    public function price(int $vehicleId, AvailabilityCheckRequest $request) : JsonResponse
     {
         $vehicle = Vehicle::findOrFail($vehicleId);
 
