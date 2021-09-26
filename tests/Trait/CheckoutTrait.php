@@ -17,7 +17,7 @@ trait CheckoutTrait
         $end = Carbon::parse($start)->addDays(2)->format('n/j/Y');
 
         return [
-            'payment_method_id' => "pm_dh4329usdja83adkDH3r",
+            'payment_method_id' => "pm_999999999999999",
             'cart' => [
                 [
                     'vehicle_id' => 1,

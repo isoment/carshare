@@ -42,4 +42,16 @@ class CheckoutStoreRequest extends FormRequest
             ]
         ]);
     }
+
+    /**
+     *  Customize the error messages
+     * 
+     *  @return array
+     */
+    public function messages()
+    {
+        return [
+            'cart.*.dates.start.after_or_equal' => 'Start date must be after or equal to now.',
+        ];
+    }
 }
