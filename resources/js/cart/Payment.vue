@@ -161,11 +161,7 @@
                 
                 if (error) {
                     this.processingPayment = false;
-
-                    console.log(error);
                 } else {
-                    console.log(paymentMethod);
-
                     const customer = {
                         payment_method_id: paymentMethod.id,
                         cart: this.cart.items.map(cartItem => {
@@ -176,6 +172,8 @@
                             }
                         })
                     }
+
+                    console.log(customer);
 
                     axios.post('/api/checkout', customer)
                         .then((response) => {

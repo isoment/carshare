@@ -13,6 +13,7 @@ class VehicleSeeder extends Seeder
      *
      * @param int $min the min number of vehicles to create
      * @param int $max the max number of vehicles to create
+     * 
      * @return void
      */
     public static function run(int $min = 1, int $max = 10)
