@@ -8,9 +8,12 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
+use Stripe\StripeClient;
 use Tests\TestCase;
 use Tests\Trait\CheckoutTrait;
 use Tests\Trait\UserTrait;
+
+use function PHPUnit\Framework\assertNotNull;
 
 class CheckoutTest extends TestCase
 {
@@ -27,7 +30,7 @@ class CheckoutTest extends TestCase
 
     /**
      *  @test
-     *  A 403 response is returned if the user does not have a drivers license stored
+     *  A 403 response is returned if the user does not have a drivers license stored.
      */
     public function response_403_is_returned_if_a_user_does_not_have_a_drivers_license_stored()
     {
@@ -47,7 +50,7 @@ class CheckoutTest extends TestCase
 
     /**
      *  @test
-     *  A 422 response is returned if the cart is empty
+     *  A 422 response is returned if the cart is empty.
      */
     public function response_422_is_returned_if_the_cart_is_empty()
     {
@@ -71,7 +74,7 @@ class CheckoutTest extends TestCase
 
     /**
      *  @test
-     *  A 422 response is returned if the payment_method_id is missing
+     *  A 422 response is returned if the payment_method_id is missing.
      */
     public function response_422_is_returned_if_the_payment_method_id_is_missing()
     {
@@ -119,7 +122,7 @@ class CheckoutTest extends TestCase
 
     /**
      *  @test
-     *  A 422 response is returned when the start date is invalid
+     *  A 422 response is returned when the start date is invalid.
      */
     public function response_422_is_returned_if_the_start_date_is_invalid()
     {
@@ -141,5 +144,30 @@ class CheckoutTest extends TestCase
 
         $response->assertStatus(422)
             ->assertSee('Start date must be after or equal to now.');
+    }
+
+    /**
+     *  @test
+     *  Checkout endpoint returns a 201 response when input data and card is valid.
+     */
+    public function checkout_endpoint_returns_201_response_when_checkout_is_successful()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::factory()->create();
+
+        DriversLicense::factory()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user);
+
+        $data = $this->validCheckoutData();
+
+        $response = $this->createStripePaymentMethod();
+
+        $data['payment_method_id'] = $response['id'];
+
+        $response = $this->json('POST', '/api/checkout', $data);
+
+        $response->assertStatus(201)->assertSee('Success');
     }
 }

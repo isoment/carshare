@@ -34,4 +34,29 @@ trait CheckoutTrait
             ]
         ];
     }
+
+    /**
+     *  Create a stripe payment method, simulating what stripe.js is doing
+     *  in the Payment.vue component.
+     * 
+     *  @param array $params
+     * 
+     *  @return \Stripe\PaymentMethod
+     */
+    public function createStripePaymentMethod(array $params = []) : \Stripe\PaymentMethod
+    {
+        $stripe = new \Stripe\StripeClient(
+            env('STRIPE_SECRET')
+        );
+
+        return $stripe->paymentMethods->create([
+            'type' => $params['type'] ?? 'card',
+            'card' => [
+                'number' => $params['number'] ?? '4242424242424242',
+                'exp_month' => 5,
+                'exp_year' => (int) Carbon::now()->addYears(5)->format('Y'),
+                'cvc' => 532
+            ]
+        ]);
+    }
 }
