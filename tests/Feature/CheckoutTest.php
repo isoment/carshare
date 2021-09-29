@@ -3,17 +3,15 @@
 namespace Tests\Feature;
 
 use App\Models\DriversLicense;
+use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
-use Stripe\StripeClient;
 use Tests\TestCase;
 use Tests\Trait\CheckoutTrait;
 use Tests\Trait\UserTrait;
-
-use function PHPUnit\Framework\assertNotNull;
 
 class CheckoutTest extends TestCase
 {
@@ -169,5 +167,59 @@ class CheckoutTest extends TestCase
         $response = $this->json('POST', '/api/checkout', $data);
 
         $response->assertStatus(201)->assertSee('Success');
+    }
+
+    /**
+     *  @test
+     *  The database has the new order and booking record when payment is successful
+     */
+    public function the_database_has_the_new_order_and_booking_record_when_payment_is_successful()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::factory()->create();
+
+        DriversLicense::factory()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user);
+
+        $data = $this->validCheckoutData();
+
+        $response = $this->createStripePaymentMethod();
+
+        $data['payment_method_id'] = $response['id'];
+
+        $response = $this->json('POST', '/api/checkout', $data);
+
+        $this->assertDatabaseHas('orders', [
+            'transaction_id' => $data['payment_method_id']
+        ]);
+
+        $order = Order::where('transaction_id', $data['payment_method_id'])->first();
+
+        $this->assertDatabaseHas('bookings', [
+            'order_id' => $order->id
+        ]);
+    }
+
+    /**
+     *  @test
+     *  An invalid stripe payment id results in an error processing payment
+     */
+    public function an_invalid_stripe_payment_id_results_in_an_error_processing_payment()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::factory()->create();
+
+        DriversLicense::factory()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user);
+
+        $data = $this->validCheckoutData();
+
+        $response = $this->json('POST', '/api/checkout', $data);
+
+        $response->assertStatus(500)->assertSee('Error processing payment');
     }
 }
