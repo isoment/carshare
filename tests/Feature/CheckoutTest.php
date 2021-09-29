@@ -5,10 +5,12 @@ namespace Tests\Feature;
 use App\Models\DriversLicense;
 use App\Models\Order;
 use App\Models\User;
+use App\Notifications\OrderConfirmation;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 use Tests\Trait\CheckoutTrait;
 use Tests\Trait\UserTrait;
@@ -171,7 +173,7 @@ class CheckoutTest extends TestCase
 
     /**
      *  @test
-     *  The database has the new order and booking record when payment is successful
+     *  The database has the new order and booking record when payment is successful.
      */
     public function the_database_has_the_new_order_and_booking_record_when_payment_is_successful()
     {
@@ -204,7 +206,7 @@ class CheckoutTest extends TestCase
 
     /**
      *  @test
-     *  An invalid stripe payment id results in an error processing payment
+     *  An invalid stripe payment id results in an error processing payment.
      */
     public function an_invalid_stripe_payment_id_results_in_an_error_processing_payment()
     {
@@ -221,5 +223,35 @@ class CheckoutTest extends TestCase
         $response = $this->json('POST', '/api/checkout', $data);
 
         $response->assertStatus(500)->assertSee('Error processing payment');
+    }
+
+    /**
+     *  @test
+     *  An order processed successfully, a confirmation email is sent.
+     */
+    public function after_an_order_processes_successfully_a_confirmation_email_is_sent()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::factory()->create();
+
+        DriversLicense::factory()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user);
+
+        $data = $this->validCheckoutData();
+
+        $response = $this->createStripePaymentMethod();
+
+        $data['payment_method_id'] = $response['id'];
+
+        Notification::fake();
+
+        $response = $this->json('POST', '/api/checkout', $data);
+
+        Notification::assertSentTo(
+            $user,
+            \App\Notifications\OrderConfirmation::class
+        );
     }
 }
