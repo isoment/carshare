@@ -40,7 +40,8 @@
                         <div class="text-sm">
                             Profile
                         </div>
-                        <a href="#" class="text-purple-500 font-bold text-sm">
+                        <a href="#" class="text-purple-500 font-bold text-sm"
+                           @click="$emit('switchToEdit')">
                             Complete your profile
                         </a>
                     </div>
@@ -48,7 +49,8 @@
                         <div class="text-sm">
                             Biography
                         </div>
-                        <a href="#" class="text-purple-500 font-bold text-sm">
+                        <a href="#" class="text-purple-500 font-bold text-sm"
+                           @click="$emit('switchToEdit')">
                             Add a bio
                         </a>
                     </div>

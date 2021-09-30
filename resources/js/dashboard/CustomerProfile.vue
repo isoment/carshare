@@ -38,7 +38,9 @@
                 <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6" 
                      v-if="user">
                      <div v-if="!editProfileMode">
-                         <customer-profile-info :user="user"></customer-profile-info>
+                         <customer-profile-info :user="user"
+                                                @switchToEdit="editProfileMode = true">
+                         </customer-profile-info>
                      </div>
                     <div v-if="editProfileMode">
                         <customer-profile-edit :user="user" 

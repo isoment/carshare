@@ -34,9 +34,10 @@
                         </div>
                         <div class="hidden sm:block sm:ml-6">
                             <div class="flex space-x-4">
-                                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-bold">
-                                    Share my car
-                                </a>
+                                <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-bold"
+                                            :to="{ name: 'customer-vehicles' }"> 
+                                    My Cars
+                                </router-link>
 
                                 <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-bold"
                                             :to="{ name: 'main-vehicle' }"> 
@@ -59,6 +60,7 @@
                     </div>
                     <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
                         v-if="isLoggedIn">
+
                         <!-- <button class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-purple-400">
                             <span class="sr-only">View notifications</span>
                             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">

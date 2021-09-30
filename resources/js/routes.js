@@ -12,6 +12,7 @@ import DriversLicense from './dashboard/DriversLicense';
 import ShoppingCart from './cart/ShoppingCart';
 import Payment from './cart/Payment';
 import Confirmation from './cart/Confirmation';
+import CustomerSharedVehicles from './dashboard/CustomerSharedVehicles';
 
 const routes = [
     {
@@ -67,6 +68,11 @@ const routes = [
         path: "/dashboard/customer/license",
         component: DriversLicense,
         name: "drivers-license"
+    },
+    {
+        path: "/dashboard/customer/shared-vehicles",
+        component: CustomerSharedVehicles,
+        name: "customer-vehicles"
     },
 
     /** CART **/
