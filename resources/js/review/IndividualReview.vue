@@ -8,11 +8,7 @@
                         class="h-12 w-12 rounded-full">
                 </div>
                 <div>
-                    <div class="flex">
-                        <span v-for="rating in review.rating" :key="rating.id">
-                            <i class="fas fa-star text-purple-500 text-lg"></i>
-                        </span>
-                    </div>
+                    <star-rating :rating="review.rating"></star-rating>
                     <div class="text-xs my-1">
                         <span>{{review.reviewer_name}}</span>
                         <span class="text-gray-500">{{dateFormat(review.updated_at)}}</span>

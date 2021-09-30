@@ -41,6 +41,7 @@ Vue.component('unauthorized', require('./shared/components/Unauthorized.vue').de
 Vue.component('main-navigation', require('./shared/components/NavigationBarMain.vue').default);
 Vue.component('validation-errors', require('./shared/components/ValidationErrors').default);
 Vue.component('notifications-list', require('./shared/components/NotificationsList').default);
+Vue.component('star-rating', require('./shared/components/StarRating').default);
 
 // Create root vue instance
 const app = new Vue({

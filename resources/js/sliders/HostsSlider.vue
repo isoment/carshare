@@ -41,11 +41,7 @@
                         </div>
                     </div>
                     <div class="mt-4">
-                        <div class="flex">
-                            <i class="fas fa-star text-sm text-purple-500"
-                               v-for="rating in host.rating" :key="rating.id">
-                            </i>
-                        </div>
+                        <star-rating :rating="host.rating" :size="'text-sm'"></star-rating>
                     </div>
                     <div class="mt-2">{{ truncateString(host.content, 100) }}</div>
                     <div class="italic font-bold text-sm mt-3">
