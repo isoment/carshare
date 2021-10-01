@@ -106,7 +106,13 @@
                                     <router-link class="block px-4 py-2 text-sm font-bold text-gray-700 hover:text-purple-500" 
                                                  role="menuitem" tabindex="-1" id="user-menu-item-0"
                                                  :to="{ name: 'customer-profile' }">
-                                        Your Profile
+                                        My Profile
+                                    </router-link>
+
+                                    <router-link class="block px-4 py-2 text-sm font-bold text-gray-700 hover:text-purple-500" 
+                                                 role="menuitem" tabindex="-1" id="user-menu-item-0"
+                                                 :to="{ name: 'customer-vehicles' }">
+                                        My Cars
                                     </router-link>
 
                                     <a href="#" class="block px-4 py-2 text-sm font-bold text-gray-700 hover:text-purple-500" 
