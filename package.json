@@ -27,6 +27,7 @@
     "dependencies": {
         "moment": "^2.29.1",
         "v-calendar": "^2.3.0",
+        "v-click-outside": "^3.1.2",
         "vue-clickaway": "^2.2.2",
         "vue-observe-visibility": "^1.0.0",
         "vue-router": "^3.5.1",

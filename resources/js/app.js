@@ -23,12 +23,17 @@ import storeDefinition from './store';
 // Import vue observer visibility for infinite scroll
 import VueObserveVisibility from 'vue-observe-visibility';
 
+// Import click outside
+import vClickOutside from 'v-click-outside';
+
 // This gives us access to a special Route object inside every component
 Vue.use(VueRouter);
 // Need to use vuex as a vue plugin
 Vue.use(Vuex);
 // For infinite scroll
 Vue.use(VueObserveVisibility);
+// For click ootside
+Vue.use(vClickOutside);
 
 // Setup a new state
 const store = new Vuex.Store(storeDefinition);

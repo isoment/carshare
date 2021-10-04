@@ -1,29 +1,47 @@
 <template>
     <div class="inline">
         <!-- Toggle Button -->
-        <button>
+        <a>
             <i class="fas fa-cogs ml-1 cursor-pointer"
-            ref="menubutton"
-            @click="toggleFilterMenu"></i>
-        </button>
+               @click="toggleMenu">
+            </i>
+        </a>
 
         <!-- Filter Dropdown -->
         <transition name="fade">
             <div class="absolute py-4 px-2 bg-white border border-grey-50 rounded-md shadow-md 
                         left-0 top-16 filtermenu text-sm font-normal"
-                ref="filtermenu"
-                v-if="menuState">
-                Test menu content
+                 v-if="menuState"
+                 v-click-outside="closeMenu">
+                <div class="flex flex-col">
+                    <label for="active">Active</label>
+                    <input type="checkbox" name="active" v-model="inputs.outOfService" class="border">
+                </div>
             </div>
         </transition>
     </div>
 </template>
 
 <script>
-    import dropdownToggle from './../../shared/mixins/dropdownToggle';
-
     export default {
-        mixins: [dropdownToggle]
+        data() {
+            return {
+                menuState: false,
+                inputs: {
+                    outOfService: false
+                }
+            }
+        },
+
+        methods: {
+            toggleMenu() {
+                this.menuState = !this.menuState;
+            },
+
+            closeMenu() {
+                this.menuState = false;
+            }
+        }
     }
 </script>
 
