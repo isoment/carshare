@@ -11,8 +11,24 @@
             </div>
         </div>
 
-        <div class="py-8">
-            Vehicle index will go here
+        <div class="pt-12 mx-6 md:mx-2">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+                <!-- Card -->
+                <div class="shadow-md border border-gray-50 rounded p-2"
+                     v-for="vehicle in vehicles" :key="vehicle.id">
+                    <div>
+                        <div>
+                            <div class="h-32"
+                                :style="{ 'background-image': 'url(' + 'https://adultswithautism.org.uk/wp-content/uploads/2015/11/driving-your-car.jpg' + ')' }"
+                                style="background-size: cover; background-position: 50% 50%;">
+                            </div>
+                        </div>
+                        <div class="pt-3 pb-2 text-xs">
+                            Data here
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -23,6 +39,29 @@
     export default {
         components: {
             CustomerManageVehiclesFilter,
+        },
+
+        data() {
+            return {
+                vehicles: {}
+            }
+        },
+
+        methods: {
+            async vehicleIndex() {
+                try {
+                    let response = await axios.get('/api/dashboard/index-users-vehicles');
+                    console.log(response.data);
+                    this.vehicles = response.data.data;
+                } catch (error) {
+                    console.log(error);
+                }
+
+            }
+        },
+
+        async created() {
+            this.vehicleIndex();
         }
     }
 </script>

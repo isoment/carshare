@@ -92,6 +92,12 @@ Route::middleware('auth:sanctum')->group(function() {
         [App\Http\Controllers\Api\Dashboard\DriversLicenseController::class, 'show']
     )->name('dashboard.show-drivers-license');
 
+    // Show a users vehicles
+    Route::get(
+        'dashboard/index-users-vehicles',
+        [App\Http\Controllers\Api\Dashboard\UserVehicleController::class, 'index']
+    )->name('dashboard.show-users-vehicles');
+
     /*************************
      *  Checkout API Routes  *
      ************************/
@@ -103,5 +109,3 @@ Route::middleware('auth:sanctum')->group(function() {
     )->name('checkout');
     
 });
-
-
