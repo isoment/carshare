@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserVehicleIndexResource;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 
@@ -13,9 +14,11 @@ class UserVehicleController extends Controller
      */
     public function index(Request $request)
     {
-        return Vehicle::where('user_id', auth()->id())
-            ->with('vehicleModel.vehicleMake')
-            ->with('vehicleImages')
-            ->paginate(10);
+        return UserVehicleIndexResource::collection(
+            Vehicle::where('user_id', auth()->id())
+                ->with('vehicleModel.vehicleMake')
+                ->with('vehicleImages')
+                ->paginate(10)
+        );
     }
 }

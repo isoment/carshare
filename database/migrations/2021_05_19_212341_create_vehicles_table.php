@@ -23,6 +23,7 @@ class CreateVehiclesTable extends Migration
             $table->text('description');
             $table->integer('doors');
             $table->integer('seats');
+            $table->boolean('active')->default(true);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
