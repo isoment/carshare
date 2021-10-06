@@ -21,7 +21,7 @@ class UserVehicleIndexResource extends JsonResource
             'active' => $this->active,
             'created_at' => $this->created_at,
             'model' => $this->vehicleModel->model,
-            'vehicle_make' => $this->vehicleModel->vehicleMake->make,
+            'make' => $this->vehicleModel->vehicleMake->make,
             'image' => $this->vehicleImages->first()->image
         ];
     }

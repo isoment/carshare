@@ -9,7 +9,7 @@
 
         <!-- Filter Dropdown -->
         <transition name="fade">
-            <div class="absolute py-4 px-2 bg-white border border-grey-50 rounded-md shadow-md 
+            <div class="absolute py-4 px-2 bg-white border border-gray-200 rounded-md shadow-lg 
                         left-0 top-16 text-sm font-normal manage-vehicles-filtermenu z-20"
                  v-if="menuState"
                  v-click-outside="closeMenu">
