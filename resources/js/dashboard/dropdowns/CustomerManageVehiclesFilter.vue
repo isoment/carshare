@@ -17,16 +17,29 @@
                 <div>
                     <div class="relative">
                         <div class="manage-vehicles-filter-heading">
-                            <h4 class="font-bold text-lg mb-2 font-boldnosans tracking-widest text-purple-500">Filter Options:</h4>
+                            <h4 class="font-bold text-lg mb-2 font-boldnosans tracking-widest text-purple-500">
+                                Filter Options:
+                            </h4>
                         </div>
                         <div class="absolute bg-purple-100 manage-vehicles-filter-headingbar"></div>
                     </div>
                     
                     <div class="flex flex-row items-center justify-between">
-                        <label for="active" class="text-sm font-semibold">Only vehicles in service:</label>
-                        <input type="checkbox" name="active" 
-                               class="text-purple-300 h-3 w-3"
-                               v-model="inputs.outOfService">
+                        <label for="active" class="text-sm font-semibold">Vehicle is active:</label>
+                        <input type="checkbox" name="active"
+                               class="text-purple-300 h-4 w-4"
+                               v-model="inputs.active"
+                               @change="emitInputs()">
+                    </div>
+                    <div class="flex flex-row items-center justify-between mt-2">
+                        <label for="priceSort" class="text-sm font-semibold">Sort by price:</label>
+                        <select name="priceSort" id="priceSort" 
+                                class="bg-white border border-gray-200 rounded-sm focus:outline-none"
+                                v-model="inputs.priceSort"
+                                @change="emitInputs()">
+                            <option value="desc">Highest</option>
+                            <option value="asc">Lowest</option>
+                        </select>
                     </div>
                 </div>
 
@@ -41,7 +54,8 @@
             return {
                 menuState: false,
                 inputs: {
-                    outOfService: false
+                    active: true,
+                    priceSort: "desc"
                 }
             }
         },
@@ -53,7 +67,16 @@
 
             closeMenu() {
                 this.menuState = false;
+            },
+
+            emitInputs() {
+                console.log('Inputs emitted!');
+                this.$emit('inputUpdated', this.inputs);
             }
+        },
+
+        created() {
+            this.emitInputs();
         }
     }
 </script>

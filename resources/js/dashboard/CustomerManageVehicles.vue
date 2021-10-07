@@ -5,7 +5,8 @@
                 <div class="rounded border-2 border-purple-400 bg-white px-6 py-3">
                     <h3 class="text-lg font-boldnosans font-bold">
                         <span>Manage Vehicles</span>
-                        <customer-manage-vehicles-filter></customer-manage-vehicles-filter>
+                        <customer-manage-vehicles-filter @inputUpdated="updateVehicles">
+                        </customer-manage-vehicles-filter>
                     </h3>
                 </div>
             </div>
@@ -65,6 +66,7 @@
 
         data() {
             return {
+                apiParams: {},
                 vehicles: null,
                 loading: false
             }
@@ -75,7 +77,12 @@
                 try {
                     this.loading = true;
 
-                    let response = await axios.get('/api/dashboard/index-users-vehicles');
+                    let response = await axios.get('/api/dashboard/index-users-vehicles', {
+                        params: {
+                            active: this.apiParams.active,
+                            priceSort: this.apiParams.priceSort
+                        }
+                    });
 
                     console.log(response.data);
 
@@ -83,18 +90,22 @@
 
                     this.loading = false;
                 } catch (error) {
-                    console.log(error);
+                    this.$store.dispatch('addNotification', {
+                        type: 'error',
+                        message: 'Error getting vehicles.'
+                    })
                 }
 
             },
 
             dateFormat(date) {
                 return monthDayYearNumbericSlash(date);
+            },
+
+            updateVehicles(payload) {
+                this.apiParams = payload;
+                this.vehicleIndex();
             }
         },
-
-        async created() {
-            this.vehicleIndex();
-        }
     }
 </script>
