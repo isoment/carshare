@@ -3,16 +3,21 @@
         <main-navigation></main-navigation>
 
         <div>
+            <!-- Display unauthorized if not logged in -->
             <div v-if="!isLoggedIn">
                 <unauthorized></unauthorized>
             </div>
-            <!-- <div v-else-if="!isHost">
+
+            <!-- If user is not a host display an error -->
+            <div v-else-if="!isHost">
                 <div class="max-w-3xl mx-auto px-2 sm:px-6 lg:px-8 mb-6 mt-6">
                     <div class="text-white shadow-md pl-4 pr-3 py-3 rounded-md text-sm my-2 bg-red-400">
                         Please <span class="font-bold"><router-link :to="{ name: 'drivers-license' }">verify</router-link></span> identity before hosting drivers.
                     </div>
                 </div>
-            </div> -->
+            </div>
+            
+            <!-- Display shared vehicle section -->
             <div v-else>
                 <div class="customer-profile-banner h-36 md:h-40 border-b border-gray-200 pb-8">
                     <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">

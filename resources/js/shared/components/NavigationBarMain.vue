@@ -96,7 +96,7 @@
                             </div>
 
                             <transition name="fade">
-                                <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white 
+                                <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md py-1 bg-white profile-dropdown-boxshadow
                                             ring-1 ring-black ring-opacity-5 focus:outline-none profile-dropdown" 
                                      v-if="profileMenu"
                                      v-click-outside="profileMenuAway">
@@ -223,3 +223,9 @@
         },
     }
 </script>
+
+<style>
+    .profile-dropdown-boxshadow {
+        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    }
+</style>

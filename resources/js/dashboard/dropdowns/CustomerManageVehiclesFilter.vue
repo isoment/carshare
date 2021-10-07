@@ -9,13 +9,13 @@
 
         <!-- Filter Dropdown -->
         <transition name="fade">
-            <div class="absolute py-4 px-2 bg-white border border-gray-200 rounded-md shadow-lg 
-                        left-0 top-16 text-sm font-normal manage-vehicles-filtermenu z-20"
+            <div class="absolute py-4 px-2 bg-white border border-gray-200 rounded-md left-0 top-16 text-sm 
+                        font-normal manage-vehicles-filtermenu z-20 manage-vehicles-filter-boxshadow"
                  v-if="menuState"
                  v-click-outside="closeMenu">
 
                 <div>
-                    <div class="relative">
+                    <div class="relative mb-4">
                         <div class="manage-vehicles-filter-heading">
                             <h4 class="font-bold text-lg mb-2 font-boldnosans tracking-widest text-purple-500">
                                 Filter Options:
@@ -96,5 +96,9 @@
         z-index: -1;
         bottom: 0.1rem;
         left: 0.65rem;
+    }
+
+    .manage-vehicles-filter-boxshadow {
+        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
     }
 </style>

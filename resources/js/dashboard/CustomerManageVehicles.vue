@@ -13,13 +13,18 @@
         </div>
 
         <div class="pt-12 mx-6 md:mx-2">
-
+            <!-- Loading spinner -->
             <div class="text-center" v-if="loading">
                 <i class="fas fa-spinner fa-spin text-purple-500 text-4xl"></i>
             </div>
 
+            <!-- No vehicles message -->
+            <div class="text-center font-boldnosans font-bold" v-else-if="noVehicles">
+                No Vehicles
+            </div>
+
+            <!-- Vehicle index -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2" v-else>
-                <!-- Card -->
                 <div class="shadow-md border border-gray-50 rounded p-2"
                      v-for="vehicle in vehicles" :key="vehicle.id">
                     <div>
@@ -46,11 +51,9 @@
                                 <div>${{vehicle.price_day}} / Day</div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </template>
@@ -67,8 +70,14 @@
         data() {
             return {
                 apiParams: {},
-                vehicles: null,
+                vehicles: {},
                 loading: false
+            }
+        },
+
+        computed: {
+            noVehicles() {
+                return this.vehicles.length === 0;
             }
         },
 
@@ -78,10 +87,7 @@
                     this.loading = true;
 
                     let response = await axios.get('/api/dashboard/index-users-vehicles', {
-                        params: {
-                            active: this.apiParams.active,
-                            priceSort: this.apiParams.priceSort
-                        }
+                        params: this.apiParams
                     });
 
                     console.log(response.data);
