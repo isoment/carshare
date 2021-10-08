@@ -11,7 +11,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2">
                     <!-- Left Col -->
                     <div>
-                        <div class="mb-4">
+                        <div class="mb-8">
                             <h3 class="text-2xl md:text-3xl font-extrabold">Tell us about your vehicle...</h3> 
                         </div>
                         <div class="md:flex">
@@ -20,7 +20,8 @@
                                        class="text-gray-400 text-xs font-bold uppercase 
                                               tracking-wider mb-2">Make</label>
                                     <v-select :options="makes"
-                                            v-model="newVehicle.make">
+                                              v-model="newVehicle.make"
+                                              @input="getModels">
                                     </v-select>
                             </div>     
                             <div class="flex flex-col mt-2 md:mt-0 md:w-1/2 md:ml-1">
@@ -61,11 +62,32 @@
 
         methods: {
             async getMakes() {
-                let response = await axios.get('/api/vehicle-make/list');
+                try {
+                    let response = await axios.get('/api/vehicle-make/list');
 
-                response.data.data.forEach(element => {
-                    this.makes.push(element.make);
-                });
+                    response.data.data.forEach(element => {
+                        this.makes.push(element.make);
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+
+            },
+
+            async getModels() {
+                try {
+                    this.newVehicle.model = '';
+
+                    let response = await axios.get('/api/vehicle-models/list', {
+                        params: {
+                            make: this.newVehicle.make
+                        }
+                    });
+
+                    this.models = response.data;
+                } catch (error) {
+                    console.log(error);
+                }
             }
         },
 

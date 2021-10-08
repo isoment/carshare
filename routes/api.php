@@ -23,8 +23,16 @@ Route::get('user-details', 'App\Http\Controllers\Api\Auth\UserDetailController')
     ->name('user-details');
 
 // List vehicle makes
-Route::get('vehicle-make/list', 'App\Http\Controllers\Api\VehicleMakeListController')
-    ->name('vehicle-make.list');
+Route::get(
+    'vehicle-make/list', 
+    [App\Http\Controllers\Api\VehicleInformationController::class, 'vehicleMakeIndex']
+)->name('vehicle-make.list');
+
+// Get a list of models for a given make
+Route::get(
+    'vehicle-models/list',
+    [App\Http\Controllers\Api\VehicleInformationController::class, 'vehicleModelIndex']
+)->name('vehicle-model.list');
 
 // List top hosts
 Route::get('top-hosts/list', 'App\Http\Controllers\Api\TopHostsListController')
