@@ -12,8 +12,10 @@
                     <!-- Left Col -->
                     <div>
                         <div class="mb-8">
-                            <h3 class="text-2xl md:text-3xl font-extrabold">Tell us about your vehicle...</h3> 
+                            <h3 class="text-2xl md:text-3xl font-extrabold">Tell us about your vehicle...</h3>
+                            <h6 class="text-gray-500 text-xs mt-1">Fill out the form below to describe your vehicle</h6> 
                         </div>
+                        <!-- Make and model -->
                         <div class="md:flex">
                             <div class="flex flex-col md:w-1/2 md:mr-1">
                                 <label for="make" 
@@ -24,7 +26,7 @@
                                               @input="getModels">
                                     </v-select>
                             </div>     
-                            <div class="flex flex-col mt-2 md:mt-0 md:w-1/2 md:ml-1">
+                            <div class="flex flex-col mt-8 md:mt-0 md:w-1/2 md:ml-1">
                                 <label for="make" 
                                        class="text-gray-400 text-xs font-bold uppercase 
                                               tracking-wider mb-2">Model</label>
@@ -33,6 +35,68 @@
                                 </v-select>
                             </div>   
                         </div>
+                        <!-- Year and plate -->
+                        <div class="flex mt-8">
+                            <div class="flex flex-col w-1/3 mr-1">
+                                <label for="year" 
+                                       class="text-gray-400 text-xs font-bold uppercase 
+                                              tracking-wider mb-2">Year</label>
+                                <input type="text"
+                                       class="px-2 py-1 border border-gray-300 text-sm"
+                                       v-model="newVehicle.year">
+                            </div>
+                            <div class="flex flex-col w-2/3 ml-1 pr-2 md:pr-0">
+                                <label for="plate" 
+                                       class="text-gray-400 text-xs font-bold uppercase 
+                                              tracking-wider mb-2">License Plate</label>
+                                <input type="text"
+                                       class="px-2 py-1 border border-gray-300 text-sm"
+                                       v-model="newVehicle.plate">
+                            </div>      
+                        </div>
+                        <!-- Seats, doors and price -->
+                        <div class="flex mt-8">
+                            <div class="flex flex-col w-1/3 mr-1">
+                                <label for="seats" 
+                                       class="text-gray-400 text-xs font-bold uppercase 
+                                              tracking-wider mb-2">Seats</label>
+                                <input type="number" max="10"
+                                       class="px-2 py-1 border border-gray-300 text-sm"
+                                       v-model="newVehicle.seats">
+                            </div> 
+                            <div class="flex flex-col w-1/3 mr-1 ml-1">
+                                <label for="doors" 
+                                       class="text-gray-400 text-xs font-bold uppercase 
+                                              tracking-wider mb-2">Doors</label>
+                                <input type="number" min="2" max="4"
+                                       class="px-2 py-1 border border-gray-300 text-sm"
+                                       v-model="newVehicle.doors">
+                            </div> 
+                            <div class="flex flex-col w-1/3 ml-1">
+                                <label for="price" 
+                                       class="text-gray-400 text-xs font-bold uppercase 
+                                              tracking-wider mb-2">Price / Day</label>
+                                <input type="number" step="1" pattern="\d+"
+                                       class="px-2 py-1 border border-gray-300 text-sm"
+                                       @change="priceRound($event)"
+                                       v-model="newVehicle.price">
+                            </div> 
+                        </div>
+                        <!-- Vehicle description -->
+                        <div class="mt-8">
+                            <div class="flex flex-col">
+                                <label for="description"
+                                        class="text-gray-400 text-xs font-bold uppercase 
+                                                tracking-wider mb-2">Description</label>
+                                <textarea name="description" rows="10"
+                                        class="px-2 py-1 border border-gray-300 text-sm"
+                                        v-model="newVehicle.description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right col -->
+                    <div>
+                        
                     </div>
                 </div>
             </div>
@@ -53,7 +117,13 @@
             return {
                 newVehicle: {
                     make: null,
-                    model: null
+                    model: null,
+                    year: null,
+                    plate: null,
+                    seats: null,
+                    doors: null,
+                    price: null,
+                    description: null
                 },
                 makes: [],
                 models: []
@@ -88,6 +158,10 @@
                 } catch (error) {
                     console.log(error);
                 }
+            },
+
+            priceRound(event) {
+                this.newVehicle.price = Math.round(event.target.value);
             }
         },
 
