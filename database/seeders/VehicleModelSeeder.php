@@ -16,7 +16,7 @@ class VehicleModelSeeder extends Seeder
     {
         $chevyModels = [
             'Camaro', 'Corvette', 'Colorado', 'Impala', 'Sonic', 'Malibu', 'Express',
-            'Suburban', 'Blazer', 'Tahoe', 'Trax', 'Traverse', 'Colorado', 'Silverado 1500'
+            'Suburban', 'Blazer', 'Tahoe', 'Trax', 'Traverse', 'Silverado 1500'
         ];
 
         foreach ($chevyModels as $model) {

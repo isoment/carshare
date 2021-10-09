@@ -3,7 +3,7 @@
         <div class="relative md:mr-20">
             <div class="absolute -top-8 mb-12">
                 <div class="rounded border-2 border-purple-400 bg-white px-6 py-3">
-                    <h3 class="text-lg font-boldnosans font-bold">New Vehicles</h3>
+                    <h3 class="text-lg font-boldnosans font-bold">New Vehicle</h3>
                 </div>
             </div>
 
@@ -95,8 +95,36 @@
                         </div>
                     </div>
                     <!-- Right col -->
-                    <div>
-                        
+                    <div class="w-full md:ml-12 mt-8 md:mt-0">
+                        <!-- Header and upload button -->
+                        <div class="flex items-center justify-between">
+                            <h6 class="text-gray-600 text-lg font-boldnosans font-bold text-center">Choose some photos...</h6>
+                            <div>
+                                <input type="file"
+                                    accept="image"
+                                    multiple
+                                    class="hidden"
+                                    ref="fileInput"
+                                    @change="imageSelected">
+                                <button class="bg-purple-500 hover:bg-purple-400 transition-all 
+                                            duration-200 px-2 py-1 text-white font-bold rounded"
+                                        @click="pickImage">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Image previews -->
+                        <div class="mt-2" v-if="hasUploads">
+                            <div class="grid grid-cols-4 gap-2">
+                                <!-- Image card -->
+                                <div v-for="image in newVehicleImagesPrev" :key="image.id">
+                                    <div class="h-24 w-24 rounded-sm"
+                                        :style="{ 'background-image': 'url(' + image + ')' }"
+                                        style="background-size: cover; background-position: 50% 50%;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -125,12 +153,46 @@
                     price: null,
                     description: null
                 },
+                newVehicleImages: [],
+                newVehicleImagesPrev: [],
                 makes: [],
                 models: []
             }
         },
 
+        computed: {
+            hasUploads() {
+                return this.newVehicleImagesPrev.length > 0;
+            }
+        },
+
         methods: {
+            pickImage() {
+                this.$refs.fileInput.click();
+            },
+
+            imageSelected(event) {
+                let files = event.target.files;
+                let allowedExtensions = /(\jpg|\jpeg|\bmp|\png|\.gif)$/i;
+                
+                // If there are files loop over them, validate the extension and store them and a preview
+                if (files) {
+                    files.forEach(file => {
+                        if (allowedExtensions.exec(file.type)) {
+                            this.newVehicleImages.push(file);
+
+                            let reader = new FileReader;
+
+                            reader.readAsDataURL(file);
+
+                            reader.onload = event => {
+                                this.newVehicleImagesPrev.push(event.target.result);
+                            };
+                        }
+                    });
+                }
+            },
+
             async getMakes() {
                 try {
                     let response = await axios.get('/api/vehicle-make/list');
