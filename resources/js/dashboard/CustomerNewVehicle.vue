@@ -173,23 +173,28 @@
 
             imageSelected(event) {
                 let files = event.target.files;
-                let allowedExtensions = /(\jpg|\jpeg|\bmp|\png|\.gif)$/i;
-                
-                // If there are files loop over them, validate the extension and store them and a preview
+                let allowedExtensions = /(\jpg|\jpeg|\webp|\bmp|\png|\.gif)$/i;
+                let imageCount = this.newVehicleImages.length;
+                let maxAllowedCount = 12 - imageCount;
+
                 if (files) {
-                    files.forEach(file => {
-                        if (allowedExtensions.exec(file.type)) {
-                            this.newVehicleImages.push(file);
+                    for (let i = 0; i < maxAllowedCount; i++) {
+                        if (files[i]) {
+                            if (allowedExtensions.exec(files[i].type)) {
+                                this.newVehicleImages.push(files[i]);
 
-                            let reader = new FileReader;
+                                let reader = new FileReader;
 
-                            reader.readAsDataURL(file);
+                                reader.readAsDataURL(files[i]);
 
-                            reader.onload = event => {
-                                this.newVehicleImagesPrev.push(event.target.result);
-                            };
+                                reader.onload = event => {
+                                    this.newVehicleImagesPrev.push(event.target.result);
+                                };
+                            } else {
+                                console.log('Invalid image');
+                            }
                         }
-                    });
+                    }
                 }
             },
 

@@ -99,7 +99,7 @@
                     this.$store.dispatch('addNotification', {
                         type: 'error',
                         message: 'Error getting vehicles.'
-                    })
+                    });
                 }
 
             },
