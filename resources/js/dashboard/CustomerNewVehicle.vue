@@ -115,12 +115,16 @@
                         </div>
                         <!-- Image previews -->
                         <div class="mt-2" v-if="hasUploads">
-                            <div class="grid grid-cols-4 gap-2">
+                            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
                                 <!-- Image card -->
-                                <div v-for="image in newVehicleImagesPrev" :key="image.id">
-                                    <div class="h-24 w-24 rounded-sm"
-                                        :style="{ 'background-image': 'url(' + image + ')' }"
+                                <div v-for="image in previews" :key="image.id">
+                                    <div class="w-36 h-36 md:h-24 md:w-24 rounded-sm relative"
+                                        :style="{ 'background-image': 'url(' + image.file + ')' }"
                                         style="background-size: cover; background-position: 50% 50%;">
+                                        <div class="absolute top-2 right-2 bg-white rounded-full cursor-pointer"
+                                            @click="removeImage(image.id)">
+                                            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -153,8 +157,8 @@
                     price: null,
                     description: null
                 },
-                newVehicleImages: [],
-                newVehicleImagesPrev: [],
+                images: [],
+                previews: [],
                 makes: [],
                 models: []
             }
@@ -162,7 +166,7 @@
 
         computed: {
             hasUploads() {
-                return this.newVehicleImagesPrev.length > 0;
+                return this.previews.length > 0;
             }
         },
 
@@ -171,29 +175,57 @@
                 this.$refs.fileInput.click();
             },
 
+            // Once files are selected, verfiy the extensions are valid, calculated how many image slots
+            // are yet unfilled out of the 12 maximum and add them to the images and previews state.
             imageSelected(event) {
                 let files = event.target.files;
                 let allowedExtensions = /(\jpg|\jpeg|\webp|\bmp|\png|\.gif)$/i;
-                let imageCount = this.newVehicleImages.length;
+                let imageCount = this.images.length;
                 let maxAllowedCount = 12 - imageCount;
 
                 if (files) {
                     for (let i = 0; i < maxAllowedCount; i++) {
                         if (files[i]) {
                             if (allowedExtensions.exec(files[i].type)) {
-                                this.newVehicleImages.push(files[i]);
+                                // Create a unique id
+                                let id = "id" + Math.random().toString(16).slice(2);
+
+                                this.images.push({
+                                    id: id,
+                                    file: files[i]
+                                });
 
                                 let reader = new FileReader;
 
                                 reader.readAsDataURL(files[i]);
 
                                 reader.onload = event => {
-                                    this.newVehicleImagesPrev.push(event.target.result);
+                                    this.previews.push({
+                                        id: id,
+                                        file: event.target.result
+                                    });
                                 };
                             } else {
                                 console.log('Invalid image');
                             }
                         }
+                    }
+                }
+            },
+
+            // Remove the selected image from the images and previews state.
+            removeImage(id) {
+                // Remove the preview
+                for (let i = 0; i < this.previews.length; i++) {
+                    if (this.previews[i].id === id) {
+                        this.previews.splice([i], 1);
+                    }
+                }
+
+                // Remove the image
+                for (let i = 0; i < this.images.length; i++) {
+                    if (this.images[i].id === id) {
+                        this.images.splice([i], 1);
                     }
                 }
             },
