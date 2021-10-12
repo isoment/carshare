@@ -129,6 +129,13 @@
                                 </div>
                             </div>
                         </div>
+                        <div>
+                            <div class="mt-6" v-if="hasUploads">
+                                <button class="md:w-1/2 text-center bg-purple-500 hover:bg-purple-400 transition-all 
+                                            duration-200 px-4 py-2 text-white font-bold"
+                                        @click="submit">Submit</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -227,6 +234,27 @@
                     if (this.images[i].id === id) {
                         this.images.splice([i], 1);
                     }
+                }
+            },
+
+            async submit() {
+                const formData = new FormData;
+
+                formData.append('images', this.images);
+                formData.append('make', this.newVehicle.make);
+                formData.append('model', this.newVehicle.model);
+                formData.append('year', this.newVehicle.year);
+                formData.append('plate', this.newVehicle.plate);
+                formData.append('seats', this.newVehicle.seats);
+                formData.append('doors', this.newVehicle.doors);
+                formData.append('price', this.newVehicle.price);
+                formData.append('description', this.newVehicle.description);
+
+                try {
+                    let response = await axios.post('/api/dashboard/create-users-vehicles', formData);
+                    console.log(response);
+                } catch(error) {
+                    console.log(error);
                 }
             },
 

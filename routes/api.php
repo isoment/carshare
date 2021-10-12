@@ -106,6 +106,12 @@ Route::middleware('auth:sanctum')->group(function() {
         [App\Http\Controllers\Api\Dashboard\UserVehicleController::class, 'index']
     )->name('dashboard.show-users-vehicles');
 
+    // Create a new vehicle
+    Route::post(
+        'dashboard/create-users-vehicles',
+        [App\Http\Controllers\Api\Dashboard\UserVehicleController::class, 'create']
+    )->name('dashboard.create-users-vehicle');
+
     /*************************
      *  Checkout API Routes  *
      ************************/

@@ -26,6 +26,14 @@ class UserVehicleController extends Controller
     }
 
     /**
+     *  Create a new vehicle
+     */
+    public function create(Request $request)
+    {
+        return $request->toArray();
+    }
+
+    /**
      *  Determine active
      * 
      *  @param string $status
