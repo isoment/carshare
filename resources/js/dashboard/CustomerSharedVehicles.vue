@@ -45,7 +45,9 @@
                 </div>
 
                 <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
-                    <customer-new-vehicle v-if="addNewCar"></customer-new-vehicle>
+                    <customer-new-vehicle v-if="addNewCar" 
+                                          @vehicleAdded="addNewCar = false">
+                    </customer-new-vehicle>
                     <customer-manage-vehicles v-else></customer-manage-vehicles>
                 </div>
             </div>

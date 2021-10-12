@@ -155,14 +155,14 @@
         data() {
             return {
                 newVehicle: {
-                    make: null,
-                    model: null,
-                    year: null,
-                    plate: null,
-                    seats: null,
-                    doors: null,
-                    price: null,
-                    description: null
+                    make: '',
+                    model: '',
+                    year: '',
+                    plate: '',
+                    seats: '',
+                    doors: '',
+                    price: '',
+                    description: ''
                 },
                 images: [],
                 previews: [],
@@ -238,6 +238,8 @@
             },
 
             async submit() {
+                console.log(this.images);
+
                 const formData = new FormData;
 
                 formData.append('images', this.images);
@@ -252,9 +254,17 @@
 
                 try {
                     let response = await axios.post('/api/dashboard/create-users-vehicles', formData);
+
                     console.log(response);
+                    
+                    // this.$store.dispatch('addNotification', {
+                    //     type: 'success',
+                    //     message: 'Vehicle added'
+                    // });
+
+                    // this.$emit('vehicleAdded');
                 } catch(error) {
-                    console.log(error);
+                    console.log(error.response);
                 }
             },
 

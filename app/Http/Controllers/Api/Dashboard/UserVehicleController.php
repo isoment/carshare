@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserVehicleCreateRequest;
 use App\Http\Resources\UserVehicleIndexResource;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
@@ -28,9 +29,9 @@ class UserVehicleController extends Controller
     /**
      *  Create a new vehicle
      */
-    public function create(Request $request)
+    public function create(UserVehicleCreateRequest $request)
     {
-        return $request->toArray();
+        return response()->json($request);
     }
 
     /**
