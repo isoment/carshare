@@ -274,7 +274,7 @@
                 formData.append('description', this.newVehicle.description);
 
                 try {
-                    let response = await axios.post('/api/dashboard/create-users-vehicles', formData);
+                    await axios.post('/api/dashboard/create-users-vehicles', formData);
                     
                     this.$store.dispatch('addNotification', {
                         type: 'success',

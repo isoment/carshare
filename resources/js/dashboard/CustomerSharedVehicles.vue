@@ -79,7 +79,7 @@
 
         data() {
             return {
-                addNewCar: true
+                addNewCar: false
             }
         }
     }
