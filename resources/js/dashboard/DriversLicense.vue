@@ -305,7 +305,7 @@
                     } else {
                         this.$store.dispatch('addNotification', {
                             type: 'error',
-                            message: 'Unknown error, try again later'
+                            message: 'Error, try again later'
                         });
                     }
                 }  

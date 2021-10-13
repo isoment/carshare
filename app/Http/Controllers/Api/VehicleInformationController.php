@@ -31,7 +31,7 @@ class VehicleInformationController extends Controller
     public function vehicleModelIndex(Request $request)
     {
         $data = $request->validate([
-            'make' => 'required'
+            'make' => 'required|exists:vehicle_makes,make'
         ]);
 
         $make = VehicleMake::where('make', $data['make'])->first();

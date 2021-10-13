@@ -21,11 +21,12 @@
                                 <label for="make" 
                                        class="text-gray-400 text-xs font-bold uppercase 
                                               tracking-wider mb-2">Make</label>
-                                    <v-select :options="makes"
-                                              v-model="newVehicle.make"
-                                              @input="getModels">
-                                    </v-select>
-                            </div>     
+                                <v-select :options="makes"
+                                            v-model="newVehicle.make"
+                                            @input="getModels">
+                                </v-select>
+                                <validation-errors :errors="errorFor('make')"></validation-errors> 
+                            </div>
                             <div class="flex flex-col mt-8 md:mt-0 md:w-1/2 md:ml-1">
                                 <label for="make" 
                                        class="text-gray-400 text-xs font-bold uppercase 
@@ -33,6 +34,7 @@
                                 <v-select :options="models"
                                           v-model="newVehicle.model">
                                 </v-select>
+                                <validation-errors :errors="errorFor('model')"></validation-errors>
                             </div>   
                         </div>
                         <!-- Year and plate -->
@@ -54,6 +56,8 @@
                                        v-model="newVehicle.plate">
                             </div>      
                         </div>
+                        <validation-errors :errors="errorFor('year')"></validation-errors>
+                        <validation-errors :errors="errorFor('plate')"></validation-errors>
                         <!-- Seats, doors and price -->
                         <div class="flex mt-8">
                             <div class="flex flex-col w-1/3 mr-1">
@@ -82,6 +86,9 @@
                                        v-model="newVehicle.price">
                             </div> 
                         </div>
+                        <validation-errors :errors="errorFor('seats')"></validation-errors>
+                        <validation-errors :errors="errorFor('doors')"></validation-errors>
+                        <validation-errors :errors="errorFor('price')"></validation-errors>
                         <!-- Vehicle description -->
                         <div class="mt-8">
                             <div class="flex flex-col">
@@ -93,6 +100,7 @@
                                         v-model="newVehicle.description"></textarea>
                             </div>
                         </div>
+                        <validation-errors :errors="errorFor('description')"></validation-errors>
                     </div>
                     <!-- Right col -->
                     <div class="w-full md:ml-12 mt-8 md:mt-0">
@@ -129,6 +137,7 @@
                                 </div>
                             </div>
                         </div>
+                        <validation-errors :errors="errorFor('images')"></validation-errors>
                         <div>
                             <div class="mt-6" v-if="hasUploads">
                                 <button class="md:w-1/2 text-center bg-purple-500 hover:bg-purple-400 transition-all 
@@ -146,11 +155,14 @@
 <script>
     import vSelect from "vue-select";
     import 'vue-select/dist/vue-select.css';
+    import validationErrors from './../shared/mixins/validationErrors';
 
     export default {
         components: {
             vSelect
         },
+
+        mixins: [validationErrors],
 
         data() {
             return {
@@ -242,7 +254,11 @@
 
                 const formData = new FormData;
 
-                formData.append('images', this.images);
+                // Loop over images and append to formData
+                for (let i = 0; i < this.images.length; i++) {
+                    formData.append(`images[${[i]}]`, this.images[i].file);
+                }
+
                 formData.append('make', this.newVehicle.make);
                 formData.append('model', this.newVehicle.model);
                 formData.append('year', this.newVehicle.year);
@@ -264,7 +280,14 @@
 
                     // this.$emit('vehicleAdded');
                 } catch(error) {
-                    console.log(error.response);
+                    if (error.response.status === 422) {
+                        this.validationErrors = error.response.data.errors;
+                    } else {
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: 'Error, try again later'
+                        });
+                    }
                 }
             },
 
