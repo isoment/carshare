@@ -2,11 +2,14 @@
 
 namespace App\Services;
 
+use App\Http\Traits\FileTrait;
 use App\Models\DriversLicense;
 use Illuminate\Support\Facades\Storage;
 
 class DriversLicenseService
 {
+    use FileTrait;
+
     /**
      *  Create a new drivers license entry for the user
      */
@@ -21,7 +24,7 @@ class DriversLicenseService
 
         $image = $request->license_image;
 
-        $newName = time() . sha1(random_bytes(10)) . auth()->id() . sha1(random_bytes(8)) . '.' . $image->extension();
+        $newName = $this->generateFileName($image->extension());
 
         $image->storeAs('license-images', $newName, 'public');
 

@@ -247,7 +247,7 @@
 
             imageSelected(event) {
                 let file = event.target.files[0];
-                let allowedExtensions = /(\jpg|\jpeg|\bmp|\png|\.gif)$/i;
+                let allowedExtensions = /(\jpg|\jpeg|\webp|\bmp|\png|\.gif)$/i;
 
                 if (file) {
                     if (allowedExtensions.exec(file.type)) {
