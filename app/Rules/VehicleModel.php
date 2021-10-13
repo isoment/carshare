@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\Log;
 
 class VehicleModel implements Rule
 {
-    private string $make;
+    private string|null $make;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct(string $make)
+    public function __construct(string|null $make)
     {
         $this->make = $make;
     }

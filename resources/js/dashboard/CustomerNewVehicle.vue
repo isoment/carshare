@@ -107,26 +107,13 @@
                         <!-- Header and upload button -->
                         <div class="flex items-center justify-between">
                             <h6 class="text-gray-600 text-lg font-boldnosans font-bold text-center">Choose some photos...</h6>
-                            <div>
-                                <input type="file"
-                                    accept="image"
-                                    multiple
-                                    class="hidden"
-                                    ref="fileInput"
-                                    @change="imageSelected">
-                                <button class="bg-purple-500 hover:bg-purple-400 transition-all 
-                                            duration-200 px-2 py-1 text-white font-bold rounded"
-                                        @click="pickImage">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                </button>
-                            </div>
                         </div>
                         <!-- Image previews -->
-                        <div class="mt-2" v-if="hasUploads">
+                        <div class="mt-2">
                             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
                                 <!-- Image card -->
                                 <div v-for="image in previews" :key="image.id">
-                                    <div class="w-36 h-36 md:h-24 md:w-24 rounded-sm relative"
+                                    <div class="w-full h-36 md:h-24 md:w-full rounded-sm relative"
                                         :style="{ 'background-image': 'url(' + image.file + ')' }"
                                         style="background-size: cover; background-position: 50% 50%;">
                                         <div class="absolute top-2 right-2 bg-white rounded-full cursor-pointer"
@@ -135,12 +122,26 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Add image -->
+                                <div v-if="addImage">
+                                    <input type="file"
+                                           accept="image"
+                                           multiple
+                                           class="hidden"
+                                           ref="fileInput"
+                                           @change="imageSelected">
+                                    <button class="w-full h-36 md:h-24 md:w-full rounded-sm flex items-center justify-center
+                                                bg-gray-50 border border-gray-300 text-gray-300"
+                                            @click="pickImage">
+                                        <i class="fas fa-plus text-xl"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <validation-errors :errors="errorFor('images')"></validation-errors>
                         <div>
-                            <div class="mt-6" v-if="hasUploads">
-                                <button class="md:w-1/2 text-center bg-purple-500 hover:bg-purple-400 transition-all 
+                            <div class="mt-6 text-right" v-if="hasUploads">
+                                <button class="w-full text-center bg-purple-500 hover:bg-purple-400 transition-all 
                                             duration-200 px-4 py-2 text-white font-bold"
                                         @click="submit">Submit</button>
                             </div>
@@ -186,6 +187,10 @@
         computed: {
             hasUploads() {
                 return this.previews.length > 0;
+            },
+
+            addImage() {
+                return this.images.length < 12;
             }
         },
 
@@ -270,15 +275,13 @@
 
                 try {
                     let response = await axios.post('/api/dashboard/create-users-vehicles', formData);
-
-                    console.log(response);
                     
-                    // this.$store.dispatch('addNotification', {
-                    //     type: 'success',
-                    //     message: 'Vehicle added'
-                    // });
+                    this.$store.dispatch('addNotification', {
+                        type: 'success',
+                        message: 'Vehicle added'
+                    });
 
-                    // this.$emit('vehicleAdded');
+                    this.$emit('vehicleAdded');
                 } catch(error) {
                     if (error.response.status === 422) {
                         this.validationErrors = error.response.data.errors;
