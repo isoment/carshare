@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Resources\VehicleMakeListResource;
 use App\Models\VehicleMake;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Log;
 
 class VehicleInformationController extends Controller
 {
@@ -34,8 +33,6 @@ class VehicleInformationController extends Controller
             'make' => 'required|exists:vehicle_makes,make'
         ]);
 
-        $make = VehicleMake::where('make', $data['make'])->first();
-
-        return $make->vehicleModels->pluck('model');
+        return VehicleMake::vehicleModelsForMake($data['make']);
     }
 }
