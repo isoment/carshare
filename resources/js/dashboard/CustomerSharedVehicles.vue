@@ -35,7 +35,7 @@
                                     <a href="#"
                                        class="bg-white px-6 py-2 text-gray-800 border-2 border-gray-800 
                                               font-bold mr-2"
-                                       @click="addNewCar = false">
+                                       @click="switchToManageMode">
                                         My Cars
                                     </a>
                                 </div>
@@ -74,6 +74,14 @@
 
             isHost() {
                 return this.user.host === 1;
+            },
+        },
+
+        methods: {
+            switchToManageMode() {
+                if (confirm('All changes will be lost, continue?')) {
+                    this.addNewCar = false;
+                }
             }
         },
 

@@ -10,6 +10,7 @@ use App\Http\Requests\UserVehicleCreateRequest;
 use App\Http\Traits\FileTrait;
 use App\Models\VehicleImages;
 use App\Models\VehicleModel;
+use Illuminate\Http\JsonResponse;
 
 class UserVehicleService
 {
@@ -39,9 +40,9 @@ class UserVehicleService
      * 
      *  @param UserVehicleCreateRequest
      * 
-     *  @return 
+     *  @return JsonResponse
      */
-    public function create(UserVehicleCreateRequest $request)
+    public function create(UserVehicleCreateRequest $request) : JsonResponse
     {
         $vehicle = Vehicle::create([
             'user_id' => current_user()->id,
@@ -57,8 +58,6 @@ class UserVehicleService
 
         // Store the vehicle images
         foreach ($request['images'] as $image) {
-            // $newName = time() . sha1(random_bytes(10)) . auth()->id() . sha1(random_bytes(8)) . '.' . $image->extension();
-
             $newName = $this->generateFileName($image->extension());
 
             $image->storeAs('vehicle-images', $newName, 'public');
@@ -81,7 +80,7 @@ class UserVehicleService
      * 
      *  @return boolean
      */
-    protected function isActive(string $status) : bool
+    private function isActive(string $status) : bool
     {
         return $status === 'true' ? 1 : 0;
     }
@@ -93,7 +92,7 @@ class UserVehicleService
      * 
      *  @return string
      */
-    protected function priceSortDirection(string $direction) : string
+    private function priceSortDirection(string $direction) : string
     {
         if (!in_array($direction, array('desc', 'asc'))) {
             return 'desc';

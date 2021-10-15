@@ -21,7 +21,7 @@
             <!-- Top Host Card -->
             <div v-for="host in topHosts" :key="host.id">
                 <div class="rounded-lg shadow-md mx-2 my-5 hover:shadow-lg transition-all transform border 
-                            border-gray-100 duration-300 p-3">
+                            border-gray-100 duration-300 p-3 top-host-card-height">
                     <div class="flex">
                         <div>
                             <img :src="host.host_avatar" alt="profile" 
@@ -43,7 +43,7 @@
                     <div class="mt-4">
                         <star-rating :rating="host.rating" :size="'text-sm'"></star-rating>
                     </div>
-                    <div class="mt-2">{{ truncateString(host.content, 100) }}</div>
+                    <div class="mt-2">{{ truncateString(host.content, 85) }}</div>
                     <div class="italic font-bold text-sm mt-3">
                         {{ host.renter_name }}
                     </div>
@@ -147,5 +147,9 @@
 
     .slick-prev::before{
         color: #9f7aea;
+    }
+
+    .top-host-card-height {
+        height: 285px;
     }
 </style>
