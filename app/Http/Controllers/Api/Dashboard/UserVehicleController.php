@@ -32,4 +32,12 @@ class UserVehicleController extends Controller
     {
         return $this->userVehicleService->create($request);
     }
+
+    /**
+     *  Update a vehicle
+     */
+    public function update()
+    {
+        
+    }
 }

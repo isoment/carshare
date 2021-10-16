@@ -27,31 +27,36 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2" v-else>
                 <div class="shadow-md border border-gray-50 rounded p-2"
                      v-for="vehicle in vehicles" :key="vehicle.id">
-                    <div>
-                        <div class="relative">
-                            <div class="h-32"
-                                :style="{ 'background-image': 'url(' + vehicle.image + ')' }"
-                                style="background-size: cover; background-position: 50% 50%;">
-                            </div>
-                            <div class="w-7 h-7 rounded-full bg-white absolute flex items-center justify-center top-1 right-1"
-                                 v-if="!vehicle.active">
-                                <i class="fas fa-user-lock text-red-400"></i>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="text-xs">
-                                <div class="pt-3 pb-1">
-                                    <span class="font-bold text-purple-600">{{vehicle.year}}</span> {{vehicle.make}} {{vehicle.model}}
+                    <router-link :to="{ 
+                        name: 'customer-edit-vehicle', 
+                        params: { id: vehicle.id } 
+                    }">
+                        <div>
+                            <div class="relative">
+                                <div class="h-32"
+                                    :style="{ 'background-image': 'url(' + vehicle.image + ')' }"
+                                    style="background-size: cover; background-position: 50% 50%;">
                                 </div>
-                                <div>
-                                    In Service: {{dateFormat(vehicle.created_at)}}
+                                <div class="w-7 h-7 rounded-full bg-white absolute flex items-center justify-center top-1 right-1"
+                                    v-if="!vehicle.active">
+                                    <i class="fas fa-user-lock text-red-400"></i>
                                 </div>
                             </div>
-                            <div class="text-xs font-bold">
-                                <div>${{vehicle.price_day}} / Day</div>
+                            <div class="flex items-center justify-between">
+                                <div class="text-xs">
+                                    <div class="pt-3 pb-1">
+                                        <span class="font-bold text-purple-600">{{vehicle.year}}</span> {{vehicle.make}} {{vehicle.model}}
+                                    </div>
+                                    <div>
+                                        In Service: {{dateFormat(vehicle.created_at)}}
+                                    </div>
+                                </div>
+                                <div class="text-xs font-bold">
+                                    <div>${{vehicle.price_day}} / Day</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </router-link>
                 </div>
             </div>
         </div>

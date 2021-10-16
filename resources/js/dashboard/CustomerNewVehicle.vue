@@ -302,7 +302,7 @@
                         this.makes.push(element.make);
                     });
                 } catch (error) {
-                    console.log(error);
+                    console.log('Error getting makes');
                 }
 
             },
@@ -319,7 +319,7 @@
 
                     this.models = response.data;
                 } catch (error) {
-                    console.log(error);
+                    console.log('Error getting models');
                 }
             },
 

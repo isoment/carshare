@@ -63,10 +63,12 @@ class VehicleTest extends TestCase
     {
         $this->createSmallDatabase();
 
-        $from = Carbon::now()->addDays(3)->format('m/d/Y');
-        $to = Carbon::now()->addDays(10)->format('m/d/Y');
+        $dates = $this->setVehicleIndexDateRange();
 
-        $response = $this->json('GET', '/api/vehicles-index', ['from' => $from, 'to' => $to]);
+        $response = $this->json('GET', '/api/vehicles-index', [
+            'from' => $dates['from'], 
+            'to' => $dates['to']
+        ]);
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -109,26 +111,28 @@ class VehicleTest extends TestCase
     {
         TestingVehicleMakeModelSeeder::run();
 
-        $from = Carbon::now()->addDays(3)->format('m/d/Y');
-        $to = Carbon::now()->addDays(10)->format('m/d/Y');
+        $dates = $this->setVehicleIndexDateRange();
 
-        $user = User::factory()->create([
+        User::factory()->create([
             'host' => true
         ]);
 
-        $activeVehicle = Vehicle::factory()->create([
+        Vehicle::factory()->create([
             'vehicle_model_id' => 1,
             'price_day' => 999,
             'active' => true
         ]);
 
-        $inactiveVehicle = Vehicle::factory()->create([
+        Vehicle::factory()->create([
             'vehicle_model_id' => 1,
             'price_day' => 888,
             'active' => false
         ]);
 
-        $this->json('GET', '/api/vehicles-index', ['from' => $from, 'to' => $to])
+        $this->json('GET', '/api/vehicles-index', [
+            'from' => $dates['from'], 
+            'to' => $dates['to']
+        ])
             ->assertJsonFragment([
                 'price_day' => '999'
             ])
@@ -174,5 +178,18 @@ class VehicleTest extends TestCase
             ])->assertJsonFragment([
                 'id' => $vehicle->id
             ]);
+    }
+
+    /**
+     *  Set a valid daterange for indexing vehicles
+     * 
+     *  @return array
+     */
+    private function setVehicleIndexDateRange() : array
+    {
+        return [
+            'from' => Carbon::now()->addDays(3)->format('m/d/Y'),
+            'to' => Carbon::now()->addDays(10)->format('m/d/Y')
+        ];
     }
 }
