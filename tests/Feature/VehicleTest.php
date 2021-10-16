@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use App\Models\Vehicle;
 use Carbon\Carbon;
+use Database\Seeders\Testing\TestingVehicleMakeModelSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\Trait\UserTrait;
@@ -96,6 +98,42 @@ class VehicleTest extends TestCase
                     'to',
                     'total'
                 ]
+            ]);
+    }
+
+    /**
+     *  @test
+     *  Inactive vehicles are not displayed in the index
+     */
+    public function inactive_vehicles_are_not_displayed_in_the_index()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $from = Carbon::now()->addDays(3)->format('m/d/Y');
+        $to = Carbon::now()->addDays(10)->format('m/d/Y');
+
+        $user = User::factory()->create([
+            'host' => true
+        ]);
+
+        $activeVehicle = Vehicle::factory()->create([
+            'vehicle_model_id' => 1,
+            'price_day' => 999,
+            'active' => true
+        ]);
+
+        $inactiveVehicle = Vehicle::factory()->create([
+            'vehicle_model_id' => 1,
+            'price_day' => 888,
+            'active' => false
+        ]);
+
+        $this->json('GET', '/api/vehicles-index', ['from' => $from, 'to' => $to])
+            ->assertJsonFragment([
+                'price_day' => '999'
+            ])
+            ->assertJsonMissing([
+                'price_day' => '888'
             ]);
     }
 

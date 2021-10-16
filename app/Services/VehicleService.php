@@ -23,7 +23,7 @@ class VehicleService
         // Only want to search by price if its selected
         $hasMinMax = isset($request['min']) && isset($request['max']);
 
-        return Vehicle::whereDoesntHave('bookings', function($query) use ($from, $to) {
+        return Vehicle::where('active', 1)->whereDoesntHave('bookings', function($query) use ($from, $to) {
 
             $query->betweenDates($from, $to);
 
