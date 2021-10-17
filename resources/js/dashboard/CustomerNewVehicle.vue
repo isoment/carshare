@@ -106,7 +106,14 @@
                     <div class="w-full md:ml-12 mt-8 md:mt-0">
                         <!-- Header and upload button -->
                         <div class="flex items-center justify-between">
-                            <h6 class="text-gray-600 text-lg font-boldnosans font-bold text-center">Choose some photos...</h6>
+                            <div class="mb-2">
+                                <h4 class="text-gray-600 text-lg font-boldnosans font-bold">
+                                    Choose some photos...
+                                </h4>
+                                <h6 class="text-gray-500 text-xs mt-1">
+                                    Click an image to set it as the featured image
+                                </h6>
+                            </div>
                         </div>
                         <!-- Image previews -->
                         <div class="mt-2">
@@ -114,8 +121,10 @@
                                 <!-- Image card -->
                                 <div v-for="image in previews" :key="image.id">
                                     <div class="w-full h-36 md:h-24 md:w-full rounded-sm relative"
-                                        :style="{ 'background-image': 'url(' + image.file + ')' }"
-                                        style="background-size: cover; background-position: 50% 50%;">
+                                         :class="{ active: (image.id === featuredId) }"
+                                         :style="{ 'background-image': 'url(' + image.file + ')' }"
+                                         style="background-size: cover; background-position: 50% 50%;"
+                                         @click.self="setFeaturedImage(image.id)">
                                         <div class="absolute top-2 right-2 bg-white rounded-full cursor-pointer"
                                             @click="removeImage(image.id)">
                                             <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -179,6 +188,8 @@
                 },
                 images: [],
                 previews: [],
+                featuredImage: '',
+                featuredId: '',
                 makes: [],
                 models: []
             }
@@ -248,8 +259,25 @@
 
                 // Remove the image
                 for (let i = 0; i < this.images.length; i++) {
+                    // Set the featured image back to empty if it's the image we are removing
+                    if (this.images[i].id === id && this.featuredImage.id === id) {
+                        this.featuredImage = '',
+                        this.featuredId = '',
+                        this.previews.splice([i], 1);
+                    }
+
                     if (this.images[i].id === id) {
                         this.images.splice([i], 1);
+                    }
+                }
+            },
+
+            // Set the feauredImage state and the featuredId state used to apply a styling class
+            setFeaturedImage(id) {
+                for (let i = 0; i < this.images.length; i++) {
+                    if (this.images[i].id === id) {
+                        this.featuredImage = this.images[i];
+                        this.featuredId = this.images[i].id;
                     }
                 }
             },
@@ -333,3 +361,9 @@
         }
     }
 </script>
+
+<style scoped>
+    .active {
+        border: 3px solid rgb(155, 122, 255);
+    }
+</style>
