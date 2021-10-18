@@ -121,7 +121,6 @@
                                 <!-- Image card -->
                                 <div v-for="image in previews" :key="image.id">
                                     <div class="w-full h-36 md:h-24 md:w-full rounded-sm relative"
-                                         :class="{ active: (image.id === featuredId) }"
                                          :style="{ 'background-image': 'url(' + image.file + ')' }"
                                          style="background-size: cover; background-position: 50% 50%;"
                                          @click.self="setFeaturedImage(image.id)">
@@ -129,6 +128,9 @@
                                             @click="removeImage(image.id)">
                                             <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                         </div>
+                                        <div class="absolute top-2 left-2 bg-white rounded-full"
+                                             v-if="image.id === featuredId">
+                                            <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>                                        </div>
                                     </div>
                                 </div>
                                 <!-- Add image -->
@@ -361,9 +363,3 @@
         }
     }
 </script>
-
-<style scoped>
-    .active {
-        border: 3px solid rgb(155, 122, 255);
-    }
-</style>
