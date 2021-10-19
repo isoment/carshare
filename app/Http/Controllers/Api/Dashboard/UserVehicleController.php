@@ -31,9 +31,7 @@ class UserVehicleController extends Controller
      */
     public function create(UserVehicleCreateRequest $request)
     {
-        return response()->json($request);
-
-        // return $this->userVehicleService->create($request);
+        return $this->userVehicleService->create($request);
     }
 
     /**

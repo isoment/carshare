@@ -304,19 +304,15 @@
                 formData.append('description', this.newVehicle.description);
 
                 try {
-                    let response = await axios.post('/api/dashboard/create-users-vehicles', formData);
-
-                    console.log(response);
+                    await axios.post('/api/dashboard/create-users-vehicles', formData);
                     
-                    // this.$store.dispatch('addNotification', {
-                    //     type: 'success',
-                    //     message: 'Vehicle added'
-                    // });
+                    this.$store.dispatch('addNotification', {
+                        type: 'success',
+                        message: 'Vehicle added'
+                    });
 
-                    // this.$emit('vehicleAdded');
+                    this.$emit('vehicleAdded');
                 } catch(error) {
-                    console.log(error.response);
-
                     if (error.response.status === 422) {
                         this.validationErrors = error.response.data.errors;
                     } else {
