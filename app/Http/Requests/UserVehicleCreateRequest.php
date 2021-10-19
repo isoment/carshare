@@ -29,7 +29,8 @@ class UserVehicleCreateRequest extends FormRequest
     {
         return [
             'images' => 'required|array|min:1',
-            'images.*' => 'image|max:10000',
+            'images.*.file' => 'image|max:10000',
+            'featured_id' => 'required',
             'make' => ['required', new VehicleMake],
             'model' => ['required', new VehicleModel($this['make'])],
             'year' => ['required', 'integer', 'min:1945', $this->twoYears()],
@@ -38,6 +39,18 @@ class UserVehicleCreateRequest extends FormRequest
             'doors' => 'required',
             'price' => 'required|integer|min:1|max:9999',
             'description' => 'required|min:10'
+        ];
+    }
+
+    /**
+     *  Customer error messages
+     * 
+     *  @return array
+     */
+    public function messages() : array
+    {
+        return [
+            'featured_id.required' => 'Please select a featured image'
         ];
     }
 

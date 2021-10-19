@@ -182,6 +182,7 @@ class VehicleFactory extends Factory
         return [
             'user_id' => User::all()->random()->id,
             'vehicle_model_id' => VehicleModel::all()->random()->id,
+            'featured_image' => 'a',
             'year' => $this->vehicleYear(),
             'plate_num' => $this->plateNumber(),
             'price_day' => $this->faker->randomFloat(0, 35, 500),
@@ -194,6 +195,7 @@ class VehicleFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function(Vehicle $vehicle) {
+            // Create images associated with a vehicle
             for ($i = 0; $i < 5; $i++) {
                 VehicleImages::create([
                     'vehicle_id' => $vehicle->id,
@@ -201,6 +203,12 @@ class VehicleFactory extends Factory
                         $this->imagePicker($vehicle->vehicleModel->vehicleMake->make)
                 ]);
             }
+
+            // Set a featured image for the vehicle
+            $vehicle->update([
+                'featured_image' => '/storage/vehicle-seeder-img/' . 
+                    $this->imagePicker($vehicle->vehicleModel->vehicleMake->make)
+            ]);
         });
     }
 }

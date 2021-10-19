@@ -44,7 +44,7 @@ class UserVehicleService
      */
     public function create(UserVehicleCreateRequest $request) : JsonResponse
     {
-        $vehicle = Vehicle::create([
+        $vehicle = Vehicle::make([
             'user_id' => current_user()->id,
             'vehicle_model_id' => VehicleModel::where('model', $request['model'])->first()->id,
             'year' => $request['year'],

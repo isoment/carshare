@@ -150,6 +150,7 @@
                             </div>
                         </div>
                         <validation-errors :errors="errorFor('images')"></validation-errors>
+                        <validation-errors :errors="errorFor('featured_id')"></validation-errors>
                         <div>
                             <div class="mt-6 text-right" v-if="hasUploads">
                                 <button class="w-full text-center bg-purple-500 hover:bg-purple-400 transition-all 
@@ -285,15 +286,14 @@
             },
 
             async submit() {
-                console.log(this.images);
-
                 const formData = new FormData;
 
                 // Loop over images and append to formData
                 for (let i = 0; i < this.images.length; i++) {
-                    formData.append(`images[${[i]}]`, this.images[i].file);
+                    formData.append(`images[${[i]}]`, this.images[i].file, this.images[i].id);
                 }
 
+                formData.append('featured_id', this.featuredId);
                 formData.append('make', this.newVehicle.make);
                 formData.append('model', this.newVehicle.model);
                 formData.append('year', this.newVehicle.year);
@@ -304,15 +304,19 @@
                 formData.append('description', this.newVehicle.description);
 
                 try {
-                    await axios.post('/api/dashboard/create-users-vehicles', formData);
-                    
-                    this.$store.dispatch('addNotification', {
-                        type: 'success',
-                        message: 'Vehicle added'
-                    });
+                    let response = await axios.post('/api/dashboard/create-users-vehicles', formData);
 
-                    this.$emit('vehicleAdded');
+                    console.log(response);
+                    
+                    // this.$store.dispatch('addNotification', {
+                    //     type: 'success',
+                    //     message: 'Vehicle added'
+                    // });
+
+                    // this.$emit('vehicleAdded');
                 } catch(error) {
+                    console.log(error.response);
+
                     if (error.response.status === 422) {
                         this.validationErrors = error.response.data.errors;
                     } else {

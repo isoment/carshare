@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserVehicleCreateRequest;
 use Illuminate\Http\Request;
 use App\Services\UserVehicleService;
+use Illuminate\Cache\Repository;
 use Illuminate\Support\Facades\Log;
 
 class UserVehicleController extends Controller
@@ -30,7 +31,9 @@ class UserVehicleController extends Controller
      */
     public function create(UserVehicleCreateRequest $request)
     {
-        return $this->userVehicleService->create($request);
+        return response()->json($request);
+
+        // return $this->userVehicleService->create($request);
     }
 
     /**

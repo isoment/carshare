@@ -17,6 +17,7 @@ class CreateVehiclesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
             $table->unsignedBigInteger('vehicle_model_id')->index();
+            $table->string('featured_image');
             $table->string('year');
             $table->string('plate_num');
             $table->unsignedMediumInteger('price_day');
