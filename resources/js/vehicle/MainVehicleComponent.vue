@@ -101,7 +101,7 @@
                     <router-link :to="{ name: 'vehicle', params: { id: vehicle.id } }">
                         <div>
                             <div class="h-56 rounded-t-lg"
-                                :style="{ 'background-image': 'url(' + vehicle.image + ')' }"
+                                :style="{ 'background-image': 'url(' + vehicle.featured_image + ')' }"
                                 style="background-size: cover; background-position: 50% 50%;">
                             </div>
                         </div>

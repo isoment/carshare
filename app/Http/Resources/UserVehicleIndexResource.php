@@ -16,6 +16,7 @@ class UserVehicleIndexResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'featured_image' => $this->featured_image,
             'year' => $this->year,
             'price_day' => $this->price_day,
             'active' => $this->active,

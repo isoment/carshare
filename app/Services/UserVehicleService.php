@@ -65,10 +65,10 @@ class UserVehicleService
         foreach ($request['images'] as $image) {
             // If the image is the one the user wants featured
             if ($image->getClientOriginalName() === $featuredImageId) {
-                $resizedImage = $this->processFeaturedImage($image);
+                $resizedImagePath = $this->processFeaturedImage($image);
 
                 $vehicle->update([
-                    'featured_image' => $resizedImage
+                    'featured_image' => $resizedImagePath
                 ]);
             }
 
@@ -94,7 +94,7 @@ class UserVehicleService
      * 
      *  @return string
      */
-    public function processFeaturedImage(Object $image) : string
+    private function processFeaturedImage(Object $image) : string
     {
         $newName = $this->generateFileName($image->extension());
 

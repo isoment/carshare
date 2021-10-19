@@ -46,6 +46,7 @@
                                 <input type="text"
                                        class="px-2 py-1 border border-gray-300 text-sm"
                                        v-model="newVehicle.year">
+                                <validation-errors :errors="errorFor('year')"></validation-errors>
                             </div>
                             <div class="flex flex-col w-2/3 ml-1 pr-2 md:pr-0">
                                 <label for="plate" 
@@ -54,10 +55,9 @@
                                 <input type="text"
                                        class="px-2 py-1 border border-gray-300 text-sm"
                                        v-model="newVehicle.plate">
+                                <validation-errors :errors="errorFor('plate')"></validation-errors>
                             </div>      
                         </div>
-                        <validation-errors :errors="errorFor('year')"></validation-errors>
-                        <validation-errors :errors="errorFor('plate')"></validation-errors>
                         <!-- Seats, doors and price -->
                         <div class="flex mt-8">
                             <div class="flex flex-col w-1/3 mr-1">
@@ -67,6 +67,7 @@
                                 <input type="number" max="10"
                                        class="px-2 py-1 border border-gray-300 text-sm"
                                        v-model="newVehicle.seats">
+                                <validation-errors :errors="errorFor('seats')"></validation-errors>
                             </div> 
                             <div class="flex flex-col w-1/3 mr-1 ml-1">
                                 <label for="doors" 
@@ -75,6 +76,7 @@
                                 <input type="number" min="2" max="4"
                                        class="px-2 py-1 border border-gray-300 text-sm"
                                        v-model="newVehicle.doors">
+                                <validation-errors :errors="errorFor('doors')"></validation-errors>
                             </div> 
                             <div class="flex flex-col w-1/3 ml-1">
                                 <label for="price" 
@@ -84,11 +86,9 @@
                                        class="px-2 py-1 border border-gray-300 text-sm"
                                        @change="priceRound($event)"
                                        v-model="newVehicle.price">
+                                <validation-errors :errors="errorFor('price')"></validation-errors>
                             </div> 
                         </div>
-                        <validation-errors :errors="errorFor('seats')"></validation-errors>
-                        <validation-errors :errors="errorFor('doors')"></validation-errors>
-                        <validation-errors :errors="errorFor('price')"></validation-errors>
                         <!-- Vehicle description -->
                         <div class="mt-8">
                             <div class="flex flex-col">

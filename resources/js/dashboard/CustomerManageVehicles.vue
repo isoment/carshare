@@ -34,7 +34,7 @@
                         <div>
                             <div class="relative">
                                 <div class="h-32"
-                                    :style="{ 'background-image': 'url(' + vehicle.image + ')' }"
+                                    :style="{ 'background-image': 'url(' + vehicle.featured_image + ')' }"
                                     style="background-size: cover; background-position: 50% 50%;">
                                 </div>
                                 <div class="w-7 h-7 rounded-full bg-white absolute flex items-center justify-center top-1 right-1"
