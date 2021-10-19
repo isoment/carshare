@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Traits\FileTrait;
 use App\Models\DriversLicense;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 
 class DriversLicenseService

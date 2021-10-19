@@ -60,6 +60,10 @@ trait VehicleTrait
                 ->pluck('rating')
         );
 
+        if ($ratings->count() === 0) {
+            return 0;
+        }
+
         return round($ratings->sum() / $ratings->count(), 1);
     }
 

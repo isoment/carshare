@@ -58,6 +58,11 @@ class Booking extends Model
 
         $ratings = $hostReviews->pluck('hostReview.rating');
 
+        // To prevent divisible by error, just return 0
+        if ($ratings->count() === 0) {
+            return 0;
+        }
+
         return round($ratings->sum() / $ratings->count(), 1);
     }
 

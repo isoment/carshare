@@ -28,7 +28,7 @@
                                     {{vehicleData.vehicle_make}} {{vehicleData.vehicle_model}} {{vehicleData.year}}
                                 </h2>
                                 <div class="my-2">
-                                    <span class="font-boldnosans font-bold text-lg sm:text-xl">{{vehicleData.vehicle_rating}}</span>
+                                    <span class="font-boldnosans font-bold text-lg sm:text-xl">{{vehicleRatingFormat}}</span>
                                     <span><i class="fas fa-star text-purple-500 text-md"></i></span>
                                     <span class="font-light text-sm">({{vehicleData.vehicle_trip_count}} trips)</span>
                                 </div>
@@ -66,7 +66,7 @@
                                         <div class="absolute bg-white shadow-lg rounded-full border border-gray-200 px-4
                                                     flex top-16">
                                             <span class="mr-1 font-semibold">
-                                                {{vehicleData.host_rating}}
+                                                {{userRatingFromat}}
                                                 </span>
                                             <span><i class="fas fa-star text-purple-500 text-md"></i></span>
                                         </div>
@@ -191,7 +191,23 @@
                 start: state => state.searchDates.start,
                 end: state => state.searchDates.end,
                 cart: state => state.cart
-            })
+            }),
+
+            vehicleRatingFormat() {
+                if (this.vehicleData.vehicle_rating === 0) {
+                    return 'N/A';
+                } else {
+                    return this.vehicleData.vehicle_rating;
+                }
+            },
+
+            userRatingFromat() {
+                if (this.vehicleData.host_rating === 0) {
+                    return 'N/A';
+                } else {
+                    return this.vehicleData.host_rating;
+                }
+            }
         },
 
         data() {
