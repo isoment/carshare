@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 /***********************
  *  Public API Routes  *
- ***********************/
+ **********************/
 
 // Authenticated user details
 Route::get('user-details', 'App\Http\Controllers\Api\Auth\UserDetailController')
@@ -42,35 +42,59 @@ Route::get('top-hosts/list', 'App\Http\Controllers\Api\TopHostsListController')
 Route::get('vehicles/price-range', 'App\Http\Controllers\Api\VehiclePriceRangeController');
 
 // Vehicle index
-Route::get('vehicles-index', [App\Http\Controllers\Api\VehiclesController::class, 'index'])
-    ->name('vehicles.index');
+Route::get(
+    'vehicles-index', 
+    [App\Http\Controllers\Api\VehiclesController::class, 'index']
+)->name('vehicles.index');
 
 // Vehicle show
-Route::get('vehicle-show/{id}', [App\Http\Controllers\Api\VehiclesController::class, 'show'])
-    ->name('vehicle.show');
+Route::get(
+    'vehicle-show/{id}', 
+    [App\Http\Controllers\Api\VehiclesController::class, 'show']
+)->name('vehicle.show');
 
 // Check vehicle availability
-Route::get('vehicle-availability/{id}', [App\Http\Controllers\Api\AvailabilityController::class, 'check'])
-    ->name('vehicle.availability.check');
+Route::get(
+    'vehicle-availability-guest/{id}', 
+    [App\Http\Controllers\Api\AvailabilityController::class, 'guestCheck']
+)->name('vehicle.availability.guest');
 
 // Vehicle price
-Route::get('vehicle-price/{id}', [App\Http\Controllers\Api\AvailabilityController::class, 'price'])
-    ->name('vehicle.price');
+Route::get(
+    'vehicle-price/{id}', 
+    [App\Http\Controllers\Api\AvailabilityController::class, 'price']
+)->name('vehicle.price');
 
 // Get reviews for a vehicle
-Route::get('reviews-vehicle/{id}', [App\Http\Controllers\Api\ReviewController::class, 'vehicleReviews'])
-    ->name('reviews.vehicle');
+Route::get(
+    'reviews-vehicle/{id}', 
+    [App\Http\Controllers\Api\ReviewController::class, 'vehicleReviews']
+)->name('reviews.vehicle');
 
 // Reviews of a renter from hosts
-Route::get('reviews-from-hosts/{id}', [App\Http\Controllers\Api\ReviewController::class, 'reviewsFromHosts'])
-    ->name('reviews.from-host');
+Route::get(
+    'reviews-from-hosts/{id}', 
+    [App\Http\Controllers\Api\ReviewController::class, 'reviewsFromHosts']
+)->name('reviews.from-host');
 
 // Reviews of a host from renters
-Route::get('reviews-from-renters/{id}', [App\Http\Controllers\Api\ReviewController::class, 'reviewsFromRenters'])
-    ->name('reviews.from-renters');
+Route::get(
+    'reviews-from-renters/{id}', 
+    [App\Http\Controllers\Api\ReviewController::class, 'reviewsFromRenters']
+)->name('reviews.from-renters');
 
-// All authenticated users can access these api endpoints
+
+/*********************
+ *  Auth API Routes  *
+ ********************/
+
 Route::middleware('auth:sanctum')->group(function() {
+
+    // Vehicle availability check for authenticated users
+    Route::get(
+        'vehicle-availability-auth/{id}',
+        [App\Http\Controllers\Api\AvailabilityController::class, 'authCheck']
+    )->name('vehicle.availability.auth');
 
     /**************************
      *  Dashboard API Routes  *
