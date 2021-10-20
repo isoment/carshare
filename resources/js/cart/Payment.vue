@@ -167,6 +167,7 @@
                         cart: this.cart.items.map(cartItem => {
                             return {
                                 vehicle_id: cartItem.vehicle.id,
+                                host_id: cartItem.vehicle.host_id,
                                 price: cartItem.price,
                                 dates: cartItem.dates
                             }
@@ -197,7 +198,12 @@
                                 })
                             }
 
-                            console.log(error);
+                            if (error.response.status === 403) {
+                                this.$store.dispatch('addNotification', {
+                                    type: 'error',
+                                    message: error.response.data
+                                })   
+                            }
                         });
                 }
             }

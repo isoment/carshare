@@ -28,6 +28,11 @@ class CheckoutService
             return response()->json('You must verify ID prior to booking', 403);
         }
 
+        // Make sure the user doesn't own a vehicle they are trying to book
+        if ($this->userOwnsBookingVehicle($request)) {
+            return response()->json('You cannot book your own vehicle', 403);
+        }
+
         try {
             $order = $this->createOrder($request);
 
@@ -51,6 +56,24 @@ class CheckoutService
 
             return response()->json('Error processing payment', 500);
         }
+    }
+
+    /**
+     *  Check if any of the vehicles are owned by the user
+     * 
+     *  @param App\Http\Requests\CheckoutStoreRequest $request
+     * 
+     *  @return bool
+     */
+    private function userOwnsBookingVehicle(CheckoutStoreRequest $request) : bool
+    {
+        $hostIds = [];
+
+        foreach ($request['cart'] as $item) {
+            array_push($hostIds, $item['host_id']);
+        }
+
+        return collect($hostIds)->contains(current_user()->id) ? true : false;
     }
 
     /**

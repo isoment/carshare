@@ -21,6 +21,10 @@ class AvailabilityController extends Controller
     {
         $vehicle = Vehicle::findOrFail($vehicleId);
 
+        if ($vehicle->user_id === current_user()->id) {
+            return response()->json('You cannot book your own vehicle', 404);
+        }
+
         if (!$vehicle->isAvailable($request['from'], $request['to'])) {
             return response()->json('Vehicle unavailable on these dates.', 404);
         }

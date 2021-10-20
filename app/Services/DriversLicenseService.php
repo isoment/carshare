@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Http\Traits\FileTrait;
 use App\Models\DriversLicense;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class DriversLicenseService
@@ -16,7 +17,7 @@ class DriversLicenseService
      */
     public function createDriversLicense($request)
     {
-        $user = auth()->user();
+        $user = current_user();
 
         // Check if the user has a license on record
         if ($user->driversLicense) {
@@ -45,6 +46,9 @@ class DriversLicenseService
                 'license_image' => $fullPath,
             ]
         );
+
+        // Allow user to host
+        DB::table('users')->where('id', $user->id)->update(['host' => true]);
 
         return response()->json('Drivers license submitted', 201);
     }
