@@ -50,6 +50,28 @@ class CheckoutTest extends TestCase
 
     /**
      *  @test
+     *  A 403 error is returned if the user is trying to book their own vehicle
+     */
+    public function response_403_is_returned_when_user_tries_booking_their_own_vehicle()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::factory()->create();
+
+        DriversLicense::factory()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user);
+
+        // Set the vehicle vehicle host id to the authenticated user
+        $data = $this->validCheckoutData($user->id);
+
+        $response = $this->json('POST', '/api/checkout', $data);
+
+        $response->assertStatus(403)->assertSee('You cannot book your own vehicle');
+    }
+
+    /**
+     *  @test
      *  A 422 response is returned if the cart is empty.
      */
     public function response_422_is_returned_if_the_cart_is_empty()

@@ -9,9 +9,11 @@ trait CheckoutTrait
     /**
      *  Valid json data for testing the checkout.
      * 
+     *  @param int $hostId
+     * 
      *  @return array
      */
-    public function validCheckoutData() : array
+    public function validCheckoutData(int $hostId = null) : array
     {
         $start = Carbon::now()->addYears(1)->format('n/j/Y');
         $end = Carbon::parse($start)->addDays(2)->format('n/j/Y');
@@ -21,6 +23,7 @@ trait CheckoutTrait
             'cart' => [
                 [
                     'vehicle_id' => 1,
+                    'host_id' => $hostId ? $hostId : 999,
                     'dates' => [
                         'start' => $start,
                         'end' => $end
