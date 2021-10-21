@@ -101,13 +101,18 @@
             },
 
             async checkAvailability() {
+                // Change the api route based on if the user is authenticated
+                const authorization = this.isLoggedIn ? 'auth' : 'guest';
+
                 try {
-                    this.status = (await axios.get(`/api/vehicle-availability/${this.$route.params.id}`, {
-                        params: {
-                            from: this.$store.state.searchDates.start,
-                            to: this.$store.state.searchDates.end
-                        }
-                    })).status
+                    this.status = (await axios.get(
+                        `/api/vehicle-availability-${authorization}/${this.$route.params.id}`, 
+                        {
+                            params: {
+                                from: this.$store.state.searchDates.start,
+                                to: this.$store.state.searchDates.end
+                            }
+                        })).status
 
                     this.$emit('renderPrice');
 
