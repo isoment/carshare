@@ -41,16 +41,17 @@ class AvailabilityController extends Controller
         $vehicle = Vehicle::findOrFail($vehicleId);
 
         if (!$vehicle->isAvailable($request['from'], $request['to'])) {
-            return response()->json('Vehicle unavailable on these dates.', 404);
+            return response()->json('Vehicle unavailable on these dates', 404);
         }
 
         // Check if the user is free to book on the given dates.
         if (!auth()->user()->hasNoBooking($request['from'], $request['to'])) {
-            return response()->json('You already have a booking on these dates.', 404);
+            return response()->json('You already have a booking on these dates', 404);
         }
 
-        // Check if the vehicle is owned by the user.
-        if ($vehicle->user_id === current_user()->id) {
+        // Check if the vehicle is owned by the user. Typecase $vehicle->user_id or associated
+        // test will fail. Feature works without this though.
+        if ((int) $vehicle->user_id === current_user()->id) {
             return response()->json('You cannot book your own vehicle', 404);
         }
 

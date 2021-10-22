@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\User;
 use App\Models\Vehicle;
 use Carbon\Carbon;
+use Database\Seeders\Testing\TestingVehicleMakeModelSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
@@ -20,15 +21,44 @@ class AvailabilityTest extends TestCase
 
     /**
      *  @test
-     *  The api route returns error 422 when the from and to query strings
+     *  The guest vehicle availability api route returns error 422 when the from and to query strings
      *  are absent.
      */
-    public function vehicle_availability_check_api_route_returns_422_when_from_and_to_dates_are_absent()
+    public function guest_vehicle_availability_api_route_returns_422_when_from_and_to_dates_are_absent()
     {
         $this->createSmallDatabase();
 
-        $this->json('GET', '/api/vehicle-availability/' . Vehicle::first()->id)
+        $this->json('GET', '/api/vehicle-availability-guest/' . Vehicle::first()->id)
             ->assertStatus(422);
+    }
+
+    /**
+     *  @test
+     *  The auth vehicle availability api route returns error 422 when the from and to query strings
+     *  are absent.
+     */
+    public function auth_vehicle_availability_api_route_returns_422_when_from_and_to_dates_are_absent()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $this->json('GET', '/api/vehicle-availability-auth/' . Vehicle::first()->id)
+            ->assertStatus(422);
+    }
+
+    /**
+     *  @test
+     *  The auth vehicle availability api route is only accessible if a user is authenticated
+     */
+    public function auth_vehicle_availability_api_route_is_only_available_when_user_authenticated()
+    {
+        $this->createSmallDatabase();
+
+        $this->json('GET', '/api/vehicle-availability-auth/' . Vehicle::first()->id)
+            ->assertStatus(401);
     }
 
     /**
@@ -44,7 +74,7 @@ class AvailabilityTest extends TestCase
 
         $this->json(
             'GET', 
-            '/api/vehicle-availability/' . Vehicle::first()->id, 
+            '/api/vehicle-availability-guest/' . Vehicle::first()->id, 
             ['from' => $from, 'to' => $to]
         )->assertStatus(422);
     }
@@ -62,16 +92,16 @@ class AvailabilityTest extends TestCase
 
         $this->json(
             'GET', 
-            '/api/vehicle-availability/' . Vehicle::first()->id, 
+            '/api/vehicle-availability-guest/' . Vehicle::first()->id, 
             ['from' => $from, 'to' => $to]
         )->assertStatus(422);
     }
 
     /**
      *  @test
-     *  A 404 response is returned if the vehicle is unavailable and user unauthenticated
+     *  A 404 response is returned if the vehicle is unavailable
      */
-    public function vehicle_availability_response_404_is_returned_if_the_vehicle_is_unavailable_and_user_unauthenticated()
+    public function vehicle_availability_response_404_is_returned_if_the_vehicle_is_unavailable()
     {
         $this->createSmallDatabase();
 
@@ -85,18 +115,19 @@ class AvailabilityTest extends TestCase
 
         $response = $this->json(
             'GET',
-            '/api/vehicle-availability/' . $vehicle->id,
+            '/api/vehicle-availability-guest/' . $vehicle->id,
             ['from' => $from, 'to' => $to]
         );
 
-        $response->assertStatus(404);
+        $response->assertStatus(404)
+            ->assertSee('Vehicle unavailable on these dates');
     }
 
     /**
      *  @test
      *  A 200 status code is returned if a vehicle is available
      */
-    public function vehicle_availability_repsonse_200_is_returned_if_the_vehicle_is_available_and_user_unauthenticated()
+    public function vehicle_availability_repsonse_200_is_returned_if_the_vehicle_is_available()
     {
         $this->createSmallDatabase();
 
@@ -111,59 +142,89 @@ class AvailabilityTest extends TestCase
 
         $response = $this->json(
             'GET',
-            '/api/vehicle-availability/' . $vehicle->id,
+            '/api/vehicle-availability-guest/' . $vehicle->id,
             ['from' => $from, 'to' => $to]
         );
 
-        $response->assertStatus(200)->assertJson([]);
+        $response->assertStatus(200)->assertSee('Vehicle available');
     }
 
     /**
      *  @test
-     *  A 404 response is returned if the vehicle is available but the authenticated user already has a booking
-     * 
-     *  Test currently failing because of a Sanctum issue
+     *  A 404 response is returned if the vehicle is available but the authenticated user already has a booking.
      */
     // public function vehicle_availability_response_404_is_returned_if_vehicle_is_available_but_authenticated_user_already_has_a_booking()
     // {
-    //     $this->createSmallDatabase();
+    //     TestingVehicleMakeModelSeeder::run();
 
     //     $user = User::factory()->create();
 
     //     $this->actingAs($user);
 
-    //     // Select the first vehicle
-    //     $vehicleFirst = Vehicle::first();
+    //     // Create a vehicle with no bookings, it has open availability
+    //     $vehicleOne = Vehicle::factory()->create([
+    //         'user_id' => User::factory()->create()->id
+    //     ]);
 
-    //     // Delete all the bookings since we are only checking a users ability to book
-    //     $vehicleFirst->bookings()->delete();
-
-    //     // Select last vehicle
-    //     $vehicleLast = Vehicle::orderBy('id', 'DESC')->first();
+    //     // Create a second vehicle which the user will have a booking for
+    //     $vehicleTwo = Vehicle::factory()->create([
+    //         'user_id' => User::factory()->create()->id
+    //     ]);
 
     //     $from = Carbon::now()->format('n/j/Y');
-    //     $to = Carbon::parse($from)->addYear()->format('n/j/Y');
+    //     $to = Carbon::parse($from)->addWeek()->format('n/j/Y');
 
-    //     // Create a new booking for the above user, also make sure that the vehicle is not the same
-    //     // as the one above, we pick the last since we are modifying the first above and know that
-    //     // createSmallDatabase() creates a min of 2 vehicles.
-    //     $booking = Booking::factory()->create([
-    //         'order_id' => Order::factory()->create([
-    //             'user_id' => $user->id
-    //         ])->id,
-    //         'vehicle_id' => $vehicleLast->id,
+    //     $order = Order::create([
+    //         'user_id' => $user->id,
+    //         'transaction_id' => 'x0000000',
+    //         'total' => 500
+    //     ]);
+
+    //     Booking::factory()->create([
+    //         'order_id' => $order->id,
+    //         'vehicle_id' => $vehicleTwo->id,
     //         'from' => $from,
-    //         'to' => $to
+    //         'to' => $to,
     //     ]);
 
     //     $response = $this->json(
     //         'GET',
-    //         '/api/vehicle-availability/' . $vehicleFirst->id,
+    //         '/api/vehicle-availability-auth/' . $vehicleOne->id,
     //         ['from' => $from, 'to' => $to]
     //     );
 
-    //     $response->assertStatus(404);
+    //     $response->assertStatus(404)
+    //         ->assertSee('You already have a booking on these dates');
     // }
+
+    /**
+     *  @test
+     *  A 404 response is returned if a user owns the vehicle
+     */
+    public function vehicle_availability_response_404_is_returned_if_vehicle_is_owned_by_the_user()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $vehicle = Vehicle::factory()->create([
+            'user_id' => $user->id
+        ]);
+
+        $from = Carbon::now()->format('n/j/Y');
+        $to = Carbon::parse($from)->addYear()->format('n/j/Y');
+
+        $response = $this->json(
+            'GET',
+            '/api/vehicle-availability-auth/' . $vehicle->id,
+            ['from' => $from, 'to' => $to]
+        );
+
+        $response->assertStatus(404)
+            ->assertSee('You cannot book your own vehicle');
+    }
 
     /**
      *  @test
