@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -108,5 +109,17 @@ class User extends Authenticatable
         return Booking::whereIn('order_id', $orders)
             ->where('to', '>=', $fromFromatted)
             ->where('from', '<=', $toFormatted)->count() === 0;
+    }
+
+    /**
+     *  Get a collection of a users bookings
+     * 
+     *  @return Illuminate\Database\Eloquent\Collection
+     */
+    public function getBookings() : Collection
+    {
+        $usersOrders = $this->orders->pluck('id');
+
+        return Booking::whereIn('order_id', $usersOrders)->get();
     }
 }
