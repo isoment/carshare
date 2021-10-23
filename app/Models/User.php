@@ -97,6 +97,7 @@ class User extends Authenticatable
      * 
      *  @param string $from
      *  @param string $to
+     * 
      *  @return boolean
      */
     public function hasNoBooking(string $from, string $to) : bool
