@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Booking;
+use App\Models\HostReview;
 use App\Models\Order;
+use App\Models\RenterReview;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -34,10 +36,15 @@ class CleanupDuplicatedUserBookings extends Seeder
                     });
                 }
 
+                // Remove the booking and reviews
                 if (isset($removeFirst)) {
                     foreach ($removeFirst as $b) {
-                        $deleteMe = Booking::find($b->id);
-                        $deleteMe->delete();
+                        $bookingToDelete = Booking::find($b->id);
+                        $hostReviewToDelete = HostReview::find($bookingToDelete->host_review_key);
+                        $renterReviewToDelete = RenterReview::find($bookingToDelete->renter_review_key);
+                        $bookingToDelete->delete();
+                        $hostReviewToDelete->delete();
+                        $renterReviewToDelete->delete();
                     }
                 }
             });
