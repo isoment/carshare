@@ -4,7 +4,7 @@
 
         <div>
             <div v-if="!isLoggedIn">
-                <unauthorized></unauthorized>
+                <error :message="'Not Authorized'"></error>
             </div>
 
             <div v-else>

@@ -5,7 +5,7 @@
         <div>
             <!-- Display unauthorized if not logged in -->
             <div v-if="!isLoggedIn">
-                <unauthorized></unauthorized>
+                <error :message="'Not Authorized'"></error>
             </div>
 
             <!-- If user is not a host display an error -->

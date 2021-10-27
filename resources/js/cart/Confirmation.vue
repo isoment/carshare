@@ -3,7 +3,7 @@
         <main-navigation></main-navigation>
 
         <div v-if="!isLoggedIn || !pid">
-            <unauthorized></unauthorized>
+            <error :message="'Not Authorized'"></error>
         </div>
 
         <div v-else>
