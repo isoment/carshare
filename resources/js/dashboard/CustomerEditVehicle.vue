@@ -18,15 +18,23 @@
                 </error>
             </div>
 
-            <div v-else>
+            <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6" v-else>
                 <!-- Loading spinner -->
                 <div class="text-center mt-8"
                     v-if="loading">
                     <i class="fas fa-spinner fa-spin text-purple-500 text-4xl"></i>
                 </div>
 
-                <div>
-                    Edit vehicle {{$route.params.id}}
+                <div class="grid grid-cols-1 md:grid-cols-2 mt-10">
+                    <div>
+                        <h3 class="text-2xl md:text-3xl font-extrabold">
+                            {{vehicle.year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}}
+                        </h3>
+                    </div>
+                    <!-- Right Column -->
+                    <div class="w-full md:ml-12 mt-8 md:mt-0">
+                        Right
+                    </div>
                 </div>
             </div>
 

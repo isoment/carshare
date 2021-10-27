@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\VehicleIndexRequest;
 use App\Http\Resources\VehicleIndexResource;
 use App\Http\Resources\VehicleShowResource;
+use App\Models\Vehicle;
 use App\Services\VehicleService;
 
 class VehiclesController extends Controller
@@ -32,6 +33,12 @@ class VehiclesController extends Controller
      */
     public function show($id)
     {
-        return new VehicleShowResource($this->vehicleService->show($id));
+        $vehicle = Vehicle::with('vehicleModel.vehicleMake')->findOrFail($id);
+
+        if (!$vehicle->active && auth()->id() !== $vehicle->user_id) {
+            return response()->json('Unauthorized', 403);
+        }
+
+        return new VehicleShowResource($this->vehicleService->show($vehicle));
     }
 }

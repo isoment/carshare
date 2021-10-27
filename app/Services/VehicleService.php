@@ -40,10 +40,8 @@ class VehicleService
     /**
      *  Get information for an individual vehicle
      */
-    public function show($id)
+    public function show(Vehicle $vehicle)
     {
-        $vehicle = Vehicle::with('vehicleModel.vehicleMake')->findOrFail($id);
-
         return collect($vehicle)->merge([
             'vehicle_images' => $this->vehicleImages($vehicle->id),
             'host' => $this->hostInfo($vehicle->user_id),
