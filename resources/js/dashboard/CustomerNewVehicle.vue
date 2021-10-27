@@ -7,7 +7,7 @@
                 </div>
             </div>
 
-        <div class="pt-12">
+            <div class="pt-12">
                 <div class="grid grid-cols-1 md:grid-cols-2">
                     <!-- Left Col -->
                     <div>
