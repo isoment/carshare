@@ -35,6 +35,14 @@ class UserVehicleController extends Controller
     }
 
     /**
+     *  Delete a vehicle image
+     */
+    public function deleteImage(Request $request)
+    {
+        return $this->userVehicleService->deleteImage($request);
+    }
+
+    /**
      *  Update a vehicle
      */
     public function update()

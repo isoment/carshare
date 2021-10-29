@@ -13,7 +13,11 @@
                     <div>
                         <div class="mb-8">
                             <h3 class="text-2xl md:text-3xl font-extrabold">Tell us about your vehicle...</h3>
-                            <h6 class="text-gray-500 text-xs mt-1">Fill out the form below to describe your vehicle</h6> 
+                            <h6 class="text-gray-500 text-xs mt-1">Fill out the form below to describe your vehicle. 
+                                <span class="text-red-500">NOTE: You must active this vehicle in manage vehicles before it is
+                                    available to renters.
+                                </span>
+                            </h6>
                         </div>
                         <!-- Make and model -->
                         <div class="md:flex">

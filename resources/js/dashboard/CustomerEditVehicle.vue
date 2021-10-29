@@ -20,10 +20,10 @@
 
             <div v-else>
                 <!-- Loading spinner -->
-                <div class="text-center mt-8"
+                <!-- <div class="text-center mt-8"
                     v-if="loading">
                     <i class="fas fa-spinner fa-spin text-purple-500 text-4xl"></i>
-                </div>
+                </div> -->
 
                 <!-- Banner -->
                 <div class="customer-profile-banner h-36 md:h-40 border-b border-gray-200 pb-8">
@@ -52,11 +52,6 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 mt-12">
                         <div>
-                            <!-- Active status -->
-                            <div>
-
-                            </div>
-
                             <!-- Header info -->
                             <div>
                                 <h3 class="text-2xl md:text-3xl font-extrabold">
@@ -65,13 +60,13 @@
                                 <h6 class="text-gray-500 text-xs mt-1">Modify your vehicle details below...</h6>
                             </div>
 
-                            <!-- Active -->
+                            <!-- Status and Price -->
                             <div class="flex mt-8">
                                 <div class="flex flex-col w-1/2 mr-2">
                                     <label for="year" 
                                         class="text-gray-400 text-xs font-bold uppercase 
                                                 tracking-wider mb-2">Vehcile Status</label>
-                                    <button class="w-full text-center transition-all focus:outline-none
+                                    <button class="w-full text-center transition-all text-sm focus:outline-none
                                                    duration-200 px-4 text-white edit-vehicle-status-button"
                                             :class="{
                                                 'bg-red-400 hover:bg-red-300': !active,
@@ -84,9 +79,10 @@
                                 <div class="flex flex-col w-1/2 mr-1">
                                     <label for="year" 
                                         class="text-gray-400 text-xs font-bold uppercase 
-                                                tracking-wider mb-2">Price</label>
-                                    <input type="text"
+                                                tracking-wider mb-2">Price / Day</label>
+                                    <input type="number" step="1" pattern="\d+"
                                            class="px-2 py-1 border border-gray-300 text-sm"
+                                           @change="priceRound($event)"
                                            v-model="price">
                                 </div>  
                             </div>
@@ -102,6 +98,13 @@
                                             v-model="description"></textarea>
                                 </div>
                             </div>
+
+                            <!-- Save -->
+                            <div class="mt-3">
+                                <button class="w-full text-center bg-purple-500 hover:bg-purple-400 transition-all 
+                                               duration-200 px-4 py-2 text-white font-bold"
+                                        @click="submit">Save changes</button>
+                            </div>
                         </div>
                         <!-- Right Column -->
                         <div class="w-full md:ml-12 mt-8 md:mt-0">
@@ -116,6 +119,44 @@
                                     </h6>
                                 </div>
                             </div>
+
+                            <div class="mt-2">
+                                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+
+                                    <!-- Existing Images -->
+                                    <div v-for="imageUrl in vehicle.vehicle_images" :key="imageUrl.id">
+                                        <div class="w-full h-36 md:h-24 md:w-full rounded-sm relative"
+                                            :style="{ 'background-image': 'url(' + imageUrl + ')' }"
+                                            style="background-size: cover; background-position: 50% 50%;">
+                                            <div class="absolute top-2 right-2 bg-white rounded-full cursor-pointer"
+                                                @click="removeExistingImage(imageUrl)">
+                                                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                            </div>
+                                            <!-- <div class="absolute top-2 left-2 bg-white rounded-full"
+                                                v-if="image.id === featuredId">
+                                                <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>                                        
+                                            </div> -->
+                                        </div>
+                                    </div>
+
+                                    <!-- Add image -->
+                                    <!-- <div v-if="addImage">
+                                        <input type="file"
+                                            accept="image"
+                                            multiple
+                                            class="hidden"
+                                            ref="fileInput"
+                                            @change="imageSelected">
+                                        <button class="w-full h-36 md:h-24 md:w-full rounded-sm flex items-center justify-center
+                                                    bg-gray-50 border border-gray-300 text-gray-300"
+                                                @click="pickImage">
+                                            <i class="fas fa-plus text-xl"></i>
+                                        </button>
+                                    </div> -->
+
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -166,8 +207,46 @@
                 this.loading = false;
             },
 
+            async removeExistingImage(imageUrl) {
+                try {
+                    await axios.delete(
+                        '/api/dashboard/delete-vehicle-image',
+                        { data: { image: imageUrl } }
+                    );
+
+                    this.$store.dispatch('addNotification', {
+                        type: 'success',
+                        message: 'Image removed'
+                    });
+
+                    this.vehicleInfo();
+                } catch (error) {
+                    if (error.response.status === 403) {
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: error.response.data
+                        });
+                    }
+
+                    if (error.response.status === 422) {
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: 'Invalid image'
+                        });
+                    }
+                }
+            },
+
             toggleVehicleStatus() {
                 this.active = !this.active;
+            },
+
+            priceRound(event) {
+                this.price = Math.round(event.target.value);
+            },
+
+            submit() {
+
             }
         },
 
@@ -179,6 +258,6 @@
 
 <style scoped>
     .edit-vehicle-status-button {
-        padding: 3px 0 3px 0;
+        padding: 5px 0 5px 0;
     }
 </style>

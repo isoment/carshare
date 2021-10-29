@@ -13,6 +13,7 @@ use App\Models\VehicleModel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use PHPUnit\Util\Json;
 
 class UserVehicleService
 {
@@ -21,7 +22,7 @@ class UserVehicleService
     /**
      *  Return an index of a users vehicle based on request params
      * 
-     *  @param Request
+     *  @param Request $request
      * 
      *  @return AnonymousResourceCollection
      */
@@ -40,7 +41,7 @@ class UserVehicleService
     /**
      *  Create a new vehicle belonging to the user
      * 
-     *  @param UserVehicleCreateRequest
+     *  @param UserVehicleCreateRequest $request
      * 
      *  @return JsonResponse
      */
@@ -56,7 +57,7 @@ class UserVehicleService
             'description' => $request['description'],
             'doors' => $request['doors'],
             'seats' => $request['seats'],
-            'active' => 1
+            'active' => 0
         ]);
 
         $featuredImageId = $request['featured_id'];
@@ -85,6 +86,41 @@ class UserVehicleService
         }
 
         return response()->json(201);
+    }
+
+    /**
+     *  Delete a vehicles image
+     * 
+     *  @param Request $request
+     * 
+     *  @return JsonResponse
+     */
+    public function deleteImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|exists:vehicle_images,image'
+        ]);
+
+        // If the image is a seeder image don't allow removal
+        if (str_contains($request['image'], 'seeder')) {
+            return response()->json('Seeder images cannot be removed', 403);
+        }
+
+        $image = VehicleImages::where('image', $request->image)->first();
+
+        if (!$image->imageBelongsToUsersVehicle()) {
+            return response()->json('This is not your vehicle', 403);
+        }
+
+        // Process the image path
+        $split = explode('/', $image->image);
+        $recombined = $split[2] . '/' . $split[3];
+
+        // Delete the image from storage if it's not part of the seeder images
+        Storage::disk('public')->delete($recombined);
+
+        // Delete the record
+        $image->delete();
     }
 
     /**

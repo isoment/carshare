@@ -142,6 +142,12 @@ Route::middleware('auth:sanctum')->group(function() {
         [App\Http\Controllers\Api\Dashboard\UserVehicleController::class, 'update']
     )->name('dashboard.update-users-vehicle');
 
+    // Delete an existing vehicle image
+    Route::delete(
+        'dashboard/delete-vehicle-image',
+        [App\Http\Controllers\Api\Dashboard\UserVehicleController::class, 'deleteImage']
+    )->name('dashboard.delete-vehicle-image');
+
     /*************************
      *  Checkout API Routes  *
      ************************/

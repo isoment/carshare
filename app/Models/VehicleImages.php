@@ -18,4 +18,16 @@ class VehicleImages extends Model
     {
         return $this->belongsTo(Vehicle::class);
     }
+
+    /**
+     *  Determine if the given image belongs to a users vehicle
+     * 
+     *  @return bool
+     */
+    public function imageBelongsToUsersVehicle() : bool
+    {
+        $userId = current_user()->id;
+
+        return $this->vehicle->user_id === $userId ? true : false;
+    }
 }
