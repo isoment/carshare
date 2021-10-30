@@ -26,6 +26,7 @@ class VehicleShowResource extends JsonResource
             'seats' => $this['seats'],
             'active' => $this['active'],
             'vehicle_images' => $this['vehicle_images'],
+            'featured_image' => $this['featured_image'],
             'host_name' => $this['host']['name'],
             'top_host' => $this['host']['top_host'],
             'member_since' => $this['host']['created_at'],

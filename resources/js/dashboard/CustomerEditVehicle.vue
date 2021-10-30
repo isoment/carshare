@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mt-4">
+                <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
                     <div class="relative">
                         <div class="absolute -top-20 mb-12">
                             <div class="rounded border-2 border-purple-400 bg-white px-6 py-3">
@@ -51,6 +51,8 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 mt-12">
+
+                        <!-- Left Columm -->
                         <div>
                             <!-- Header info -->
                             <div>
@@ -66,11 +68,11 @@
                                     <label for="year" 
                                         class="text-gray-400 text-xs font-bold uppercase 
                                                 tracking-wider mb-2">Vehcile Status</label>
-                                    <button class="w-full text-center transition-all text-sm focus:outline-none
-                                                   duration-200 px-4 text-white edit-vehicle-status-button"
+                                    <button class="w-full text-center transition-all text-sm font-semibold focus:outline-none
+                                                   duration-200 px-4 border-2 edit-vehicle-status-button tracking-wider"
                                             :class="{
-                                                'bg-red-400 hover:bg-red-300': !active,
-                                                'bg-green-400 hover:bg-green-300': active
+                                                'border-gray-600 text-gray-600': !active,
+                                                'border-purple-400 text-purple-400': active
                                             }"
                                             @click="toggleVehicleStatus">
                                         {{vehicleStatusText}}
@@ -106,8 +108,21 @@
                                         @click="submit">Save changes</button>
                             </div>
                         </div>
+                        
                         <!-- Right Column -->
-                        <div class="w-full md:ml-12 mt-8 md:mt-0">
+                        <div class="md:ml-12 mt-8 md:mt-0">
+                            <!-- Featured Image -->
+                            <div>
+                                <div class="mb-2">
+                                    <h4 class="text-gray-600 text-lg font-boldnosans font-bold">
+                                        Featured image
+                                    </h4>
+                                    <div class="w-full">
+                                        <img class="w-full" :src="existingFeaturedImage">
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Header and upload button -->
                             <div class="flex items-center justify-between">
                                 <div class="mb-2">
@@ -115,7 +130,7 @@
                                         Choose some photos...
                                     </h4>
                                     <h6 class="text-gray-500 text-xs mt-1">
-                                        Click an image to set it as the featured image
+                                        Click an image to set it as the new featured image
                                     </h6>
                                 </div>
                             </div>
@@ -127,20 +142,38 @@
                                     <div v-for="imageUrl in vehicle.vehicle_images" :key="imageUrl.id">
                                         <div class="w-full h-36 md:h-24 md:w-full rounded-sm relative"
                                             :style="{ 'background-image': 'url(' + imageUrl + ')' }"
-                                            style="background-size: cover; background-position: 50% 50%;">
+                                            style="background-size: cover; background-position: 50% 50%;"
+                                            @click.self="setFeaturedImage(imageUrl)">
                                             <div class="absolute top-2 right-2 bg-white rounded-full cursor-pointer"
                                                 @click="removeExistingImage(imageUrl)">
                                                 <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                             </div>
-                                            <!-- <div class="absolute top-2 left-2 bg-white rounded-full"
+                                            <div class="absolute top-2 left-2 bg-white rounded-full"
+                                                v-if="imageUrl === featuredId">
+                                                <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>                                        
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- New images -->
+                                    <div v-for="image in previews" :key="image.id">
+                                        <div class="w-full h-36 md:h-24 md:w-full rounded-sm relative"
+                                            :style="{ 'background-image': 'url(' + image.file + ')' }"
+                                            style="background-size: cover; background-position: 50% 50%;"
+                                            @click.self="setFeaturedImage(image.id)">
+                                            <div class="absolute top-2 right-2 bg-white rounded-full cursor-pointer"
+                                                @click="removeImage(image.id)">
+                                                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                            </div>
+                                            <div class="absolute top-2 left-2 bg-white rounded-full"
                                                 v-if="image.id === featuredId">
                                                 <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>                                        
-                                            </div> -->
+                                            </div>
                                         </div>
                                     </div>
 
                                     <!-- Add image -->
-                                    <!-- <div v-if="addImage">
+                                    <div>
                                         <input type="file"
                                             accept="image"
                                             multiple
@@ -152,7 +185,7 @@
                                                 @click="pickImage">
                                             <i class="fas fa-plus text-xl"></i>
                                         </button>
-                                    </div> -->
+                                    </div>
 
                                 </div>
                             </div>
@@ -192,17 +225,109 @@
                 price: null,
                 active: null,
                 loading: false,
-                vehicle: null
+                vehicle: null,
+                existingFeaturedImage: null,
+                images: [],
+                previews: [],
+                featuredImage: '',
+                featuredId: '',
             }
         },
 
         methods: {
+            pickImage() {
+                this.$refs.fileInput.click();
+            },
+
+            // Once files are selected, verfiy the extensions are valid, calculated how many image slots
+            // are yet unfilled out of the 12 maximum and add them to the images and previews state.
+            imageSelected(event) {
+                let files = event.target.files;
+                let allowedExtensions = /(\jpg|\jpeg|\webp|\bmp|\png|\.gif)$/i;
+                let imageCount = this.images.length;
+                let maxAllowedCount = 12 - imageCount;
+
+                if (files) {
+                    for (let i = 0; i < maxAllowedCount; i++) {
+                        if (files[i]) {
+                            if (allowedExtensions.exec(files[i].type)) {
+                                // Create a unique id
+                                let id = "id" + Math.random().toString(16).slice(2);
+
+                                this.images.push({
+                                    id: id,
+                                    file: files[i]
+                                });
+
+                                let reader = new FileReader;
+
+                                reader.readAsDataURL(files[i]);
+
+                                reader.onload = event => {
+                                    this.previews.push({
+                                        id: id,
+                                        file: event.target.result
+                                    });
+                                };
+                            } else {
+                                console.log('Invalid image');
+                            }
+                        }
+                    }
+                }
+            },
+
+            removeImage(id) {
+                // Remove the preview
+                for (let i = 0; i < this.previews.length; i++) {
+                    if (this.previews[i].id === id) {
+                        this.previews.splice([i], 1);
+                    }
+                }
+
+                // Remove the image
+                for (let i = 0; i < this.images.length; i++) {
+                    // Set the featured image back to empty if it's the image we are removing
+                    if (this.images[i].id === id && this.featuredImage.id === id) {
+                        this.featuredImage = '',
+                        this.featuredId = '',
+                        this.previews.splice([i], 1);
+                    }
+
+                    if (this.images[i].id === id) {
+                        this.images.splice([i], 1);
+                    }
+                }
+            },
+
+            setFeaturedImage(identifier) {
+                let mergedArrays = this.images.concat(this.vehicle.vehicle_images);
+
+                for (let i = 0; i < mergedArrays.length; i++) {
+                    // If the featured image selected is one of the new images
+                    if (mergedArrays[i].id === identifier) {
+                        this.featuredImage = mergedArrays[i];
+                        this.featuredId = mergedArrays[i].id;
+                    }
+
+
+                    // If the featured image is one of the previous uploaded images
+                    if (mergedArrays[i] === identifier) {
+                        this.featuredImage = mergedArrays[i];
+                        this.featuredId = mergedArrays[i];
+                    }
+                }
+            },
+
             async vehicleInfo() {
                 this.loading = true;
 
                 this.vehicle = (await axios.get(`/api/vehicle-show/${this.$route.params.id}`)).data.data
             
                 this.active = this.vehicle.active;
+                this.price = this.vehicle.price;
+                this.description = this.vehicle.description;
+                this.existingFeaturedImage = this.vehicle.featured_image;
 
                 this.loading = false;
             },
@@ -218,6 +343,11 @@
                         type: 'success',
                         message: 'Image removed'
                     });
+
+                    if (this.featuredImage === imageUrl) {
+                        this.featuredImage = '';
+                        this.featuredId = '';
+                    }
 
                     this.vehicleInfo();
                 } catch (error) {
@@ -258,6 +388,6 @@
 
 <style scoped>
     .edit-vehicle-status-button {
-        padding: 5px 0 5px 0;
+        padding: 3px 0 3px 0;
     }
 </style>
