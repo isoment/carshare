@@ -101,4 +101,14 @@ class Vehicle extends Model
             'total' => $totalPrice
         ];
     }
+
+    /**
+     *  Determine if the vehilce has images
+     * 
+     *  @return bool
+     */
+    public function vehicleHasImages() : bool
+    {
+        return $this->vehicleImages->count() !== 0;
+    }
 }

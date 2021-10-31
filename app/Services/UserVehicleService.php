@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services;
 
@@ -61,30 +62,8 @@ class UserVehicleService
             'active' => 0
         ]);
 
-        $featuredImageId = $request['featured_id'];
-
         // Store the vehicle images
-        foreach ($request['images'] as $image) {
-            // If the image is the one the user wants featured
-            if ($image->getClientOriginalName() === $featuredImageId) {
-                $resizedImagePath = $this->processFeaturedImage($image);
-
-                $vehicle->update([
-                    'featured_image' => $resizedImagePath
-                ]);
-            }
-
-            $newName = $this->generateFileName($image->extension());
-
-            $image->storeAs('vehicle-images', $newName, 'public');
-
-            $fullPath = '/storage/vehicle-images/' . $newName;
-
-            VehicleImages::create([
-                'vehicle_id' => $vehicle->id,
-                'image' => $fullPath
-            ]);
-        }
+        $this->storeImages($request, $vehicle);
 
         return response()->json(201);
     }
@@ -109,6 +88,8 @@ class UserVehicleService
 
         $image = VehicleImages::where('image', $request->image)->first();
 
+        $vehicle = $image->vehicle;
+
         if (!$image->imageBelongsToUsersVehicle()) {
             return response()->json('This is not your vehicle', 403);
         }
@@ -122,6 +103,16 @@ class UserVehicleService
 
         // Delete the record
         $image->delete();
+
+        // If there are no images for the vehicle set it to inactive until a new
+        // one is provided
+        if (!$vehicle->vehicleHasImages()) {
+            $vehicle->update([
+                'active' => 0
+            ]);
+    
+            return response()->json('Vehicle set to inactive until image is provided', 404);
+        }
 
         return response()->json(204);
     }
@@ -142,7 +133,59 @@ class UserVehicleService
             return response()->json('You do not own this vehicle', 403);
         }
 
+        if (!$vehicle->vehicleHasImages() && empty($request['images'])) {
+            $vehicle->update([
+                'active' => 0
+            ]);
+    
+            return response()->json('Please provide images for your vehicle', 404);
+        }
+
+        // Store the vehicle images
+        if (!empty($request['images'])) {
+            $this->storeImages($request, $vehicle);
+        }
+
+        // Update the vehicle attributes
+        $vehicle->update([
+            'price_day' => $request['price'],
+            'description' => $request['description'],
+            'active' => $this->isActive($request['active'])
+        ]);
+
         return response()->json($request->toArray());
+    }
+
+    /**
+     *  Store uploaded images
+     * 
+     *  @param Request $request
+     *  @param Vehicle $vehicle
+     * 
+     *  @return void
+     */
+    public function storeImages(Request $request, Vehicle $vehicle) : void
+    {
+        foreach ($request['images'] as $image) {
+            if ($image->getClientOriginalName() === $request['featured_id']) {
+                $resizedImagePath = $this->processFeaturedImage($image);
+
+                $vehicle->update([
+                    'featured_image' => $resizedImagePath
+                ]);
+            }
+
+            $newName = $this->generateFileName($image->extension());
+
+            $image->storeAs('vehicle-images', $newName, 'public');
+
+            $fullPath = '/storage/vehicle-images/' . $newName;
+
+            VehicleImages::create([
+                'vehicle_id' => $vehicle->id,
+                'image' => $fullPath
+            ]);
+        }
     }
 
     /**
@@ -171,7 +214,7 @@ class UserVehicleService
      * 
      *  @return boolean
      */
-    private function isActive(string $status) : bool
+    private function isActive(string $status) : int
     {
         return $status === 'true' ? 1 : 0;
     }

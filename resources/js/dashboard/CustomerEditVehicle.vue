@@ -301,10 +301,8 @@
                         this.featuredImage = '';
                         this.featuredId = '';
                     }
-
-                    this.vehicleInfo();
                 } catch (error) {
-                    if (error.response.status === 403) {
+                    if (error.response.status === 403 || error.response.status === 404) {
                         this.$store.dispatch('addNotification', {
                             type: 'error',
                             message: error.response.data
@@ -318,6 +316,8 @@
                         });
                     }
                 }
+
+                this.vehicleInfo();
             },
 
             toggleVehicleStatus() {
@@ -345,10 +345,15 @@
 
                 try {
                     await axios.post(`/api/dashboard/update-users-vehicles/${this.vehicle.id}`, formData);
+
+                    this.$store.dispatch('addNotification', {
+                        type: 'success',
+                        message: 'Vehicle updated successfully'
+                    });
                 } catch (error) {
                     if (error.response.status === 422) {
                         this.validationErrors = error.response.data.errors;
-                    } else if (error.response.status === 403) {
+                    } else if (error.response.status === 403 || error.response.status === 404) {
                         this.$store.dispatch('addNotification', {
                             type: 'error',
                             message: error.response.data
