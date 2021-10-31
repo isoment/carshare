@@ -138,7 +138,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
     // Update a vehicle
     Route::post(
-        'dashboard/update-users-vehicles',
+        'dashboard/update-users-vehicles/{id}',
         [App\Http\Controllers\Api\Dashboard\UserVehicleController::class, 'update']
     )->name('dashboard.update-users-vehicle');
 

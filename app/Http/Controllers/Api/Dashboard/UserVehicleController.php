@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserVehicleCreateRequest;
+use App\Http\Requests\UserVehicleUpdateRequest;
 use Illuminate\Http\Request;
 use App\Services\UserVehicleService;
 use Illuminate\Cache\Repository;
@@ -45,8 +46,8 @@ class UserVehicleController extends Controller
     /**
      *  Update a vehicle
      */
-    public function update()
+    public function update(int $id, UserVehicleUpdateRequest $request)
     {
-        
+        return $this->userVehicleService->update($id, $request);
     }
 }

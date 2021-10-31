@@ -7,6 +7,7 @@ use App\Models\Vehicle;
 use App\Http\Resources\UserVehicleIndexResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Requests\UserVehicleCreateRequest;
+use App\Http\Requests\UserVehicleUpdateRequest;
 use App\Http\Traits\FileTrait;
 use App\Models\VehicleImages;
 use App\Models\VehicleModel;
@@ -95,7 +96,7 @@ class UserVehicleService
      * 
      *  @return JsonResponse
      */
-    public function deleteImage(Request $request)
+    public function deleteImage(Request $request) : JsonResponse
     {
         $request->validate([
             'image' => 'required|exists:vehicle_images,image'
@@ -121,6 +122,27 @@ class UserVehicleService
 
         // Delete the record
         $image->delete();
+
+        return response()->json(204);
+    }
+
+    /**
+     *  Update a vehicle
+     * 
+     *  @param int $id
+     *  @param UserVehicleUpdateRequest $request
+     * 
+     *  @return JsonResponse
+     */
+    public function update(int $id, UserVehicleUpdateRequest $request)
+    {
+        $vehicle = Vehicle::find($id);
+
+        if ($vehicle->user_id !== current_user()->id) {
+            return response()->json('You do not own this vehicle', 403);
+        }
+
+        return response()->json($request->toArray());
     }
 
     /**

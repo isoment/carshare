@@ -37,7 +37,7 @@ class UserVehicleCreateRequest extends FormRequest
             'plate' => 'required|max:10',
             'seats' => 'required',
             'doors' => 'required',
-            'price' => 'required|integer|min:1|max:9999',
+            'price' => 'required|integer|min:20|max:9999',
             'description' => 'required|min:10'
         ];
     }

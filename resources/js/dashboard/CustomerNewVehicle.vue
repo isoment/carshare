@@ -223,6 +223,8 @@
             },
 
             async submit() {
+                this.validationErrors = null;
+
                 const formData = new FormData;
 
                 // Loop over images and append to formData

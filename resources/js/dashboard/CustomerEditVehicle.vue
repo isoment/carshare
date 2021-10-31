@@ -3,6 +3,12 @@
         <!-- Main Navigation -->
         <main-navigation></main-navigation>
 
+        <div v-if="vehicleNotFound">
+            <error :message="'Vehicle not found'"
+                    :routeName="'customer-vehicles'"
+                    :routeDesc="'my vehicles'"></error>
+        </div>
+
         <div v-if="vehicle">
 
             <!-- Display unauthorized if not logged in -->
@@ -88,6 +94,8 @@
                                            v-model="price">
                                 </div>  
                             </div>
+                            <validation-errors :errors="errorFor('active')"></validation-errors>
+                            <validation-errors :errors="errorFor('price')"></validation-errors>
 
                             <!-- Description -->
                             <div class="mt-8">
@@ -99,6 +107,7 @@
                                             class="px-2 py-1 border border-gray-300 text-sm"
                                             v-model="description"></textarea>
                                 </div>
+                                <validation-errors :errors="errorFor('description')"></validation-errors>
                             </div>
 
                             <!-- Save -->
@@ -188,6 +197,7 @@
                                     </div>
 
                                 </div>
+                                <validation-errors :errors="errorFor('images')"></validation-errors>
                             </div>
 
                         </div>
@@ -202,6 +212,7 @@
 
 <script>
     import { mapState } from 'vuex';
+    import validationErrors from '../shared/mixins/validationErrors';
     import imageSelecting from './../shared/mixins/imageSelecting';
 
     export default {
@@ -220,10 +231,11 @@
             }
         },
 
-        mixins: [imageSelecting],
+        mixins: [validationErrors, imageSelecting],
 
         data() {
             return {
+                vehicleNotFound: null,
                 description: null,
                 price: null,
                 active: null,
@@ -246,7 +258,6 @@
                         this.featuredId = mergedArrays[i].id;
                     }
 
-
                     // If the featured image is one of the previous uploaded images
                     if (mergedArrays[i] === identifier) {
                         this.featuredImage = mergedArrays[i];
@@ -258,8 +269,14 @@
             async vehicleInfo() {
                 this.loading = true;
 
-                this.vehicle = (await axios.get(`/api/vehicle-show/${this.$route.params.id}`)).data.data
-            
+                try {
+                    this.vehicle = (await axios.get(`/api/vehicle-show/${this.$route.params.id}`)).data.data
+                } catch (error) {
+                    if (error.response.status === 404) {
+                        this.vehicleNotFound = true
+                    }
+                }
+
                 this.active = this.vehicle.active;
                 this.price = this.vehicle.price;
                 this.description = this.vehicle.description;
@@ -311,8 +328,38 @@
                 this.price = Math.round(event.target.value);
             },
 
-            submit() {
+            async submit() {
+                this.validationErrors = null;
 
+                const formData = new FormData;
+
+                // Loop over images and append to formData
+                for (let i = 0; i < this.images.length; i++) {
+                    formData.append(`images[${[i]}]`, this.images[i].file, this.images[i].id);
+                }
+
+                formData.append('featured_id', this.featuredId);
+                formData.append('description', this.description);
+                formData.append('price', this.price);
+                formData.append('active', this.active);
+
+                try {
+                    await axios.post(`/api/dashboard/update-users-vehicles/${this.vehicle.id}`, formData);
+                } catch (error) {
+                    if (error.response.status === 422) {
+                        this.validationErrors = error.response.data.errors;
+                    } else if (error.response.status === 403) {
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: error.response.data
+                        });
+                    } else {
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: 'Error, try again later'
+                        });
+                    }
+                }
             }
         },
 
