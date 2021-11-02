@@ -262,11 +262,11 @@ class UserVehicleService
     /**
      *  Determine active
      * 
-     *  @param string $status
+     *  @param string|null $status
      * 
      *  @return boolean
      */
-    private function isActive(string $status) : int
+    private function isActive(string|null $status) : int
     {
         return $status === 'true' ? 1 : 0;
     }
@@ -274,11 +274,11 @@ class UserVehicleService
     /**
      *  Determine sort direction for price
      *  
-     *  @param string $direction
+     *  @param string|null $direction
      * 
      *  @return string
      */
-    private function priceSortDirection(string $direction) : string
+    private function priceSortDirection(string|null $direction) : string
     {
         if (!in_array($direction, array('desc', 'asc'))) {
             return 'desc';
