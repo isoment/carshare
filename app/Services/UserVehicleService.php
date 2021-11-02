@@ -13,9 +13,9 @@ use App\Http\Traits\FileTrait;
 use App\Models\VehicleImages;
 use App\Models\VehicleModel;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
-use PHPUnit\Util\Json;
 
 class UserVehicleService
 {
@@ -95,11 +95,10 @@ class UserVehicleService
         }
 
         // Process the image path
-        $split = explode('/', $image->image);
-        $recombined = $split[2] . '/' . $split[3];
+        $path = $this->imageNameFromPath($image->image);
 
         // Delete the image from storage if it's not part of the seeder images
-        Storage::disk('public')->delete($recombined);
+        Storage::disk('public')->delete($path);
 
         // Delete the record
         $image->delete();
@@ -125,14 +124,16 @@ class UserVehicleService
      * 
      *  @return JsonResponse
      */
-    public function update(int $id, UserVehicleUpdateRequest $request)
+    public function update(int $id, UserVehicleUpdateRequest $request) : JsonResponse
     {
         $vehicle = Vehicle::find($id);
 
+        // Check to make sure the user owns the vehicle
         if ($vehicle->user_id !== current_user()->id) {
             return response()->json('You do not own this vehicle', 403);
         }
 
+        // If there are no existing images and no images in the request
         if (!$vehicle->vehicleHasImages() && empty($request['images'])) {
             $vehicle->update([
                 'active' => 0
@@ -141,9 +142,17 @@ class UserVehicleService
             return response()->json('Please provide images for your vehicle', 404);
         }
 
-        // Store the vehicle images
+        // Store the vehicle images, and set featured image if it is one the new
+        // ones passed in the request.
         if (!empty($request['images'])) {
             $this->storeImages($request, $vehicle);
+        }
+
+        // If the featured image is an existing image
+        if (!is_null($request['featured_id'])) {
+            if (str_contains($request['featured_id'], '/storage/vehicle-images/')) {
+                $this->setExistingImageAsFeatured($request, $vehicle);
+            }
         }
 
         // Update the vehicle attributes
@@ -153,7 +162,7 @@ class UserVehicleService
             'active' => $this->isActive($request['active'])
         ]);
 
-        return response()->json($request->toArray());
+        return response()->json(201);
     }
 
     /**
@@ -164,7 +173,7 @@ class UserVehicleService
      * 
      *  @return void
      */
-    public function storeImages(Request $request, Vehicle $vehicle) : void
+    private function storeImages(Request $request, Vehicle $vehicle) : void
     {
         foreach ($request['images'] as $image) {
             if ($image->getClientOriginalName() === $request['featured_id']) {
@@ -189,13 +198,56 @@ class UserVehicleService
     }
 
     /**
+     *  Set an existing image as the featured image
+     * 
+     *  @param Request $request
+     *  @param Vehicle $vehicle
+     * 
+     *  @return void
+     */
+    private function setExistingImageAsFeatured(Request $request, Vehicle $vehicle) : void
+    {
+        // Process the filename we pass in
+        $imageName = $this->imageNameFromPath($request['featured_id']);
+
+        // Get the image we want to feature from storage
+        $existingImage = Storage::disk('public')->get($imageName);
+
+        // The extension
+        $extension = explode('.', $imageName);
+
+        // Generate a new filename
+        $newName = $this->generateFileName($extension[1]);
+
+        // Resize the image
+        $resize = Image::make($existingImage)
+            ->fit(600, 360);
+
+        // Store the new featured image
+        Storage::disk('public')->put('vehicle-images-featured/' . $newName, $resize->encode());
+
+        // The new complete path
+        $completePath = '/storage/vehicle-images-featured/' . $newName;
+
+        // Delete the old featured image
+        $oldFeaturedImagePath = $this->imageNameFromPath($vehicle->featured_image);
+
+        Storage::disk('public')->delete($oldFeaturedImagePath);
+
+        // Update the vehicle
+        $vehicle->update([
+            'featured_image' => $completePath
+        ]);
+    }
+
+    /**
      *  Process the featured image
      * 
-     *  @param Object $image
+     *  @param UploadedFile $image
      * 
      *  @return string
      */
-    private function processFeaturedImage(Object $image) : string
+    private function processFeaturedImage(UploadedFile $image) : string
     {
         $newName = $this->generateFileName($image->extension());
 
@@ -233,5 +285,19 @@ class UserVehicleService
         }
 
         return $direction;
+    }
+
+    /**
+     *  Get the image name and folder from the full path
+     * 
+     *  @param string $imagePath
+     * 
+     *  @return string
+     */
+    private function imageNameFromPath(string $imagePath) : string
+    {
+        $split = explode('/', $imagePath);
+
+        return $split[2] . '/' . $split[3];
     }
 }

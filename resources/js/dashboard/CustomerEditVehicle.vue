@@ -350,6 +350,13 @@
                         type: 'success',
                         message: 'Vehicle updated successfully'
                     });
+
+                    this.vehicleInfo();
+
+                    this.images = [];
+                    this.previews = [];
+                    this.featuredImage = '';
+                    this.featuredId = '';
                 } catch (error) {
                     if (error.response.status === 422) {
                         this.validationErrors = error.response.data.errors;

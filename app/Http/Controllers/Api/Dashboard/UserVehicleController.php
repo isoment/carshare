@@ -7,8 +7,6 @@ use App\Http\Requests\UserVehicleCreateRequest;
 use App\Http\Requests\UserVehicleUpdateRequest;
 use Illuminate\Http\Request;
 use App\Services\UserVehicleService;
-use Illuminate\Cache\Repository;
-use Illuminate\Support\Facades\Log;
 
 class UserVehicleController extends Controller
 {
