@@ -71,6 +71,6 @@ trait UserVehicleTrait
      */
     public function createFakeFile() : File
     {
-        return UploadedFile::fake()->image('test-file.jpg', 1200, 800)->size(200);
+        return UploadedFile::fake()->image('test-file.jpg', 1200, 800)->size(1000);
     }
 }

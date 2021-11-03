@@ -51,7 +51,7 @@ class UserVehicleService
     public function create(UserVehicleCreateRequest $request) : JsonResponse
     {
         if (!current_user()->host) {
-            return response()->json('You are not a host', 403);
+            return response()->json('You must be a host to create a vehicle', 403);
         }
 
         $vehicle = Vehicle::create([

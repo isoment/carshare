@@ -6,6 +6,8 @@ use App\Models\User;
 use Database\Seeders\Testing\TestingVehicleMakeModelSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use Tests\Trait\UserTrait;
 use Tests\Trait\UserVehicleTrait;
@@ -174,6 +176,25 @@ class UserVehicleTest extends TestCase
 
     /**
      *  @test
+     *  A user must be a host to create a vehicle
+     */
+    public function a_user_must_be_a_host_to_create_a_vehicle()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $data = $this->validNewVehicleData();
+
+        $this->json('POST', '/api/dashboard/create-users-vehicles', $data)
+            ->assertStatus(403)
+            ->assertSee('You must be a host to create a vehicle');
+    }
+
+    /**
+     *  @test
      *  An empty request results in 422 validation error
      */
     public function an_empty_request_results_in_422_to_the_new_vehicle_api_route()
@@ -184,6 +205,57 @@ class UserVehicleTest extends TestCase
 
         $this->json('POST', '/api/dashboard/create-users-vehicles', [])
             ->assertStatus(422);
+    }
+
+    /**
+     *  @test
+     *  Image and featured image are required to create a vehicle
+     */
+    public function image_and_featured_image_are_required_to_create_vehicle()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $user = User::factory()->create([
+            'host' => true
+        ]);
+
+        $this->actingAs($user);
+
+        $data = $this->validNewVehicleData([
+            'images' => [],
+            'featured_id' => ''
+        ]);
+
+        $this->json('POST', '/api/dashboard/create-users-vehicles', $data)
+            ->assertStatus(422)
+            ->assertSee('The images field is required.')
+            ->assertSee('Please select a featured image');
+    }
+
+    /**
+     *  @test
+     *  File types other than images are rejected when creating vehilces
+     */
+    public function file_types_other_than_images_are_rejected_when_creating_vehicles()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $user = User::factory()->create([
+            'host' => true
+        ]);
+
+        $this->actingAs($user);
+
+        // Create a fake pdf
+        $file = UploadedFile::fake()->create('test-file.pdf', 8000, 'application/pdf');
+
+        $data = $this->validNewVehicleData([
+            'images' => [$file],
+        ]);
+
+        $this->json('POST', '/api/dashboard/create-users-vehicles', $data)
+            ->assertStatus(422)
+            ->assertSee('must be an image');
     }
 
     /**

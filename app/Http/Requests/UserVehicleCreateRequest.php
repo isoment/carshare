@@ -29,7 +29,7 @@ class UserVehicleCreateRequest extends FormRequest
     {
         return [
             'images' => 'required|array|min:1',
-            'images.*.file' => 'image|max:10000',
+            'images.*' => ['image', 'max:10000'],
             'featured_id' => 'required',
             'make' => ['required', new VehicleMake],
             'model' => ['required', new VehicleModel($this['make'])],
@@ -59,8 +59,6 @@ class UserVehicleCreateRequest extends FormRequest
      */
     private function twoYears() : string
     {
-        Log::info(Carbon::now()->addYears(2)->format('Y'));
-
         return 'max:' . Carbon::now()->addYears(2)->format('Y');
     }
 }
