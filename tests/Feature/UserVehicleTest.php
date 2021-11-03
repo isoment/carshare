@@ -3,15 +3,16 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Database\Seeders\Testing\TestingVehicleMakeModelSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 use Tests\Trait\UserTrait;
+use Tests\Trait\UserVehicleTrait;
 
 class UserVehicleTest extends TestCase
 {
-    use RefreshDatabase, UserTrait;
+    use RefreshDatabase, UserTrait, UserVehicleTrait;
 
     /**
      *  @test
@@ -158,6 +159,60 @@ class UserVehicleTest extends TestCase
             'id' => $userTwoVehicle->id
         ])->assertJsonMissing([
             'id' => $userThreeVehicle->id
+        ]);
+    }
+
+    /**
+     *  @test
+     *  Unauthenticated users cannot access the new vehicle api endpoint
+     */
+    public function unauthenticated_users_cannot_access_the_new_vehicle_api_route()
+    {
+        $this->json('POST', '/api/dashboard/create-users-vehicles')
+            ->assertStatus(401);
+    }
+
+    /**
+     *  @test
+     *  An empty request results in 422 validation error
+     */
+    public function an_empty_request_results_in_422_to_the_new_vehicle_api_route()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $this->json('POST', '/api/dashboard/create-users-vehicles', [])
+            ->assertStatus(422);
+    }
+
+    /**
+     *  @test
+     *  When valid data is submitted a new vehicle is created
+     */
+    public function when_valid_data_is_submitted_a_new_vehicle_is_created()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $user = User::factory()->create([
+            'host' => true
+        ]);
+
+        $this->actingAs($user);
+
+        $data = $this->validNewVehicleData();
+
+        $this->assertDatabaseMissing('vehicles', [
+            'plate_num' => $data['plate'],
+            'price_day' => $data['price']
+        ]);
+
+        $this->json('POST', '/api/dashboard/create-users-vehicles', $data)
+            ->assertStatus(201);
+
+        $this->assertDatabaseHas('vehicles', [
+            'plate_num' => $data['plate'],
+            'price_day' => $data['price']
         ]);
     }
 }

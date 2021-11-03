@@ -14,6 +14,7 @@ use App\Models\VehicleImages;
 use App\Models\VehicleModel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
@@ -49,6 +50,10 @@ class UserVehicleService
      */
     public function create(UserVehicleCreateRequest $request) : JsonResponse
     {
+        if (!current_user()->host) {
+            return response()->json('You are not a host', 403);
+        }
+
         $vehicle = Vehicle::create([
             'user_id' => current_user()->id,
             'vehicle_model_id' => VehicleModel::where('model', $request['model'])->first()->id,
@@ -65,7 +70,7 @@ class UserVehicleService
         // Store the vehicle images
         $this->storeImages($request, $vehicle);
 
-        return response()->json(201);
+        return response()->json('Created new vehicle', 201);
     }
 
     /**
@@ -241,7 +246,7 @@ class UserVehicleService
     }
 
     /**
-     *  Process the featured image
+     *  Process the featured image and return a string with its path
      * 
      *  @param UploadedFile $image
      * 
