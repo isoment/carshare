@@ -260,6 +260,29 @@ class UserVehicleTest extends TestCase
 
     /**
      *  @test
+     *  A request with a feature id that doesn't match an image results in 422 error
+     */
+    public function request_with_invalid_image_id_results_in_422_error()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $user = User::factory()->create([
+            'host' => true
+        ]);
+
+        $this->actingAs($user);
+
+        $data = $this->validNewVehicleData([
+            'featured_id' => 'FAKE123'
+        ]);
+
+        $this->json('POST', '/api/dashboard/create-users-vehicles', $data)
+            ->assertStatus(422)
+            ->assertSee('Invalid image id');
+    }
+
+    /**
+     *  @test
      *  When valid data is submitted a new vehicle is created
      */
     public function when_valid_data_is_submitted_a_new_vehicle_is_created()

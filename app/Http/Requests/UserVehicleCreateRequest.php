@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\FeatureId;
 use App\Rules\VehicleMake;
 use App\Rules\VehicleModel;
 use Carbon\Carbon;
@@ -30,7 +31,7 @@ class UserVehicleCreateRequest extends FormRequest
         return [
             'images' => 'required|array|min:1',
             'images.*' => ['image', 'max:10000'],
-            'featured_id' => 'required',
+            'featured_id' => ['required', new FeatureId($this['images'])],
             'make' => ['required', new VehicleMake],
             'model' => ['required', new VehicleModel($this['make'])],
             'year' => ['required', 'integer', 'min:1945', $this->twoYears()],
