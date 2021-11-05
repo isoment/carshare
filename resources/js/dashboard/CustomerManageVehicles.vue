@@ -59,6 +59,26 @@
                     </router-link>
                 </div>
             </div>
+
+            <!-- Pagination -->
+            <div class="mt-3" v-if="multiplePages">
+                <div class="flex items-center justify-between">
+                    <button class="bg-gray-300 rounded-sm px-3 py-1 text-white text-sm font-bold 
+                                  tracking-widest"
+                            :class="{ 'bg-purple-400 hover:bg-purple-300 transition-all duration-200': !onFirstPage }"
+                            :disabled="onFirstPage"
+                            @click="prevPage">
+                        Prev
+                    </button>
+                    <button class="bg-gray-300 rounded-sm px-3 py-1 text-white text-sm font-bold 
+                                  tracking-widest"
+                            :class="{ 'bg-purple-400 hover:bg-purple-300 transition-all duration-200' : !onLastPage }"
+                            :disabled="onLastPage"
+                            @click="nextPage">
+                        Next
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -74,6 +94,8 @@
 
         data() {
             return {
+                page: 1,
+                lastPage: '',
                 apiParams: {},
                 vehicles: {},
                 loading: false
@@ -83,6 +105,18 @@
         computed: {
             noVehicles() {
                 return this.vehicles.length === 0;
+            },
+
+            multiplePages() {
+                return this.lastPage > 1;
+            },
+
+            onLastPage() {
+                return this.page === this.lastPage
+            },
+
+            onFirstPage() {
+                return this.page === 1;
             }
         },
 
@@ -91,13 +125,14 @@
                 try {
                     this.loading = true;
 
-                    let response = await axios.get('/api/dashboard/index-users-vehicles', {
+                    let response = (await axios.get(`/api/dashboard/index-users-vehicles?page=${this.page}`, {
                         params: this.apiParams
-                    });
+                    }));
 
-                    console.log(response.data);
+                    console.log(response);
 
                     this.vehicles = response.data.data;
+                    this.lastPage = response.data.meta.last_page;
 
                     this.loading = false;
                 } catch (error) {
@@ -109,11 +144,26 @@
 
             },
 
+            prevPage() {
+                if (this.page > 1) {
+                    this.page--
+                    this.vehicleIndex();
+                }
+            },
+
+            nextPage() {
+                if (this.page < this.lastPage) {
+                    this.page++
+                    this.vehicleIndex();
+                }
+            },
+
             dateFormat(date) {
                 return monthDayYearNumbericSlash(date);
             },
 
             updateVehicles(payload) {
+                this.page = 1;
                 this.apiParams = payload;
                 this.vehicleIndex();
             }

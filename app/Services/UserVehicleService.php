@@ -37,7 +37,7 @@ class UserVehicleService
                 ->orderBy('price_day', $this->priceSortDirection($request->priceSort))
                 ->with('vehicleModel.vehicleMake')
                 ->with('vehicleImages')
-                ->paginate(10)
+                ->paginate(8)
         );
     }
 
