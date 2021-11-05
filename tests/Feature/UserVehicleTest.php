@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\VehicleImages;
+use Barryvdh\Debugbar\Twig\Extension\Dump;
 use Database\Seeders\Testing\TestingVehicleMakeModelSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -383,5 +384,96 @@ class UserVehicleTest extends TestCase
         $path = explode("/", $featuredImageUrl)[2] . "/" . explode("/", $featuredImageUrl)[3];
 
         Storage::disk('public')->assertExists($path);
+    }
+
+    /**
+     *  @test
+     *  Unauthenticated users cannot access the users vehicle update api endpoint
+     */
+    public function unauthenticated_users_cannot_access_the_users_vehicle_update_api_route()
+    {
+        $this->json('POST', '/api/dashboard/update-users-vehicles/1')
+            ->assertStatus(401);
+    }
+
+    /**
+     *  @test
+     *  A user cannot update a vehicle that they do not own
+     */
+    public function a_user_cannot_update_a_vehicle_they_do_not_own()
+    {
+        $this->createSmallDatabase();
+
+        $users = User::where('host', 1)->get();
+
+        $userOne = $users[0];
+        $userTwo = $users[1];
+
+        $this->actingAs($userOne);
+
+        $vehicle = $userTwo->vehicles->first();
+
+        $data = $this->validUpdateVehicleDataNoImages();
+
+        $this->json(
+            'POST', 
+            "/api/dashboard/update-users-vehicles/{$vehicle->id}", 
+            $data
+        )->assertStatus(403)
+        ->assertSee('You do not own this vehicle');
+    }
+
+    /**
+     *  @test
+     *  If there are no images in the request and no images associated with the vehicle a 403 is returned
+     */
+    public function if_there_are_no_images_in_the_request_and_the_vehicle_has_no_images_403_is_returned()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::where('host', 1)->first();
+
+        $this->actingAs($user);
+
+        $data = $this->validUpdateVehicleDataNoImages();
+
+        $vehicle = $user->vehicles->first();
+
+        $vehicle->vehicleImages->each(function($image) {
+            $image->delete();
+        });
+
+        $response = $this->json(
+            'POST', 
+            "/api/dashboard/update-users-vehicles/{$vehicle->id}", $data);
+
+        $response->assertStatus(404)
+            ->assertSee('Please provide images for your vehicle');
+    }
+
+    /**
+     *  @test
+     *  Passing empty data into the vehicle update route results in 422 error
+     */
+    public function empty_request_to_vehicle_update_route_results_in_422_error()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::where('host', 1)->first();
+
+        $this->actingAs($user);
+
+        $data = $this->validUpdateVehicleDataNoImages([
+            'price' => '',
+            'description' => ''
+        ]);
+
+        $vehicle = $user->vehicles->first();
+
+        $response = $this->json(
+            'POST', 
+            "/api/dashboard/update-users-vehicles/{$vehicle->id}", $data);
+
+        $response->assertStatus(422);
     }
 }

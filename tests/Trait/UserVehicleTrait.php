@@ -36,6 +36,22 @@ trait UserVehicleTrait
     }
 
     /**
+     *  Valid form data for updating a vehicle, no images
+     * 
+     *  @param array $params
+     * 
+     *  @return array
+     */
+    public function validUpdateVehicleDataNoImages(array $params = []) : array
+    {
+        return [
+            'price' => $params['price'] ?? 120,
+            'active' => $params['active'] ?? 'true',
+            'description' => $params['description'] ?? 'This is just a sample description for the vehicle.'
+        ];
+    }
+
+    /**
      *  Get a vehicle make
      * 
      *  @return string

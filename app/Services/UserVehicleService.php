@@ -54,8 +54,6 @@ class UserVehicleService
             return response()->json('You must be a host to create a vehicle', 403);
         }
 
-        Log::info($request->toArray());
-
         $vehicle = Vehicle::create([
             'user_id' => current_user()->id,
             'vehicle_model_id' => VehicleModel::where('model', $request['model'])->first()->id,
@@ -136,7 +134,7 @@ class UserVehicleService
         $vehicle = Vehicle::find($id);
 
         // Check to make sure the user owns the vehicle
-        if ($vehicle->user_id !== current_user()->id) {
+        if ((int) $vehicle->user_id !== current_user()->id) {
             return response()->json('You do not own this vehicle', 403);
         }
 
