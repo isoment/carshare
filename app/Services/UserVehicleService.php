@@ -54,6 +54,8 @@ class UserVehicleService
             return response()->json('You must be a host to create a vehicle', 403);
         }
 
+        Log::info($request->toArray());
+
         $vehicle = Vehicle::create([
             'user_id' => current_user()->id,
             'vehicle_model_id' => VehicleModel::where('model', $request['model'])->first()->id,
@@ -181,7 +183,12 @@ class UserVehicleService
     private function storeImages(Request $request, Vehicle $vehicle) : void
     {
         foreach ($request['images'] as $image) {
-            if ($image->getClientOriginalName() === $request['featured_id']) {
+            // In vue we are setting every image name to a unique id before sending to the api, we then 
+            // select the featured image based on this id, here we compare them and call processFeaturedImage()
+            // if they are a match. We remove the file extension here for tests.
+            $imageName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+
+            if ($imageName === $request['featured_id']) {
                 $resizedImagePath = $this->processFeaturedImage($image);
 
                 $vehicle->update([

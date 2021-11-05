@@ -30,7 +30,7 @@ class UserVehicleCreateRequest extends FormRequest
     {
         return [
             'images' => 'required|array|min:1',
-            'images.*' => ['image', 'max:10000'],
+            'images.*' => ['mimetypes:image/jpeg,image/gif,image/png,image/bmp,image/webp', 'max:10000'],
             'featured_id' => ['required', new FeatureId($this['images'])],
             'make' => ['required', new VehicleMake],
             'model' => ['required', new VehicleModel($this['make'])],
@@ -51,7 +51,8 @@ class UserVehicleCreateRequest extends FormRequest
     public function messages() : array
     {
         return [
-            'featured_id.required' => 'Please select a featured image'
+            'featured_id.required' => 'Please select a featured image',
+            'images.*.mimetypes' => 'File must be an image'
         ];
     }
 

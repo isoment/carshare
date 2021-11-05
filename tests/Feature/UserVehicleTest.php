@@ -3,11 +3,14 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Models\Vehicle;
+use App\Models\VehicleImages;
 use Database\Seeders\Testing\TestingVehicleMakeModelSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use Tests\Trait\UserTrait;
 use Tests\Trait\UserVehicleTrait;
@@ -255,7 +258,7 @@ class UserVehicleTest extends TestCase
 
         $this->json('POST', '/api/dashboard/create-users-vehicles', $data)
             ->assertStatus(422)
-            ->assertSee('must be an image');
+            ->assertSee('File must be an image');
     }
 
     /**
@@ -278,7 +281,7 @@ class UserVehicleTest extends TestCase
 
         $this->json('POST', '/api/dashboard/create-users-vehicles', $data)
             ->assertStatus(422)
-            ->assertSee('Invalid image id');
+            ->assertSee('Invalid featured image');
     }
 
     /**
@@ -295,6 +298,8 @@ class UserVehicleTest extends TestCase
 
         $this->actingAs($user);
 
+        Storage::fake('public');
+
         $data = $this->validNewVehicleData();
 
         $this->assertDatabaseMissing('vehicles', [
@@ -309,5 +314,74 @@ class UserVehicleTest extends TestCase
             'plate_num' => $data['plate'],
             'price_day' => $data['price']
         ]);
+    }
+
+    /**
+     *  @test
+     *  Images are saved to disk when vehicle is created
+     */
+    public function images_are_saved_to_disk_when_new_vehicle_is_created()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $user = User::factory()->create([
+            'host' => true
+        ]);
+
+        $this->actingAs($user);
+
+        Storage::fake('public');
+
+        $data = $this->validNewVehicleData();
+
+        // There should be no vehicles
+        $this->assertEmpty(Vehicle::get());
+
+        $this->json('POST', '/api/dashboard/create-users-vehicles', $data)
+            ->assertStatus(201);
+
+        // The vehicle we created should have an image stored associated with it
+        $vehicleImage = Vehicle::first()
+            ->vehicleImages
+            ->first()
+            ->image;
+
+        $this->assertNotEmpty($vehicleImage);
+
+        $imagePath = explode("/", $vehicleImage)[2] . "/" . explode("/", $vehicleImage)[3];
+
+        Storage::disk('public')->assertExists($imagePath);
+    }
+
+    /**
+     *  @test
+     *  A featured image is set when a vehicle is created
+     */
+    public function a_featured_image_is_set_when_creating_a_new_vehicle()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $user = User::factory()->create([
+            'host' => true
+        ]);
+
+        $this->actingAs($user);
+
+        Storage::fake('public');
+
+        $data = $this->validNewVehicleData();
+
+        // There should be no vehicles
+        $this->assertEmpty(Vehicle::get());
+
+        $response = $this->json('POST', '/api/dashboard/create-users-vehicles', $data);
+
+        $featuredImageUrl = Vehicle::first()->featured_image;
+
+        $this->assertNotEmpty($featuredImageUrl);
+
+        $path = explode("/", $featuredImageUrl)[2] . "/" . explode("/", $featuredImageUrl)[3];
+
+        Storage::disk('public')->assertExists($path);
     }
 }

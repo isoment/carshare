@@ -47,6 +47,6 @@ class FeatureId implements Rule
      */
     public function message()
     {
-        return 'Invalid image id';
+        return 'Invalid featured image';
     }
 }
