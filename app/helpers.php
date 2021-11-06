@@ -14,3 +14,18 @@ if (!function_exists('current_user'))
         return auth()->user();
     }
 }
+
+/**
+ *  Remove 'storage' from file path
+ * 
+ *  @param string $path
+ * 
+ *  @return string
+ */
+if (!function_exists('remove_storage_file_path'))
+{
+    function remove_storage_file_path(string $path) : string
+    {
+        return explode("/", $path)[2] . "/" . explode("/", $path)[3];
+    }
+}

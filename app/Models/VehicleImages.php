@@ -28,6 +28,6 @@ class VehicleImages extends Model
     {
         $userId = current_user()->id;
 
-        return $this->vehicle->user_id === $userId ? true : false;
+        return (int) $this->vehicle->user_id === $userId ? true : false;
     }
 }

@@ -45,6 +45,8 @@ trait UserVehicleTrait
     public function validUpdateVehicleDataNoImages(array $params = []) : array
     {
         return [
+            'images' => $params['images'] ?? [],
+            'featured_id' => $params['featured_id'] ?? '',
             'price' => $params['price'] ?? 120,
             'active' => $params['active'] ?? 'true',
             'description' => $params['description'] ?? 'This is just a sample description for the vehicle.'

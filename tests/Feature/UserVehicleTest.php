@@ -349,7 +349,7 @@ class UserVehicleTest extends TestCase
 
         $this->assertNotEmpty($vehicleImage);
 
-        $imagePath = explode("/", $vehicleImage)[2] . "/" . explode("/", $vehicleImage)[3];
+        $imagePath = remove_storage_file_path($vehicleImage);
 
         Storage::disk('public')->assertExists($imagePath);
     }
@@ -381,7 +381,7 @@ class UserVehicleTest extends TestCase
 
         $this->assertNotEmpty($featuredImageUrl);
 
-        $path = explode("/", $featuredImageUrl)[2] . "/" . explode("/", $featuredImageUrl)[3];
+        $path = remove_storage_file_path($featuredImageUrl);
 
         Storage::disk('public')->assertExists($path);
     }
@@ -447,6 +447,9 @@ class UserVehicleTest extends TestCase
             'POST', 
             "/api/dashboard/update-users-vehicles/{$vehicle->id}", $data);
 
+        // The vehicle is disabled when there are no images
+        $this->assertEquals(Vehicle::find($vehicle->id)->active, 0);
+
         $response->assertStatus(404)
             ->assertSee('Please provide images for your vehicle');
     }
@@ -475,5 +478,198 @@ class UserVehicleTest extends TestCase
             "/api/dashboard/update-users-vehicles/{$vehicle->id}", $data);
 
         $response->assertStatus(422);
+    }
+
+    /**
+     *  @test
+     *  A vehicle status price and description can be updated
+     */
+    public function a_vehicles_status_price_and_description_can_be_updated()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::where('host', 1)->first();
+
+        $this->actingAs($user);
+
+        $data = $this->validUpdateVehicleDataNoImages([
+            'active' => 'false',
+            'price' => 999,
+            'description' => 'UPDATED UPDATED UPDATED'
+        ]);
+
+        $vehicle = $user->vehicles->first();
+
+        $this->assertEquals($vehicle->active, 1);
+
+        $response = $this->json(
+            'POST', 
+            "/api/dashboard/update-users-vehicles/{$vehicle->id}", $data)
+        ->assertStatus(201);
+
+        $updatedVehicle = Vehicle::find($vehicle->id);
+
+        $this->assertEquals($updatedVehicle->price_day, 999);
+        $this->assertEquals($updatedVehicle->description, 'UPDATED UPDATED UPDATED');
+        $this->assertEquals($updatedVehicle->active, 0);
+    }
+
+    /**
+     *  @test
+     *  New images can be added to a vehicle
+     */
+    public function new_images_can_be_added_to_a_vehicle()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::where('host', 1)->first();
+
+        $this->actingAs($user);
+
+        $newImage = UploadedFile::fake()->image('test-file.jpg', 1200, 800)->size(1000);
+
+        $data = $this->validUpdateVehicleDataNoImages([
+            'images' => [$newImage]
+        ]);
+
+        $vehicle = $user->vehicles->first();
+
+        $imageCount = $vehicle->vehicleImages->count();
+
+        $response = $this->json(
+            'POST', 
+            "/api/dashboard/update-users-vehicles/{$vehicle->id}", $data)
+        ->assertStatus(201);
+
+        $updatedVehicleImageCount = Vehicle::find($vehicle->id)->vehicleImages->count();
+
+        $this->assertEquals($imageCount + 1, $updatedVehicleImageCount);
+    }
+
+    /**
+     *  @test 
+     *  More than 12 images for a vehicle results in a 422 error
+     */
+    public function attempting_to_have_more_than_12_images_for_a_vehicle_results_in_validation_422_error()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::where('host', 1)->first();
+
+        $this->actingAs($user);
+
+        $newImage = UploadedFile::fake()->image('test-file.jpg', 1200, 800)->size(1000);
+
+        $data = $this->validUpdateVehicleDataNoImages([
+            'images' => [$newImage, $newImage, $newImage, $newImage, $newImage, $newImage, $newImage, $newImage,
+            $newImage, $newImage, $newImage, $newImage]
+        ]);
+
+        $vehicle = $user->vehicles->first();
+
+        $this->json(
+            'POST', 
+            "/api/dashboard/update-users-vehicles/{$vehicle->id}", $data)
+        ->assertStatus(422)
+        ->assertSee('Maximum of 12 images allowed, please remove some.');
+    }
+
+    /**
+     *  @test
+     *  An existing image can be set to the featured image
+     */
+    public function an_existing_image_can_be_set_to_the_featured_image()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::where('host', 1)->first();
+
+        $this->actingAs($user);
+
+        Storage::fake('public');
+
+        $vehicle = $user->vehicles->first();
+
+        // Clear existing images and set a new one
+        $vehicle->vehicleImages->each(function($image) {
+            $image->delete();
+        });
+
+        $newImage = UploadedFile::fake()->image('test-file.jpg', 1200, 800)->size(1000);
+
+        $data = $this->validUpdateVehicleDataNoImages([
+            'images' => [$newImage]
+        ]);
+
+        $this->json(
+            'POST', 
+            "/api/dashboard/update-users-vehicles/{$vehicle->id}", $data)
+        ->assertStatus(201);
+
+        // Get the updated vehicle and set a new featured image
+        $vehicleOld = Vehicle::find($vehicle->id);
+
+        $newData = $this->validUpdateVehicleDataNoImages([
+            'featured_id' => $vehicleOld->vehicleImages->first()->image
+        ]);
+
+        $this->json(
+            'POST', 
+            "/api/dashboard/update-users-vehicles/{$vehicleOld->id}", $newData)
+        ->assertStatus(201);
+
+        // Get the updated vehicle featured image, compare it to the old one then
+        // check to make sure it exists on the disk
+        $vehicleNewFeaturedImage = Vehicle::find($vehicle->id)->featured_image;
+
+        $this->assertNotEquals($vehicleOld->featured_image, $vehicleNewFeaturedImage);
+
+        $path = remove_storage_file_path($vehicleNewFeaturedImage);
+
+        Storage::disk('public')->assertExists($path);
+    }
+
+    /**
+     *  @test
+     *  An existing image can be deleted.
+     */
+    public function an_existing_vehicle_image_can_be_deleted()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::where('host', 1)->first();
+
+        $this->actingAs($user);
+
+        Storage::fake('public');
+
+        $vehicle = $user->vehicles->first();
+
+        $newImage = UploadedFile::fake()->image('test-file.jpg', 1200, 800)->size(1000);
+
+        $data = $this->validUpdateVehicleDataNoImages([
+            'images' => [$newImage]
+        ]);
+
+        $this->json(
+            'POST', 
+            "/api/dashboard/update-users-vehicles/{$vehicle->id}", $data)
+        ->assertStatus(201);
+
+        $newestVehicleImage = Vehicle::find($vehicle->id)->vehicleImages->last();
+
+        $response = $this->json('DELETE', "/api/dashboard/delete-vehicle-image", [
+            'image' => $newestVehicleImage->image
+        ]);
+
+        $response->assertStatus(204);
+
+        $this->assertDatabaseMissing('vehicle_images', [
+            'id' => $newestVehicleImage->id
+        ]);
+
+        $path = remove_storage_file_path($newestVehicleImage->image);
+
+        Storage::disk('public')->assertMissing($path);
     }
 }

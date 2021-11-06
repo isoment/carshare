@@ -118,7 +118,7 @@ class UserVehicleService
             return response()->json('Vehicle set to inactive until image is provided', 404);
         }
 
-        return response()->json(204);
+        return response()->json('Image deleted', 204);
     }
 
     /**
@@ -167,7 +167,7 @@ class UserVehicleService
             'active' => $this->isActive($request['active'])
         ]);
 
-        return response()->json(201);
+        return response()->json('Vehicle updated', 201);
     }
 
     /**
