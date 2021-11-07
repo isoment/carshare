@@ -112,9 +112,16 @@
 
                             <!-- Save -->
                             <div class="mt-3">
-                                <button class="w-full text-center bg-purple-500 hover:bg-purple-400 transition-all 
-                                               duration-200 px-4 py-2 text-white font-bold"
-                                        @click="submit">Save changes</button>
+                                <button class="w-full text-center bg-gray-300 px-4 py-2 text-white font-bold
+                                              flex items-center justify-center"
+                                        :disabled="submittingForm"
+                                        :class="{ 'bg-purple-500 hover:bg-purple-400 transition-all duration-200' : !submittingForm }"
+                                        @click="submit">
+                                    <span>Save changes</span>
+                                    <span v-if="submittingForm">
+                                        <i class="fas fa-spinner fa-spin text-white text-sm ml-2"></i>
+                                    </span>
+                                </button>
                             </div>
                         </div>
                         
@@ -235,6 +242,7 @@
 
         data() {
             return {
+                submittingForm: false,
                 vehicleNotFound: null,
                 description: null,
                 price: null,
@@ -330,6 +338,7 @@
 
             async submit() {
                 this.validationErrors = null;
+                this.submittingForm = true;
 
                 const formData = new FormData;
 
@@ -372,6 +381,8 @@
                         });
                     }
                 }
+
+                this.submittingForm = false;
             }
         },
 

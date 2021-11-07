@@ -29,7 +29,7 @@ class UserVehicleCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'images' => 'required|array|min:1',
+            'images' => 'required|array|min:1|max:12',
             'images.*' => ['mimetypes:image/jpeg,image/gif,image/png,image/bmp,image/webp', 'max:10000'],
             'featured_id' => ['required', new FeatureId($this['images'])],
             'make' => ['required', new VehicleMake],

@@ -157,9 +157,16 @@
                         <validation-errors :errors="errorFor('featured_id')"></validation-errors>
                         <div>
                             <div class="mt-6 text-right" v-if="hasUploads">
-                                <button class="w-full text-center bg-purple-500 hover:bg-purple-400 transition-all 
-                                            duration-200 px-4 py-2 text-white font-bold"
-                                        @click="submit">Submit</button>
+                                <button class="w-full flex justify-center items-center bg-gray-300 px-4 
+                                               py-2 text-white font-bold"
+                                        :disabled="submittingForm"
+                                        :class="{ 'bg-purple-500 hover:bg-purple-400 transition-all duration-200': !submittingForm }"
+                                        @click="submit">
+                                    <span>Submit</span>
+                                    <span v-if="submittingForm">
+                                        <i class="fas fa-spinner fa-spin text-white text-sm ml-2"></i>
+                                    </span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -184,6 +191,7 @@
 
         data() {
             return {
+                submittingForm: false,
                 newVehicle: {
                     make: '',
                     model: '',
@@ -224,6 +232,7 @@
 
             async submit() {
                 this.validationErrors = null;
+                this.submittingForm = true;
 
                 const formData = new FormData;
 
@@ -261,6 +270,8 @@
                         });
                     }
                 }
+
+                this.submittingForm = false;
             },
 
             async getMakes() {
