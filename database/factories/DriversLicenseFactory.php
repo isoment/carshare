@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\DriversLicense;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class DriversLicenseFactory extends Factory
@@ -26,14 +27,14 @@ class DriversLicenseFactory extends Factory
             'user_id' => User::inRandomOrder()->first()->id,
             'number' => uniqid('pm_' . true),
             'state' => $this->faker->state,
-            'issued' => $this->faker->date('Y-m-d', 'now'),
-            'expiration' => $this->faker->date('Y-m-d', '+2 years'),
-            'dob' => $this->faker->date('Y-m-d', '-30 years'),
+            'issued' => Carbon::now()->subYears(random_int(2,5))->format('Y-m-d'),
+            'expiration' => Carbon::now()->addYears(random_int(3,5))->format('Y-m-d'),
+            'dob' => Carbon::now()->subYears(random_int(22,40))->format('Y-m-d'),
             'street' => $this->faker->streetAddress,
             'city' => $this->faker->city,
             'zip' => $this->faker->postcode,
             'license_image' => 'dummy',
-            'verified' => 0
+            'verified' => 1
         ];
     }
 }

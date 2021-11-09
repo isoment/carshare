@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DriversLicense;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -32,5 +33,9 @@ class UserSeeder extends Seeder
             'host' => 1,
             'top_host' => 1
         ]);
+
+        User::all()->each(function($user) {
+            DriversLicense::factory()->create(['user_id' => $user->id]);
+        });
     }
 }
