@@ -205,6 +205,7 @@
 
                                 </div>
                                 <validation-errors :errors="errorFor('images')"></validation-errors>
+                                <validation-errors :errors="errorFor('featured_id')"></validation-errors>
                             </div>
 
                         </div>
