@@ -52,7 +52,7 @@
                                     </div>
                                 </div>
                                 <div class="text-xs font-bold">
-                                    <div>${{vehicle.price_day}} / Day</div>
+                                    <div>${{priceFormat(vehicle.price_day)}} / Day</div>
                                 </div>
                             </div>
                         </div>
@@ -86,6 +86,7 @@
 <script>
     import CustomerManageVehiclesFilter from './dropdowns/CustomerManageVehiclesFilter';
     import { monthDayYearNumbericSlash } from './../shared/utils/dateFormats';
+    import { wholeDollars } from './../shared/utils/currency';
 
     export default {
         components: {
@@ -160,6 +161,10 @@
 
             dateFormat(date) {
                 return monthDayYearNumbericSlash(date);
+            },
+
+            priceFormat(value) {
+                return wholeDollars(value);
             },
 
             updateVehicles(payload) {

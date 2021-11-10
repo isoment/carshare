@@ -115,7 +115,7 @@
                                 </h6>
                             </div>
                             <div class="text-right font-bold text-sm text-purple-500 mt-6">
-                                ${{ vehicle.price_day }} / Day
+                                ${{ priceFormat(vehicle.price_day) }} / Day
                             </div>
                         </div>
                     </router-link>
@@ -143,6 +143,7 @@
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
     import { dateTypeCheck, dateSetterStart, dateSetterEnd } from './../shared/utils/dateHelpers';
+    import { wholeDollars } from './../shared/utils/currency';
     import VueSlider from 'vue-slider-component';
     import 'vue-slider-component/theme/material.css';
 
@@ -173,6 +174,10 @@
         },
 
         methods: {
+            priceFormat(value) {
+                return wholeDollars(value);
+            },
+
             toggleDatesMenu() {
                 if (this.priceMenu) {
                     this.priceMenu = false;

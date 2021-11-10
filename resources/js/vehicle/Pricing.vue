@@ -14,14 +14,16 @@
 </template>
 
 <script>
+    import { wholeDollars } from './../shared/utils/currency';
+
     export default {
         props: {
             pricing: Object
         },
 
         methods: {
-            formatNumber(num) {
-                return num.toLocaleString("en-US");
+            formatNumber(value) {
+                return wholeDollars(value);
             }
         },
     }

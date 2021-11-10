@@ -222,6 +222,7 @@
     import { mapState } from 'vuex';
     import validationErrors from '../shared/mixins/validationErrors';
     import imageSelecting from './../shared/mixins/imageSelecting';
+    import { wholeDollars } from './../shared/utils/currency';
 
     export default {
         computed: {
@@ -288,7 +289,7 @@
                 }
 
                 this.active = this.vehicle.active === 1 ? true : false;
-                this.price = this.vehicle.price;
+                this.price = wholeDollars(this.vehicle.price);
                 this.description = this.vehicle.description;
                 this.existingFeaturedImage = this.vehicle.featured_image;
 
