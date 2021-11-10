@@ -281,7 +281,6 @@
 
                 try {
                     this.vehicle = (await axios.get(`/api/vehicle-show/${this.$route.params.id}`)).data.data
-                    console.log(this.vehicle);
                 } catch (error) {
                     if (error.response.status === 404) {
                         this.vehicleNotFound = true

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Vehicle;
 use App\Rules\CheckIfSeederImage;
+use App\Rules\ExistingFeaturedId;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\Console\Input\Input;
 
@@ -29,7 +30,10 @@ class UserVehicleUpdateRequest extends FormRequest
         return [
             'images' => ['array', $this->maxImageCount()],
             'images.*.file' => 'image|max:10000',
-            'featured_id' => [new CheckIfSeederImage],
+            'featured_id' => [
+                new CheckIfSeederImage, 
+                new ExistingFeaturedId($this['images'], $this->route(('id')))
+            ],
             'price' => 'required|integer|min:20|max:9999',
             'active' => 'required',
             'description' => 'required|min:10',
