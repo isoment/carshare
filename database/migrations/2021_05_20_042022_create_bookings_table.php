@@ -19,8 +19,8 @@ class CreateBookingsTable extends Migration
             $table->unsignedBigInteger('order_id')->index();
             $table->date('from');
             $table->date('to');
-            $table->decimal('price_total');
-            $table->decimal('price_day');
+            $table->decimal('price_total', 9, 2);
+            $table->decimal('price_day', 9, 2);
             $table->uuid('renter_review_key');
             $table->uuid('host_review_key');
             $table->timestamps();

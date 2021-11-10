@@ -20,7 +20,7 @@ class CreateVehiclesTable extends Migration
             $table->string('featured_image');
             $table->string('year');
             $table->string('plate_num');
-            $table->unsignedMediumInteger('price_day');
+            $table->decimal('price_day', 9, 2);
             $table->text('description');
             $table->integer('doors');
             $table->integer('seats');
