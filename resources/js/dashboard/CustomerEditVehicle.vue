@@ -130,9 +130,18 @@
                             <!-- Featured Image -->
                             <div>
                                 <div class="mb-2">
-                                    <h4 class="text-gray-600 text-lg font-boldnosans font-bold">
-                                        Featured image
-                                    </h4>
+                                    <div class="flex justify-between mb-1">
+                                        <h4 class="text-gray-600 text-lg font-boldnosans font-bold">
+                                            Featured image
+                                        </h4>
+                                        <button class="text-xs font-semibold border border-purple-400 text-purple-400 
+                                                       px-2 hover:text-purple-500 hover:border-purple-500 
+                                                       duration-200 transition-all"
+                                                @click="resetFeaturedImage">
+                                            Reset
+                                            </button>
+                                    </div>
+
                                     <div class="w-full">
                                         <img class="w-full" :src="existingFeaturedImage">
                                     </div>
@@ -336,6 +345,16 @@
 
             priceRound(event) {
                 this.price = Math.round(event.target.value);
+            },
+
+            resetFeaturedImage() {
+                this.featuredImage = '';
+                this.featuredId = '';
+
+                this.$store.dispatch('addNotification', {
+                    type: 'success',
+                    message: 'Featured image reset'
+                });
             },
 
             async submit() {
