@@ -14,6 +14,7 @@ import Payment from './cart/Payment';
 import Confirmation from './cart/Confirmation';
 import CustomerSharedVehicles from './dashboard/CustomerSharedVehicles';
 import CustomerEditVehicle from './dashboard/CustomerEditVehicle';
+import CustomerReviews from './dashboard/CustomerReviews';
 
 const routes = [
     {
@@ -79,6 +80,11 @@ const routes = [
         path: "/dashboard/customer/edit-vehicle/:id",
         component: CustomerEditVehicle,
         name: "customer-edit-vehicle"
+    },
+    {
+        path: "/dashboard/customer/reviews",
+        component: CustomerReviews,
+        name: "customer-reviews"
     },
 
     /** CART **/
