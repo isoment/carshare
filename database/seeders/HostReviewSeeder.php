@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Booking;
 use App\Models\HostReview;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class HostReviewSeeder extends Seeder
@@ -20,11 +21,23 @@ class HostReviewSeeder extends Seeder
     {
         Booking::all()->each(function ($booking) {
 
-            HostReview::factory()->create([
-                'id' => $booking->host_review_key,
-                'user_id' => $booking->vehicle->user->id
-            ]);
-            
+            $currentDate = Carbon::now();
+            $bookingEnd = Carbon::parse($booking->to);
+
+            if ($currentDate->isBefore($bookingEnd)) {
+                HostReview::factory()->create([
+                    'id' => $booking->host_review_key,
+                    'user_id' => $booking->vehicle->user->id,
+                    'rating' => NULL,
+                    'content' => NULL
+                ]);
+            } else {
+                HostReview::factory()->create([
+                    'id' => $booking->host_review_key,
+                    'user_id' => $booking->vehicle->user->id,
+                ]);
+            }
+ 
         });
     }
 }

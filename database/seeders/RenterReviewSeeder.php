@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Booking;
-use App\Models\HostReview;
 use App\Models\RenterReview;
-use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class RenterReviewSeeder extends Seeder
@@ -22,11 +21,23 @@ class RenterReviewSeeder extends Seeder
     {
         Booking::all()->each(function ($booking) {
 
-            RenterReview::factory()->create([
-                'id' => $booking->renter_review_key,
-                'user_id' => $booking->order->user_id
-            ]);
-            
+            $currentDate = Carbon::now();
+            $bookingEnd = Carbon::parse($booking->to);
+
+            if ($currentDate->isBefore($bookingEnd)) {
+                RenterReview::factory()->create([
+                    'id' => $booking->renter_review_key,
+                    'user_id' => $booking->order->user_id,
+                    'rating' => NULL,
+                    'content' => NULL
+                ]);
+            } else {
+                RenterReview::factory()->create([
+                    'id' => $booking->renter_review_key,
+                    'user_id' => $booking->order->user_id,
+                ]);
+            }
+
         });
     }
 }

@@ -8,7 +8,6 @@
 
             <div v-else>
                 <div class="customer-profile-banner h-36 border-b border-gray-200 pb-8">
-                    <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6"></div>
                 </div>
 
                 <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
@@ -16,6 +15,64 @@
                         <div class="absolute -top-8 mb-12">
                             <div class="rounded border-2 border-purple-400 bg-white px-6 py-3">
                                 <h3 class="text-lg font-boldnosans font-bold">Reviews</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
+                    <div class="mt-12">
+                        <div class="grid grid-cols-5">
+                            <!-- Select -->
+                            <div class="border-l border-gray-300 pl-3 review-select-menu">
+                                <!-- From Hosts -->
+                                <div class="mb-5">
+                                    <h4 class="text-lg font-boldnosans font-semibold tracking-wider mb-2">From Hosts</h4>
+                                    <div class="my-1 ml-2 text-purple-400 font-bold text-sm cursor-pointer 
+                                               hover:text-purple-500">
+                                        Needs Review
+                                    </div>
+                                    <div class="mt-2 ml-2 text-purple-400 font-bold text-sm cursor-pointer
+                                               hover:text-purple-500">
+                                        Has Review
+                                    </div>
+                                </div>
+                                <!-- From Renters -->
+                                <div>
+                                    <h4 class="text-lg font-boldnosans font-semibold tracking-wider mb-2">From Renters</h4>
+                                    <div class="my-1 ml-2 text-purple-400 font-bold text-sm cursor-pointer
+                                               hover:text-purple-500 transition-all duration-200">
+                                        Needs Review
+                                    </div>
+                                    <div class="mt-2 ml-2 text-purple-400 font-bold text-sm cursor-pointer
+                                               hover:text-purple-500 transition-all duration-200">
+                                        Has Review
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Reviews -->
+                            <div class="border rounded-md col-span-4">
+                                <div class="my-2">
+                                    TEST REVIEWS
+                                </div>
+                                <div class="my-2">
+                                    TEST REVIEWS
+                                </div>
+                                <div class="my-2">
+                                    TEST REVIEWS
+                                </div>
+                                <div class="my-2">
+                                    TEST REVIEWS
+                                </div>
+                                <div class="my-2">
+                                    TEST REVIEWS
+                                </div>
+                                <div class="my-2">
+                                    TEST REVIEWS
+                                </div>
+                                <div class="my-2">
+                                    TEST REVIEWS
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -37,3 +94,9 @@
         }
     }
 </script>
+
+<style scoped>
+    .review-select-menu {
+        max-height: 11.85rem;
+    }
+</style>
