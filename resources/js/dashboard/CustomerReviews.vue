@@ -27,51 +27,56 @@
                             <div class="border-l border-gray-300 pl-3 review-select-menu">
                                 <!-- From Hosts -->
                                 <div class="mb-5">
-                                    <h4 class="text-lg font-boldnosans font-semibold tracking-wider mb-2">From Hosts</h4>
+                                    <h4 class="text-lg font-boldnosans font-semibold tracking-wider mb-2">
+                                        Your Bookings
+                                    </h4>
                                     <div class="my-1 ml-2 text-purple-400 font-bold text-sm cursor-pointer 
-                                               hover:text-purple-500">
+                                               hover:text-purple-500"
+                                         :class="{ 'text-purple-800 hover:text-purple-800': hostIncomplete }"
+                                         @click="reviewTypeSelect('HostIncomplete')">
                                         Needs Review
                                     </div>
                                     <div class="mt-2 ml-2 text-purple-400 font-bold text-sm cursor-pointer
-                                               hover:text-purple-500">
+                                               hover:text-purple-500"
+                                         :class="{ 'text-purple-800 hover:text-purple-800': hostComplete }"
+                                         @click="reviewTypeSelect('HostComplete')">
                                         Has Review
                                     </div>
                                 </div>
                                 <!-- From Renters -->
                                 <div>
-                                    <h4 class="text-lg font-boldnosans font-semibold tracking-wider mb-2">From Renters</h4>
+                                    <h4 class="text-lg font-boldnosans font-semibold tracking-wider mb-2">
+                                        Your Rentals
+                                    </h4>
                                     <div class="my-1 ml-2 text-purple-400 font-bold text-sm cursor-pointer
-                                               hover:text-purple-500 transition-all duration-200">
+                                               hover:text-purple-500 transition-all duration-200"
+                                         :class="{ 'text-purple-800 hover:text-purple-800': renterIncomplete }"
+                                         @click="reviewTypeSelect('RenterIncomplete')">
                                         Needs Review
                                     </div>
                                     <div class="mt-2 ml-2 text-purple-400 font-bold text-sm cursor-pointer
-                                               hover:text-purple-500 transition-all duration-200">
+                                               hover:text-purple-500 transition-all duration-200"
+                                         :class="{ 'text-purple-800 hover:text-purple-800': renterComplete }"
+                                         @click="reviewTypeSelect('RenterComplete')">
                                         Has Review
                                     </div>
                                 </div>
                             </div>
                             <!-- Reviews -->
-                            <div class="border rounded-md col-span-4">
-                                <div class="my-2">
-                                    TEST REVIEWS
-                                </div>
-                                <div class="my-2">
-                                    TEST REVIEWS
-                                </div>
-                                <div class="my-2">
-                                    TEST REVIEWS
-                                </div>
-                                <div class="my-2">
-                                    TEST REVIEWS
-                                </div>
-                                <div class="my-2">
-                                    TEST REVIEWS
-                                </div>
-                                <div class="my-2">
-                                    TEST REVIEWS
-                                </div>
-                                <div class="my-2">
-                                    TEST REVIEWS
+                            <div class="border rounded-md col-span-4 p-2">
+                                <div>
+                                    <div v-if="hostIncomplete">
+                                        <host-incomplete></host-incomplete>
+                                    </div>
+                                    <div v-if="hostComplete">
+                                        <host-complete></host-complete>
+                                    </div>
+                                    <div v-if="renterIncomplete">
+                                        <renter-incomplete></renter-incomplete>
+                                    </div>
+                                    <div v-if="renterComplete">
+                                        <renter-complete></renter-complete>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -84,13 +89,52 @@
 
 <script>
     import { mapState } from 'vuex';
+    import HostIncomplete from './review-components/HostIncomplete.vue';
+    import HostComplete from './review-components/HostComplete.vue';
+    import RenterIncomplete from './review-components/RenterIncomplete.vue';
+    import RenterComplete from './review-components/RenterComplete.vue';
 
     export default {
+        components: {
+            HostIncomplete,
+            HostComplete,
+            RenterIncomplete,
+            RenterComplete
+        },
+
         computed: {
             ...mapState({
                 isLoggedIn: "isLoggedIn",
                 user: "user"
             }),
+
+            hostIncomplete() {
+                return this.reviewSelect === 'HostIncomplete';
+            },
+
+            hostComplete() {
+                return this.reviewSelect === 'HostComplete';
+            },
+
+            renterIncomplete() {
+                return this.reviewSelect === 'RenterIncomplete';
+            },
+
+            renterComplete() {
+                return this.reviewSelect === 'RenterComplete';
+            }
+        },
+
+        data() {
+            return {
+                reviewSelect: 'HostIncomplete'
+            }
+        },
+
+        methods: {
+            reviewTypeSelect(value) {
+                this.reviewSelect = value;
+            }
         }
     }
 </script>
