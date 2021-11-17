@@ -148,6 +148,20 @@ Route::middleware('auth:sanctum')->group(function() {
         [App\Http\Controllers\Api\Dashboard\UserVehicleController::class, 'deleteImage']
     )->name('dashboard.delete-vehicle-image');
 
+    /***********************
+     *  Review API Routes  *
+     **********************/
+
+    Route::get(
+        'dashboard/host-users-reviews-complete',
+        [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'hostComplete']
+    )->name('dashboard.host-users-reviews-complete');
+
+    Route::get(
+        'dashboard/host-users-reviews-incomplete',
+        [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'hostIncompleteIndex']
+    )->name('dashboard.host-users-reviews-incomplete');
+
     /*************************
      *  Checkout API Routes  *
      ************************/

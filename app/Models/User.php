@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Laravel\Cashier\Billable;
 
 class User extends Authenticatable
@@ -102,13 +103,13 @@ class User extends Authenticatable
      */
     public function hasNoBooking(string $from, string $to) : bool
     {
-        $fromFromatted = Carbon::parse($from)->toDateString();
+        $fromFormatted = Carbon::parse($from)->toDateString();
         $toFormatted = Carbon::parse($to)->toDateString();
 
         $orders = auth()->user()->orders->pluck('id');
 
         return Booking::whereIn('order_id', $orders)
-            ->where('to', '>=', $fromFromatted)
+            ->where('to', '>=', $fromFormatted)
             ->where('from', '<=', $toFormatted)->count() === 0;
     }
 
@@ -122,5 +123,23 @@ class User extends Authenticatable
         $usersOrders = $this->orders->pluck('id');
 
         return Booking::whereIn('order_id', $usersOrders)->get();
+    }
+
+    /**
+     *  Get a collection of users bookings with host reviews
+     * 
+     *  @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getCompletedHostReviews() : LengthAwarePaginator
+    {
+        $usersOrders = $this->orders->pluck('id');
+
+        return Booking::with(['hostReview.user', 'vehicle.vehicleModel.vehicleMake'])
+            ->whereHas('hostReview', function($query) {
+
+                $query->whereNotNull('rating');
+
+            })->whereIn('order_id', $usersOrders)
+                ->paginate(5);
     }
 }
