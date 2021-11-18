@@ -134,12 +134,15 @@ class User extends Authenticatable
     {
         $usersOrders = $this->orders->pluck('id');
 
+        // return Booking::with(['hostReview.user', 'vehicle.vehicleModel.vehicleMake'])
+        //     ->whereHas('hostReview', function($query) {
+
+        //         $query->whereNotNull('rating');
+
+        //     })->whereIn('order_id', $usersOrders)->paginate(5);
+
+        // Just temporary for building up our paginator component
         return Booking::with(['hostReview.user', 'vehicle.vehicleModel.vehicleMake'])
-            ->whereHas('hostReview', function($query) {
-
-                $query->whereNotNull('rating');
-
-            })->whereIn('order_id', $usersOrders)
-                ->paginate(5);
+            ->whereIn('order_id', $usersOrders)->paginate(2);
     }
 }

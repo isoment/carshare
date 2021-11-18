@@ -28,7 +28,7 @@
                                 <!-- From Hosts -->
                                 <div class="mb-5">
                                     <h4 class="text-lg font-boldnosans font-semibold tracking-wider mb-2">
-                                        For Bookings
+                                        As Renter
                                     </h4>
                                     <div class="my-1 ml-2 text-purple-400 font-bold text-sm cursor-pointer 
                                                hover:text-purple-500"
@@ -46,7 +46,7 @@
                                 <!-- From Renters -->
                                 <div>
                                     <h4 class="text-lg font-boldnosans font-semibold tracking-wider mb-2">
-                                        Your Vehicles
+                                        As Host
                                     </h4>
                                     <div class="my-1 ml-2 text-purple-400 font-bold text-sm cursor-pointer
                                                hover:text-purple-500 transition-all duration-200"
