@@ -29,12 +29,14 @@ class UserReviewsHostResource extends JsonResource
             ],
             'host' => [
                 'id' => $this->hostReview->user->id,
-                'name' => $this->hostReview->user->name
+                'name' => $this->hostReview->user->name,
+                'image' => $this->hostReview->user->profile->image
             ],
             'vehicle' => [
                 'year' => $this->vehicle->year,
                 'model' => $this->vehicle->vehicleModel->model,
-                'make' => $this->vehicle->vehicleModel->vehicleMake->make
+                'make' => $this->vehicle->vehicleModel->vehicleMake->make,
+                'featured_image' => $this->vehicle->featured_image
             ]
         ];
     }

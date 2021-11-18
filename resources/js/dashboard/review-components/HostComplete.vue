@@ -4,11 +4,15 @@
         <h6 class="text-gray-600 text-xs font-light">
             These are the reviews for previous bookings that you have already left.
         </h6>
-        <!-- Add an if statement to ensure the component is only loaded once reviews are -->
+        <!-- 
+            Add an if statement to ensure the review paginator component is only loaded 
+            when the reviews are. We pass DisplayReviewHostComplete component into the
+            paginator using a slot.
+        -->
         <div class="mt-2" v-if="reviews">
             <review-paginator :reviews="reviews"
                               @pageChanged="pageChanged">
-                              
+                <display-review-host-complete :reviews="reviews"></display-review-host-complete>        
             </review-paginator>
         </div>
     </div>
@@ -16,9 +20,13 @@
 
 <script>
     import ReviewPaginator from './ReviewPaginator.vue';
+    import DisplayReviewHostComplete from './DisplayReviewHostComplete.vue';
 
     export default {
-        components: {ReviewPaginator},
+        components: {
+            ReviewPaginator, 
+            DisplayReviewHostComplete
+        },
 
         data() {
             return {
