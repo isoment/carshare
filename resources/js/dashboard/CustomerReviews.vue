@@ -63,7 +63,7 @@
                                 </div>
                             </div>
                             <!-- Reviews -->
-                            <div class="border rounded-md col-span-4 p-2">
+                            <div class="border rounded-md col-span-4">
                                 <div>
                                     <div v-if="hostIncomplete">
                                         <host-incomplete></host-incomplete>

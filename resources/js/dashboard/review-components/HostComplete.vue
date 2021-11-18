@@ -1,9 +1,11 @@
 <template>
-    <div>
-        <h5 class="font-semibold font-boldnosans">Completed reviews.</h5>
-        <h6 class="text-gray-600 text-xs font-light">
-            These are the reviews for previous bookings that you have already left.
-        </h6>
+    <div class="mx-4 my-2">
+        <div class="pb-2 mb-4 border-b border-gray-200">
+            <h5 class="font-semibold font-boldnosans">Completed reviews.</h5>
+            <h6 class="text-gray-600 text-xs font-light">
+                These are the reviews for previous bookings that you have already left.
+            </h6>
+        </div>
         <!-- 
             Add an if statement to ensure the review paginator component is only loaded 
             when the reviews are. We pass DisplayReviewHostComplete component into the
