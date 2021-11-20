@@ -24,7 +24,7 @@
                     <div class="mt-12">
                         <div class="grid grid-cols-5">
                             <!-- Select -->
-                            <div class="border-l border-gray-300 pl-3 review-select-menu">
+                            <div class="border-l border-gray-300 pl-3 review-select-menu hidden sm:block">
                                 <!-- From Hosts -->
                                 <div class="mb-5">
                                     <h4 class="text-lg font-boldnosans font-semibold tracking-wider mb-2">
@@ -63,7 +63,7 @@
                                 </div>
                             </div>
                             <!-- Reviews -->
-                            <div class="border rounded-md col-span-4">
+                            <div class="border rounded-md col-span-5 sm:col-span-4">
                                 <div>
                                     <div v-if="hostIncomplete">
                                         <of-host-incomplete></of-host-incomplete>

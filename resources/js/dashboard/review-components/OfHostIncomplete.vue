@@ -8,27 +8,42 @@
             </h6>
         </div>
 
-        <div class="mt-2">
-            TEST
+        <div class="mt-2" v-if="reviews">
+            <review-paginator :reviews="reviews"
+                              @pageChanged="pageChanged">
+                <display-review-host-uncomplete :reviews="reviews"></display-review-host-uncomplete>
+            </review-paginator>
         </div>
     </div>
 </template>
 
 <script>
     import ReviewPaginator from './ReviewPaginator.vue';
+    import DisplayReviewHostUncomplete from './DisplayReviewHostUncomplete.vue';
 
     export default {
+        components: {
+            ReviewPaginator,
+            DisplayReviewHostUncomplete
+        },
+
         data() {
             return {
-                reviews: null
+                reviews: null,
+                page: 1
             }
         },
 
         methods: {
             async fetchReviews() {
-                let response = await axios.get('/api/dashboard/host-users-reviews-uncomplete');
+                let response = await axios.get(`/api/dashboard/host-users-reviews-uncomplete?page=${this.page}`);
 
                 this.reviews = response.data;
+            },
+
+            pageChanged(payload) {
+                this.page = payload;
+                this.fetchReviews();
             }
         },
 
