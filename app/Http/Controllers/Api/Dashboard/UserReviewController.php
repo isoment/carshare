@@ -5,16 +5,33 @@ namespace App\Http\Controllers\Api\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserReviewsHostResource;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserReviewController extends Controller
 {
     /**
-     *  Get an index of completed reviews by the users of hosts
+     *  Get a paginated collection of completed reviews by 
+     *  the users of hosts
+     * 
+     *  @return Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function hostComplete()
+    public function ofHostComplete() : AnonymousResourceCollection
     {
         return UserReviewsHostResource::collection(
-            current_user()->getCompletedHostReviews()
+            current_user()->getCompletedReviewsOfHost()
+        );
+    }
+
+    /**
+     *  Get a paginated collection of completed reviews by 
+     *  the users of hosts
+     * 
+     *  @return Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function ofHostUncomplete() : AnonymousResourceCollection
+    {
+        return UserReviewsHostResource::collection(
+            current_user()->getUncompletedReviewsOfHost()
         );
     }
 }

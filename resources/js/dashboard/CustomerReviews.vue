@@ -66,16 +66,16 @@
                             <div class="border rounded-md col-span-4">
                                 <div>
                                     <div v-if="hostIncomplete">
-                                        <host-incomplete></host-incomplete>
+                                        <of-host-incomplete></of-host-incomplete>
                                     </div>
                                     <div v-if="hostComplete">
-                                        <host-complete></host-complete>
+                                        <of-host-complete></of-host-complete>
                                     </div>
                                     <div v-if="renterIncomplete">
-                                        <renter-incomplete></renter-incomplete>
+                                        <of-renter-incomplete></of-renter-incomplete>
                                     </div>
                                     <div v-if="renterComplete">
-                                        <renter-complete></renter-complete>
+                                        <of-renter-complete></of-renter-complete>
                                     </div>
                                 </div>
                             </div>
@@ -89,17 +89,17 @@
 
 <script>
     import { mapState } from 'vuex';
-    import HostIncomplete from './review-components/HostIncomplete.vue';
-    import HostComplete from './review-components/HostComplete.vue';
-    import RenterIncomplete from './review-components/RenterIncomplete.vue';
-    import RenterComplete from './review-components/RenterComplete.vue';
+    import OfHostIncomplete from './review-components/OfHostIncomplete.vue';
+    import OfHostComplete from './review-components/OfHostComplete.vue';
+    import OfRenterIncomplete from './review-components/OfRenterIncomplete.vue';
+    import OfRenterComplete from './review-components/OfRenterComplete.vue';
 
     export default {
         components: {
-            HostIncomplete,
-            HostComplete,
-            RenterIncomplete,
-            RenterComplete
+            OfHostIncomplete,
+            OfHostComplete,
+            OfRenterIncomplete,
+            OfRenterComplete
         },
 
         computed: {
@@ -127,7 +127,7 @@
 
         data() {
             return {
-                reviewSelect: 'HostComplete'
+                reviewSelect: 'HostIncomplete'
             }
         },
 

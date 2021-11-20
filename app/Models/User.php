@@ -126,11 +126,11 @@ class User extends Authenticatable
     }
 
     /**
-     *  Get a collection of users bookings with host reviews
+     *  Get a collection of users bookings with completed host reviews
      * 
      *  @return Illuminate\Pagination\LengthAwarePaginator
      */
-    public function getCompletedHostReviews() : LengthAwarePaginator
+    public function getCompletedReviewsOfHost() : LengthAwarePaginator
     {
         $usersOrders = $this->orders->pluck('id');
 
@@ -144,5 +144,22 @@ class User extends Authenticatable
         // Just temporary for building up our paginator component
         // return Booking::with(['hostReview.user.profile', 'vehicle.vehicleModel.vehicleMake'])
         //     ->whereIn('order_id', $usersOrders)->paginate(2);
+    }
+
+    /**
+     *  Get a collection of users bookings with incomplete host reviews
+     * 
+     *  @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getUncompletedReviewsOfHost() : LengthAwarePaginator
+    {
+        $usersOrders = $this->orders->pluck('id');
+
+        return Booking::with(['hostReview.user.profile', 'vehicle.vehicleModel.vehicleMake'])
+            ->whereHas('hostReview', function($query) {
+
+                $query->whereNull('rating');
+
+            })->whereIn('order_id', $usersOrders)->paginate(5);
     }
 }

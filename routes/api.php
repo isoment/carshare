@@ -154,12 +154,12 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::get(
         'dashboard/host-users-reviews-complete',
-        [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'hostComplete']
+        [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'ofHostComplete']
     )->name('dashboard.host-users-reviews-complete');
 
     Route::get(
-        'dashboard/host-users-reviews-incomplete',
-        [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'hostIncompleteIndex']
+        'dashboard/host-users-reviews-uncomplete',
+        [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'ofHostUncomplete']
     )->name('dashboard.host-users-reviews-incomplete');
 
     /*************************
