@@ -36,7 +36,7 @@
 
         methods: {
             async fetchReviews() {
-                let response = await axios.get(`/api/dashboard/host-users-reviews-uncomplete?page=${this.page}`);
+                let response = await axios.get(`/api/dashboard/host-users-reviews-uncompleted?page=${this.page}`);
 
                 this.reviews = response.data;
             },

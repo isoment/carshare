@@ -28,7 +28,7 @@ class UserReviewController extends Controller
      * 
      *  @return Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function ofHostUncomplete() : AnonymousResourceCollection
+    public function ofHostUncompleted() : AnonymousResourceCollection
     {
         return UserReviewsHostResource::collection(
             current_user()->getUncompletedReviewsOfHost()

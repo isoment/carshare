@@ -37,16 +37,16 @@
                 <div class="my-2" v-if="isThisReviewSetToEdit(review.hostReview.id)">
                     <div class="flex justify-start items-center">
                         <h6 class="font-bold mr-1">Rating:</h6>
-                        <div class="flex">
-                            <i class="fas fa-star text-purple-500"></i>
-                            <i class="fas fa-star text-purple-500"></i>
-                            <i class="fas fa-star text-purple-500"></i>
-                            <i class="fas fa-star text-purple-500"></i>
-                            <i class="fas fa-star text-purple-500"></i>
-                        </div>
+                        <selectable-star-rating :size="'text-sm'"></selectable-star-rating>
                     </div>
-                    <div class="lg:w-1/2 mt-2">
-                        <textarea rows="5" class="border w-full"></textarea>
+                    <div class="lg:w-2/3 mt-2">
+                        <textarea rows="5" class="border w-full px-2 py-1 focus:outline-none"></textarea>
+                        <div>
+                            <button class="text-white font-semibold py-2 text-center bg-purple-400 
+                                           w-full sm:w-1/2">
+                                Submit
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -55,11 +55,16 @@
 </template>
 
 <script>
+    import SelectableStarRating from './SelectableStarRating.vue';
     import { humanReadableDate } from './../../shared/utils/dateFormats';
 
     export default {
         props: {
             reviews: Object
+        },
+
+        components: {
+            SelectableStarRating
         },
 
         data() {
