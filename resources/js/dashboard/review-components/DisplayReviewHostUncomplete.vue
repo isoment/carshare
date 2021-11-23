@@ -35,6 +35,11 @@
                     </span>
                 </div>
                 <div class="my-2" v-if="isThisReviewSetToEdit(review.hostReview.id)">
+                    <div class="mb-2">
+                        <validation-errors :errors="errorFor('id')"></validation-errors>
+                        <validation-errors :errors="errorFor('rating')"></validation-errors>
+                        <validation-errors :errors="errorFor('content')"></validation-errors>
+                    </div>
                     <div class="flex justify-start items-center">
                         <h6 class="font-bold mr-1">Rating:</h6>
                         <selectable-star-rating :size="'text-sm'"
@@ -61,11 +66,14 @@
 <script>
     import SelectableStarRating from './SelectableStarRating.vue';
     import { humanReadableDate } from './../../shared/utils/dateFormats';
+    import validationErrors from './../../shared/mixins/validationErrors';
 
     export default {
         props: {
             reviews: Object
         },
+
+        mixins: [validationErrors],
 
         components: {
             SelectableStarRating
@@ -95,9 +103,11 @@
             setAsReviewEdit(id) {
                 if (this.reviewToEdit === id) {
                     this.resetFields();
+                    this.validationErrors = null;
                 } else {
                     this.reviewToEdit = id;
                     this.content = null;
+                    this.validationErrors = null;
                 }
             },
 
@@ -120,7 +130,9 @@
                     let response = await axios.post('/api/dashboard/create-review-of-host', data);
                     console.log(response);
                 } catch(error) {
-                    console.log(error);
+                    if (error.response.status === 422) {
+                        this.validationErrors = error.response.data.errors
+                    }
                 }
             },
 
