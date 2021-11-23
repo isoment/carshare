@@ -128,7 +128,11 @@
 
                 try {
                     let response = await axios.post('/api/dashboard/create-review-of-host', data);
-                    console.log(response);
+
+                    this.$store.dispatch('addNotification', {
+                        type: 'success',
+                        message: response.data
+                    });
                 } catch(error) {
                     if (error.response.status === 422) {
                         this.validationErrors = error.response.data.errors

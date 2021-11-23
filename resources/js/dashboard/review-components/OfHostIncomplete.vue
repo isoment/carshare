@@ -11,7 +11,8 @@
         <div class="mt-2" v-if="reviews">
             <review-paginator :reviews="reviews"
                               @pageChanged="pageChanged">
-                <display-review-host-uncomplete :reviews="reviews"></display-review-host-uncomplete>
+                <display-review-host-uncomplete :reviews="reviews">
+                </display-review-host-uncomplete>
             </review-paginator>
         </div>
     </div>
@@ -44,7 +45,7 @@
             pageChanged(payload) {
                 this.page = payload;
                 this.fetchReviews();
-            }
+            },
         },
 
         created() {

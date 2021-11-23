@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class HostReview extends Model
 {
     use HasFactory;
 
     protected $keyType = 'string';
+    protected $fillable = ['rating', 'content'];
 
     /**
      *  Relationship to booking
@@ -25,5 +27,15 @@ class HostReview extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     *  Current users can leave a review
+     * 
+     *  @return bool
+     */
+    public function userCanLeaveReview() : bool
+    {
+        return (int) $this->booking->order->user_id === current_user()->id;
     }
 }

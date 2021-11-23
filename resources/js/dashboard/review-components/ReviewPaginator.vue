@@ -73,7 +73,7 @@
             setPaginationData() {
                 this.page = this.reviews.meta.current_page ?? 1;
                 this.lastPage = this.reviews.meta.last_page ?? null;
-            }
+            },
         },
 
         created() {
