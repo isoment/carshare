@@ -37,13 +37,17 @@
                 <div class="my-2" v-if="isThisReviewSetToEdit(review.hostReview.id)">
                     <div class="flex justify-start items-center">
                         <h6 class="font-bold mr-1">Rating:</h6>
-                        <selectable-star-rating :size="'text-sm'"></selectable-star-rating>
+                        <selectable-star-rating :size="'text-sm'"
+                                                @ratingUpdate="updateStarRating">
+                        </selectable-star-rating>
                     </div>
                     <div class="lg:w-2/3 mt-2">
-                        <textarea rows="5" class="border w-full px-2 py-1 focus:outline-none"></textarea>
+                        <textarea rows="5" class="border w-full px-2 py-1 focus:outline-none"
+                                v-model="content"></textarea>
                         <div>
                             <button class="text-white font-semibold py-2 text-center bg-purple-400 
-                                           w-full sm:w-1/2">
+                                        w-full sm:w-1/2"
+                                    @click="submitReview()">
                                 Submit
                             </button>
                         </div>
@@ -69,7 +73,9 @@
 
         data() {
             return {
-                reviewToEdit: null
+                reviewToEdit: null,
+                rating: null,
+                content: null
             }
         },
         
@@ -88,14 +94,40 @@
 
             setAsReviewEdit(id) {
                 if (this.reviewToEdit === id) {
-                    this.reviewToEdit = null;
+                    this.resetFields();
                 } else {
                     this.reviewToEdit = id;
+                    this.content = null;
                 }
             },
 
             isThisReviewSetToEdit(id) {
                 return id === this.reviewToEdit;
+            },
+
+            updateStarRating(payload) {
+                this.rating = payload;
+            },
+
+            async submitReview() {
+                const data = {
+                    id: this.reviewToEdit,
+                    rating: this.rating,
+                    content: this.content
+                }
+
+                try {
+                    let response = await axios.post('/api/dashboard/create-review-of-host', data);
+                    console.log(response);
+                } catch(error) {
+                    console.log(error);
+                }
+            },
+
+            resetFields() {
+                this.reviewToEdit = null;
+                this.rating = 5;
+                this.content = null;
             }
         },
     }

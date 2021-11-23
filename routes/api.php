@@ -162,6 +162,11 @@ Route::middleware('auth:sanctum')->group(function() {
         [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'ofHostUncompleted']
     )->name('dashboard.host-users-reviews-incomplete');
 
+    Route::post(
+        'dashboard/create-review-of-host',
+        [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'createReviewOfHost']
+    )->name('dashboard.create-review-of-host');
+
     /*************************
      *  Checkout API Routes  *
      ************************/

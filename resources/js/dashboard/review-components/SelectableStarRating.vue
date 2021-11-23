@@ -40,11 +40,17 @@
         methods: {
             starClicked(index) {
                 this.rating = index + 1;
+                this.$emit('ratingUpdate', this.rating);
             },
 
             emptyStarClicked(index) {
                 this.rating = this.rating + (index + 1);
+                this.$emit('ratingUpdate', this.rating);
             }
+        },
+
+        created() {
+            this.$emit('ratingUpdate', this.rating);
         }
     }
 </script>

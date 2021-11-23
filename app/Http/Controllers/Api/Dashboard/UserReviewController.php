@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserReviewsHostResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Log;
 
 class UserReviewController extends Controller
 {
@@ -33,5 +34,13 @@ class UserReviewController extends Controller
         return UserReviewsHostResource::collection(
             current_user()->getUncompletedReviewsOfHost()
         );
+    }
+
+    /**
+     *  Create a review of the host
+     */
+    public function createReviewOfHost(Request $request)
+    {
+        Log::info($request->toArray());
     }
 }
