@@ -35,7 +35,7 @@
 
         methods: {
             async fetchReviews() {
-                let response = await axios.get(`/api/dashboard/renter-users-reviews-complete`);
+                let response = await axios.get(`/api/dashboard/renter-users-reviews-complete?page=${this.page}`);
 
                 this.reviews = response.data;
             },

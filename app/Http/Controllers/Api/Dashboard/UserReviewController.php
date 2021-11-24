@@ -60,8 +60,7 @@ class UserReviewController extends Controller
     }
 
     /**
-     *  Get a paginated collection of completed reviews by the
-     *  user of renters
+     *  Get a paginated collection of renters that the user has reviews
      * 
      *  @return AnonymousResourceCollection|JsonResponse
      */
@@ -73,6 +72,23 @@ class UserReviewController extends Controller
 
         return UserReviewsRenterResource::collection(
             current_user()->getCompletedReviewsOfRenter()
+        );
+    }
+
+    /**
+     *  Get a paginated collection of renters that the user still needs
+     *  to review
+     * 
+     *  @return AnonymousResourceCollection|JsonResponse
+     */
+    public function ofRenterUncompleted() : AnonymousResourceCollection|JsonResponse
+    {
+        if (current_user()->host === 0) {
+            return response()->json('You are not a host', 403);
+        }
+
+        return UserReviewsRenterResource::collection(
+            current_user()->getUncompletedReviewsOfRenter()
         );
     }
 }

@@ -140,10 +140,6 @@ class User extends Authenticatable
                 $query->whereNotNull('rating');
 
             })->whereIn('order_id', $usersOrders)->paginate(5);
-
-        // Just temporary for building up our paginator component
-        // return Booking::with(['hostReview.user.profile', 'vehicle.vehicleModel.vehicleMake'])
-        //     ->whereIn('order_id', $usersOrders)->paginate(2);
     }
 
     /**
@@ -155,6 +151,15 @@ class User extends Authenticatable
     {
         $usersOrders = $this->orders->pluck('id');
 
+        // return Booking::with(['hostReview.user.profile', 'vehicle.vehicleModel.vehicleMake'])
+        //     ->whereHas('hostReview', function($query) {
+
+        //         $query->whereNull('rating');
+
+        //     })->whereIn('order_id', $usersOrders)
+        //         ->where('to', '<=', Carbon::now())
+        //         ->paginate(5);
+
         return Booking::with(['hostReview.user.profile', 'vehicle.vehicleModel.vehicleMake'])
             ->whereHas('hostReview', function($query) {
 
@@ -164,7 +169,7 @@ class User extends Authenticatable
     }
 
     /**
-     *  Get a collection of user bookings of your vehicles where
+     *  Get a collection of users who booked your vehicles where
      *  the reviews are complete
      * 
      *  @return Illuminate\Pagination\LengthAwarePaginator
@@ -177,6 +182,24 @@ class User extends Authenticatable
             ->whereHas('renterReview', function($query) {
 
                 $query->whereNotNull('rating');
+
+            })->whereIn('vehicle_id', $usersVehicles)->paginate(5);
+    }
+
+    /**
+     *  Get a collection of users who booked your vehicles where
+     *  the reviews are incomplete
+     * 
+     *  @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getUncompletedReviewsOfRenter() : LengthAwarePaginator
+    {
+        $usersVehicles = $this->vehicles->pluck('id');
+
+        return Booking::with(['renterReview.user.profile', 'vehicle.vehicleModel.vehicleMake'])
+            ->whereHas('renterReview', function($query) {
+
+                $query->whereNull('rating');
 
             })->whereIn('vehicle_id', $usersVehicles)->paginate(5);
     }
