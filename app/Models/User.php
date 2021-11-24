@@ -162,4 +162,22 @@ class User extends Authenticatable
 
             })->whereIn('order_id', $usersOrders)->paginate(5);
     }
+
+    /**
+     *  Get a collection of user bookings of your vehicles where
+     *  the reviews are complete
+     * 
+     *  @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getCompletedReviewsOfRenter() : LengthAwarePaginator
+    {
+        $usersVehicles = $this->vehicles->pluck('id');
+
+        return Booking::with(['renterReview.user.profile', 'vehicle.vehicleModel.vehicleMake'])
+            ->whereHas('renterReview', function($query) {
+
+                $query->whereNull('rating');
+
+            })->whereIn('vehicle_id', $usersVehicles)->paginate(5);
+    }
 }

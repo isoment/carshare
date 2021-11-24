@@ -41,6 +41,6 @@ class IsReviewable implements Rule
      */
     public function message() : string
     {
-        return 'Booking has not ended, unable to review now';
+        return 'Booking has not ended, unable to review now.';
     }
 }

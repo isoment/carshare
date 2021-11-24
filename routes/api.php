@@ -167,6 +167,21 @@ Route::middleware('auth:sanctum')->group(function() {
         [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'createReviewOfHost']
     )->name('dashboard.create-review-of-host');
 
+    Route::get(
+        'dashboard/renter-users-reviews-complete',
+        [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'ofRenterComplete']
+    )->name('dashboard.renter-users-reviews-complete');
+
+    Route::get(
+        'dashboard/renter-users-reviews-uncompleted',
+        [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'ofRenterUncompleted']
+    )->name('dashboard.renter-users-reviews-complete');
+
+    Route::post(
+        'dashboard/create-review-of-renter',
+        [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'createReviewOfRenter']
+    )->name('dashboard.create-review-of-renter');
+
     /*************************
      *  Checkout API Routes  *
      ************************/

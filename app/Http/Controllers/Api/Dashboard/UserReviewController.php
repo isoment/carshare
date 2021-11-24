@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserReviewOfHostRequest;
 use App\Http\Resources\UserReviewsHostResource;
+use App\Http\Resources\UserReviewsRenterResource;
 use App\Services\UserReviewService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
 
@@ -23,7 +25,7 @@ class UserReviewController extends Controller
 
     /**
      *  Get a paginated collection of completed reviews by 
-     *  the users of hosts
+     *  the user of hosts
      * 
      *  @return Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
@@ -36,7 +38,7 @@ class UserReviewController extends Controller
 
     /**
      *  Get a paginated collection of completed reviews by 
-     *  the users of hosts
+     *  the user of hosts
      * 
      *  @return Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
@@ -55,5 +57,22 @@ class UserReviewController extends Controller
     public function createReviewOfHost(UserReviewOfHostRequest $request)
     {
         return $this->userReviewService->createReviewOfHost($request);
+    }
+
+    /**
+     *  Get a paginated collection of completed reviews by the
+     *  user of renters
+     * 
+     *  @return AnonymousResourceCollection|JsonResponse
+     */
+    public function ofRenterComplete() : AnonymousResourceCollection|JsonResponse
+    {
+        if (current_user()->host === 0) {
+            return response()->json('You are not a host', 403);
+        }
+
+        return UserReviewsRenterResource::collection(
+            current_user()->getCompletedReviewsOfRenter()
+        );
     }
 }

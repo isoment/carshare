@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Requests\UserReviewOfHostRequest;
 use App\Models\HostReview;
+use Illuminate\Http\JsonResponse;
 
 class UserReviewService
 {
@@ -11,8 +12,10 @@ class UserReviewService
      *  Create a review of a host
      *  
      *  @param App\Http\Requests\UserReviewOfHostRequest $request
+     * 
+     *  @return Illuminate\Http\JsonResponse
      */
-    public function createReviewOfHost(UserReviewOfHostRequest $request)
+    public function createReviewOfHost(UserReviewOfHostRequest $request) : JsonResponse
     {
         $review = HostReview::find($request['id']);
 
