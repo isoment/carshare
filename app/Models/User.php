@@ -176,7 +176,7 @@ class User extends Authenticatable
         return Booking::with(['renterReview.user.profile', 'vehicle.vehicleModel.vehicleMake'])
             ->whereHas('renterReview', function($query) {
 
-                $query->whereNull('rating');
+                $query->whereNotNull('rating');
 
             })->whereIn('vehicle_id', $usersVehicles)->paginate(5);
     }

@@ -1,63 +1,70 @@
 <template>
     <div>
-        <div v-for="review in reviews.data" :key="review.id"
-             :class="{ 'border-b border-gray-200': notLastReview(review.hostReview.id) }">
-            <div class="mt-3 flex justify-between items-center">
-                <div class="flex items-center">
-                    <div>
-                        <img :src="review.host.image" alt="profile" 
-                            class="rounded-full h-14 w-14">
-                    </div>
-                    <div class="ml-3">
-                        <h5 class="font-boldnosans font font-semibold">{{review.host.name}}</h5>
-                    </div>
-                </div>
-                <button class="focus:outline-none">
-                    <i class="text-purple-400 cursor-pointer"
-                       :class="{ 
-                           'fas fa-times text-3xl pr-2': isThisReviewSetToEdit(review.hostReview.id),
-                           'fas fa-user-edit text-2xl': !isThisReviewSetToEdit(review.hostReview.id)
-                        }"
-                       @click="setAsReviewEdit(review.hostReview.id)">
-                    </i>
-                </button>
-            </div>
-            <div class="mt-2 text-gray-600">
-                <div class="text-xs font-semibold">
-                    <span>{{readableDate(review.booking.from)}}</span>
-                    <span class="mx-1">&#8722;</span>
-                    <span>{{readableDate(review.booking.to)}}</span>
-                </div>
-                <div class="my-2 text-sm">
-                    <span>You rented the</span>
-                    <span class="font-bold text-purple-500">
-                        {{review.vehicle.year}} {{review.vehicle.make}} {{review.vehicle.model}}
-                    </span>
-                </div>
-                <div class="my-2" v-if="isThisReviewSetToEdit(review.hostReview.id)">
-                    <div class="mb-2">
-                        <validation-errors :errors="errorFor('id')"></validation-errors>
-                        <validation-errors :errors="errorFor('rating')"></validation-errors>
-                        <validation-errors :errors="errorFor('content')"></validation-errors>
-                    </div>
-                    <div class="flex justify-start items-center">
-                        <h6 class="font-bold mr-1">Rating:</h6>
-                        <selectable-star-rating :size="'text-sm'"
-                                                @ratingUpdate="updateStarRating">
-                        </selectable-star-rating>
-                    </div>
-                    <div class="lg:w-2/3 mt-2">
-                        <textarea rows="5" class="border w-full px-2 py-1 focus:outline-none"
-                                v-model="content"></textarea>
+        <div v-if="hasReviews">
+            <div v-for="review in reviews.data" :key="review.id"
+                :class="{ 'border-b border-gray-200': notLastReview(review.hostReview.id) }">
+                <div class="mt-3 flex justify-between items-center">
+                    <div class="flex items-center">
                         <div>
-                            <button class="text-white font-semibold py-2 text-center bg-purple-400 
-                                        w-full sm:w-1/2"
-                                    @click="submitReview()">
-                                Submit
-                            </button>
+                            <img :src="review.host.image" alt="profile" 
+                                class="rounded-full h-14 w-14">
+                        </div>
+                        <div class="ml-3">
+                            <h5 class="font-boldnosans font font-semibold">{{review.host.name}}</h5>
+                        </div>
+                    </div>
+                    <button class="focus:outline-none">
+                        <i class="text-purple-400 cursor-pointer"
+                        :class="{ 
+                            'fas fa-times text-3xl pr-2': isThisReviewSetToEdit(review.hostReview.id),
+                            'fas fa-user-edit text-2xl': !isThisReviewSetToEdit(review.hostReview.id)
+                            }"
+                        @click="setAsReviewEdit(review.hostReview.id)">
+                        </i>
+                    </button>
+                </div>
+                <div class="mt-2 text-gray-600">
+                    <div class="text-xs font-semibold">
+                        <span>{{readableDate(review.booking.from)}}</span>
+                        <span class="mx-1">&#8722;</span>
+                        <span>{{readableDate(review.booking.to)}}</span>
+                    </div>
+                    <div class="my-2 text-sm">
+                        <span>You rented the</span>
+                        <span class="font-bold text-purple-500">
+                            {{review.vehicle.year}} {{review.vehicle.make}} {{review.vehicle.model}}
+                        </span>
+                    </div>
+                    <div class="my-2" v-if="isThisReviewSetToEdit(review.hostReview.id)">
+                        <div class="mb-2">
+                            <validation-errors :errors="errorFor('id')"></validation-errors>
+                            <validation-errors :errors="errorFor('rating')"></validation-errors>
+                            <validation-errors :errors="errorFor('content')"></validation-errors>
+                        </div>
+                        <div class="flex justify-start items-center">
+                            <h6 class="font-bold mr-1">Rating:</h6>
+                            <selectable-star-rating :size="'text-sm'"
+                                                    @ratingUpdate="updateStarRating">
+                            </selectable-star-rating>
+                        </div>
+                        <div class="lg:w-2/3 mt-2">
+                            <textarea rows="5" class="border w-full px-2 py-1 focus:outline-none"
+                                    v-model="content"></textarea>
+                            <div>
+                                <button class="text-white font-semibold py-2 text-center bg-purple-400 
+                                            w-full sm:w-1/2"
+                                        @click="submitReview()">
+                                    Submit
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div v-else>
+            <div class="font-semibold font-boldnosans">
+                No Reviews
             </div>
         </div>
     </div>
@@ -77,6 +84,12 @@
 
         components: {
             SelectableStarRating
+        },
+
+        computed: {
+            hasReviews() {
+                return this.reviews.data.length !== 0;
+            }
         },
 
         data() {

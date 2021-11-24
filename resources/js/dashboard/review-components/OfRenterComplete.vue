@@ -6,20 +6,43 @@
                 These are the reviews you have left for users who booked your vehicles.
             </h6>
         </div>
-
-        <div>
-
+        <!-- Paginator of reviews index -->
+        <div class="mt-2" v-if="reviews">
+            <review-paginator :reviews="reviews"
+                              @pageChanged="pageChanged">
+                <display-review-renter-complete :reviews="reviews"></display-review-renter-complete>
+            </review-paginator>
         </div>
     </div>
 </template>
 
 <script>
+    import ReviewPaginator from './ReviewPaginator.vue';
+    import DisplayReviewRenterComplete from './DisplayReviewRenterComplete.vue';
+
     export default {
+        components: {
+            ReviewPaginator,
+            DisplayReviewRenterComplete
+        },
+
+        data() {
+            return {
+                reviews: null,
+                page: 1
+            }
+        },
+
         methods: {
             async fetchReviews() {
                 let response = await axios.get(`/api/dashboard/renter-users-reviews-complete`);
 
-                console.log(response);
+                this.reviews = response.data;
+            },
+
+            pageChanged(payload) {
+                this.page = payload;
+                this.fetchReviews();
             }
         },
 
