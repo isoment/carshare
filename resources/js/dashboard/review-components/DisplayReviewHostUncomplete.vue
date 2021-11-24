@@ -133,6 +133,8 @@
                         type: 'success',
                         message: response.data
                     });
+
+                    this.$emit('reviewSubmit');
                 } catch(error) {
                     if (error.response.status === 422) {
                         this.validationErrors = error.response.data.errors

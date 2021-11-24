@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\IsReviewable;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserReviewOfHostRequest extends FormRequest
@@ -24,7 +25,11 @@ class UserReviewOfHostRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', 'exists:host_reviews,id'],
+            'id' => [
+                'required', 
+                'exists:host_reviews,id', 
+                new IsReviewable($this['id'])
+            ],
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
             'content' => ['required', 'string', 'min:5', 'max:250']
         ];

@@ -11,7 +11,8 @@
         <div class="mt-2" v-if="reviews">
             <review-paginator :reviews="reviews"
                               @pageChanged="pageChanged">
-                <display-review-host-uncomplete :reviews="reviews">
+                <display-review-host-uncomplete :reviews="reviews"
+                                                @reviewSubmit="reviewSubmitted">
                 </display-review-host-uncomplete>
             </review-paginator>
         </div>
@@ -46,6 +47,13 @@
                 this.page = payload;
                 this.fetchReviews();
             },
+
+            // Reload all the reviews once a new one is submitted
+            reviewSubmitted() {
+                this.reviews = null;
+                this.page = 1;
+                this.fetchReviews();
+            }
         },
 
         created() {
