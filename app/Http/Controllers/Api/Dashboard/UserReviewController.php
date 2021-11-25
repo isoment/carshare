@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserReviewOfHostRequest;
+use App\Http\Requests\UserReviewRequest;
 use App\Http\Resources\UserReviewsHostResource;
 use App\Http\Resources\UserReviewsRenterResource;
 use App\Services\UserReviewService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Log;
 
 class UserReviewController extends Controller
 {
@@ -52,9 +51,11 @@ class UserReviewController extends Controller
     /**
      *  Create a review of the host
      * 
-     *  @param App\Http\Requests\UserReviewOfHostRequest $request
+     *  @param App\Http\Requests\UserReviewRequest $request
+     * 
+     *  @return Illuminate\Http\JsonResponse
      */
-    public function createReviewOfHost(UserReviewOfHostRequest $request)
+    public function createReviewOfHost(UserReviewRequest $request) : JsonResponse
     {
         return $this->userReviewService->createReviewOfHost($request);
     }
@@ -90,5 +91,17 @@ class UserReviewController extends Controller
         return UserReviewsRenterResource::collection(
             current_user()->getUncompletedReviewsOfRenter()
         );
+    }
+
+    /**
+     *  Create a review of the renter
+     * 
+     *  @param App\Http\Requests\UserReviewRequest $request
+     * 
+     *  @return Illuminate\Http\JsonResponse
+     */
+    public function createReviewOfRenter(UserReviewRequest $request) : JsonResponse
+    {
+        return $this->userReviewService->createReviewOfRenter($request);
     }
 }

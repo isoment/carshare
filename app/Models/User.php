@@ -139,7 +139,7 @@ class User extends Authenticatable
 
                 $query->whereNotNull('rating');
 
-            })->whereIn('order_id', $usersOrders)->paginate(5);
+            })->whereIn('order_id', $usersOrders)->paginate(4);
     }
 
     /**
@@ -165,7 +165,7 @@ class User extends Authenticatable
 
                 $query->whereNull('rating');
 
-            })->whereIn('order_id', $usersOrders)->paginate(5);
+            })->whereIn('order_id', $usersOrders)->paginate(4);
     }
 
     /**
@@ -183,7 +183,7 @@ class User extends Authenticatable
 
                 $query->whereNotNull('rating');
 
-            })->whereIn('vehicle_id', $usersVehicles)->paginate(5);
+            })->whereIn('vehicle_id', $usersVehicles)->paginate(4);
     }
 
     /**
@@ -201,6 +201,6 @@ class User extends Authenticatable
 
                 $query->whereNull('rating');
 
-            })->whereIn('vehicle_id', $usersVehicles)->paginate(5);
+            })->whereIn('vehicle_id', $usersVehicles)->paginate(4);
     }
 }

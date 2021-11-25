@@ -9,17 +9,6 @@ use Illuminate\Contracts\Validation\Rule;
 
 class IsReviewable implements Rule
 {
-    private string $id;
-
-    /**
-     * @param string $id
-     * @return void
-     */
-    public function __construct(string $id)
-    {
-        $this->id = $id;
-    }
-
     /**
      * Determine if the validation rule passes.
      *
@@ -29,7 +18,13 @@ class IsReviewable implements Rule
      */
     public function passes($attribute, $value) : bool
     {
-        $review = HostReview::find($this->id) ?? RenterReview::find($this->id);
+        $review = HostReview::find($value) ?? RenterReview::find($value);
+
+        // Sometimes this rule may be called before validating the review
+        // key, if this happens the above returns null, so it should fail.
+        if ($review === null) {
+            return false;
+        }
 
         return Carbon::parse($review->booking->to)->isBefore(Carbon::now());
     }

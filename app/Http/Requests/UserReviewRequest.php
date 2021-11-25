@@ -3,9 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Rules\IsReviewable;
+use App\Rules\IsValidReview;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserReviewOfHostRequest extends FormRequest
+class UserReviewRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,8 +28,8 @@ class UserReviewOfHostRequest extends FormRequest
         return [
             'id' => [
                 'required', 
-                'exists:host_reviews,id', 
-                new IsReviewable($this['id'])
+                new IsValidReview(), 
+                new IsReviewable()
             ],
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
             'content' => ['required', 'string', 'min:5', 'max:250']

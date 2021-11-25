@@ -10,6 +10,7 @@ class RenterReview extends Model
     use HasFactory;
 
     protected $keyType = 'string';
+    protected $fillable = ['rating', 'content'];
 
     /**
      *  Relationship to booking
@@ -25,5 +26,15 @@ class RenterReview extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     *  Current users can leave a review
+     * 
+     *  @return bool
+     */
+    public function userCanLeaveReview() : bool
+    {
+        return (int) $this->booking->vehicle->user_id === current_user()->id;
     }
 }

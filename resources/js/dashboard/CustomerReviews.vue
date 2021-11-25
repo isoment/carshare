@@ -40,7 +40,7 @@
                                                hover:text-purple-500"
                                          :class="{ 'text-purple-800 hover:text-purple-800': hostComplete }"
                                          @click="reviewTypeSelect('HostComplete')">
-                                        Has Review
+                                        You Reviewed
                                     </div>
                                 </div>
                                 <!-- From Renters -->
@@ -58,7 +58,7 @@
                                                hover:text-purple-500 transition-all duration-200"
                                          :class="{ 'text-purple-800 hover:text-purple-800': renterComplete }"
                                          @click="reviewTypeSelect('RenterComplete')">
-                                        Has Review
+                                        You Reviewed
                                     </div>
                                 </div>
                             </div>
