@@ -70,7 +70,6 @@
             },
 
             emitInputs() {
-                console.log('Inputs emitted!');
                 this.$emit('inputUpdated', this.inputs);
             }
         },

@@ -151,21 +151,14 @@ class User extends Authenticatable
     {
         $usersOrders = $this->orders->pluck('id');
 
-        // return Booking::with(['hostReview.user.profile', 'vehicle.vehicleModel.vehicleMake'])
-        //     ->whereHas('hostReview', function($query) {
-
-        //         $query->whereNull('rating');
-
-        //     })->whereIn('order_id', $usersOrders)
-        //         ->where('to', '<=', Carbon::now())
-        //         ->paginate(5);
-
         return Booking::with(['hostReview.user.profile', 'vehicle.vehicleModel.vehicleMake'])
             ->whereHas('hostReview', function($query) {
 
                 $query->whereNull('rating');
 
-            })->whereIn('order_id', $usersOrders)->paginate(4);
+            })->whereIn('order_id', $usersOrders)
+                ->where('to', '<=', Carbon::now())
+                ->paginate(4);
     }
 
     /**
@@ -201,6 +194,8 @@ class User extends Authenticatable
 
                 $query->whereNull('rating');
 
-            })->whereIn('vehicle_id', $usersVehicles)->paginate(4);
+            })->whereIn('vehicle_id', $usersVehicles)
+                ->where('to', '<=', Carbon::now())
+                ->paginate(4);
     }
 }

@@ -21,9 +21,39 @@
                 </div>
 
                 <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
-                    <div class="mt-12">
+                    <div class="mt-6 sm:mt-12">
+                        <!-- Select small screen -->
+                        <div class="mb-2 text-right w-full sm:hidden relative">
+                            <button class="focus:outline-none px-2 py-1 border border-gray-800 text-gray-800"
+                                    @click="toggleFilterMenu">
+                                <span class="text-sm font-semibold">Filter</span>
+                                <span><i class="fas fa-sliders-h text-sm"></i></span>
+                            </button>
+
+                            <div class="absolute bg-white right-0 top-10 rounded-sm 
+                                        border border-gray-200 filter-dropdown-boxshadow"
+                                 v-if="filterMenu"
+                                 v-click-outside="filterMenuClose">
+                                <div class="px-3 py-5">
+                                    <h5 class="text-left text-xs font-semibold mb-1">Review type:</h5>
+                                    <select class="w-full bg-white border border-gray-300 
+                                                   rounded-sm text-sm focus:outline-none py-1"
+                                            @change="reviewTypeSelectMobile($event)">
+                                        <optgroup label="As Renter">
+                                            <option value="HostIncomplete">Needs Review</option>
+                                            <option value="HostComplete">You Reviewed</option>
+                                        </optgroup>
+                                        <optgroup label="As Host">
+                                            <option value="RenterIncomplete">Needs Review</option>
+                                            <option value="RenterComplete">You Reviewed</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="grid grid-cols-5">
-                            <!-- Select -->
+                            <!-- Select large scree -->
                             <div class="border-l border-gray-300 pl-3 review-select-menu hidden sm:block">
                                 <!-- From Hosts -->
                                 <div class="mb-5">
@@ -62,6 +92,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <!-- Reviews -->
                             <div class="border rounded-md col-span-5 sm:col-span-4">
                                 <div>
@@ -127,13 +158,30 @@
 
         data() {
             return {
-                reviewSelect: 'HostIncomplete'
+                reviewSelect: 'HostIncomplete',
+                filterMenu: false
             }
         },
 
         methods: {
             reviewTypeSelect(value) {
                 this.reviewSelect = value;
+            },
+
+            reviewTypeSelectMobile(event) {
+                this.reviewSelect = event.target.value;
+            },
+
+            toggleFilterMenu() {
+                if (this.filterMenu === true) {
+                    this.filterMenu = false;
+                } else {
+                    this.filterMenu = true;
+                }  
+            },
+
+            filterMenuClose() {
+                this.filterMenu = false;
             }
         }
     }
@@ -142,5 +190,9 @@
 <style scoped>
     .review-select-menu {
         max-height: 11.85rem;
+    }
+
+    .filter-dropdown-boxshadow {
+        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
     }
 </style>

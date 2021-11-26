@@ -130,8 +130,6 @@
                         params: this.apiParams
                     }));
 
-                    console.log(response);
-
                     this.vehicles = response.data.data;
                     this.lastPage = response.data.meta.last_page;
 
