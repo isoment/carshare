@@ -1,19 +1,24 @@
 <template>
-    <div class="mx-4 my-2">
-        <div class="pb-2 mb-4 border-b border-gray-200">
-            <h5 class="font-semibold font-boldnosans">Leave reviews for those who've rented your vehicles.</h5>
-            <h6 class="text-gray-600 text-xs font-light">
-                Here you can review renters of your vehicles.
-            </h6>
-        </div>
+    <div>
+        <review-summary></review-summary>
+        <div class="border rounded-md">
+            <div class="mx-4 my-2">
+                <div class="pb-2 mb-4 border-b border-gray-200">
+                    <h5 class="font-semibold font-boldnosans">Leave reviews for those who've rented your vehicles.</h5>
+                    <h6 class="text-gray-600 text-xs font-light">
+                        Here you can review renters of your vehicles.
+                    </h6>
+                </div>
 
-        <div class="mt-2" v-if="reviews">
-            <review-paginator :reviews="reviews"
-                              @pageChanged="pageChanged">
-                <display-review-renter-uncomplete :reviews="reviews"
-                                                  @reviewSubmit="reviewSubmitted">
-                </display-review-renter-uncomplete>
-            </review-paginator>
+                <div class="mt-2" v-if="reviews">
+                    <review-paginator :reviews="reviews"
+                                    @pageChanged="pageChanged">
+                        <display-review-renter-uncomplete :reviews="reviews"
+                                                        @reviewSubmit="reviewSubmitted">
+                        </display-review-renter-uncomplete>
+                    </review-paginator>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -21,11 +26,13 @@
 <script>
     import ReviewPaginator from './ReviewPaginator.vue';
     import DisplayReviewRenterUncomplete from './DisplayReviewRenterUncomplete.vue';
+    import ReviewSummary from './ReviewSummary.vue';
 
     export default {
         components: {
             ReviewPaginator,
-            DisplayReviewRenterUncomplete
+            DisplayReviewRenterUncomplete,
+            ReviewSummary
         },
 
         data() {

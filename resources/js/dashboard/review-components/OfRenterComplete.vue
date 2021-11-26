@@ -1,17 +1,22 @@
 <template>
-    <div class="mx-4 my-2">
-        <div class="pb-2 mb-4 border-b border-gray-200">
-            <h5 class="font-semibold font-boldnosans">Reviews of renters.</h5>
-            <h6 class="text-gray-600 text-xs font-light">
-                These are the reviews you have left for users who booked your vehicles.
-            </h6>
-        </div>
-        <!-- Paginator of reviews index -->
-        <div class="mt-2" v-if="reviews">
-            <review-paginator :reviews="reviews"
-                              @pageChanged="pageChanged">
-                <display-review-renter-complete :reviews="reviews"></display-review-renter-complete>
-            </review-paginator>
+    <div>
+        <review-summary></review-summary>
+        <div class="border rounded-md">
+            <div class="mx-4 my-2">
+                <div class="pb-2 mb-4 border-b border-gray-200">
+                    <h5 class="font-semibold font-boldnosans">Reviews of renters.</h5>
+                    <h6 class="text-gray-600 text-xs font-light">
+                        These are the reviews you have left for users who booked your vehicles.
+                    </h6>
+                </div>
+                <!-- Paginator of reviews index -->
+                <div class="mt-2" v-if="reviews">
+                    <review-paginator :reviews="reviews"
+                                    @pageChanged="pageChanged">
+                        <display-review-renter-complete :reviews="reviews"></display-review-renter-complete>
+                    </review-paginator>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -19,11 +24,13 @@
 <script>
     import ReviewPaginator from './ReviewPaginator.vue';
     import DisplayReviewRenterComplete from './DisplayReviewRenterComplete.vue';
+    import ReviewSummary from './ReviewSummary.vue';
 
     export default {
         components: {
             ReviewPaginator,
-            DisplayReviewRenterComplete
+            DisplayReviewRenterComplete,
+            ReviewSummary
         },
 
         data() {

@@ -94,7 +94,7 @@
                             </div>
 
                             <!-- Reviews -->
-                            <div class="border rounded-md col-span-5 sm:col-span-4">
+                            <div class="col-span-5 sm:col-span-4">
                                 <div>
                                     <div v-if="hostIncomplete">
                                         <of-host-incomplete></of-host-incomplete>
@@ -173,11 +173,7 @@
             },
 
             toggleFilterMenu() {
-                if (this.filterMenu === true) {
-                    this.filterMenu = false;
-                } else {
-                    this.filterMenu = true;
-                }  
+                this.filterMenu = !this.filterMenu;
             },
 
             filterMenuClose() {
