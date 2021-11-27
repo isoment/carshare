@@ -30,7 +30,7 @@
                                 <span><i class="fas fa-sliders-h text-sm"></i></span>
                             </button>
 
-                            <div class="absolute bg-white right-0 top-10 rounded-sm 
+                            <div class="absolute bg-white right-0 top-10 rounded-sm z-40
                                         border border-gray-200 filter-dropdown-boxshadow"
                                  v-if="filterMenu"
                                  v-click-outside="filterMenuClose">
