@@ -47,16 +47,21 @@ class Booking extends Model
 
     /**
      *  Calculate vehicle rating
+     * 
+     *  @param Illuminate\Database\Eloquent\Builder $query
+     *  @param int $vehicleId
+     *  @return float
      */
-    public function scopeCalculateVehicleRating(Builder $query, $vehicleId)
+    public function scopeCalculateVehicleRating(Builder $query, int $vehicleId) : float
     {
-        $bookings = $query->where('vehicle_id', $vehicleId)->get();
+        $reviewKeys = $query->where('vehicle_id', $vehicleId)
+            ->get()
+            ->pluck('host_review_key');
 
-        $hostReviews = $bookings->each(function($booking) {
-            $booking->hostReview;
-        });
-
-        $ratings = $hostReviews->pluck('hostReview.rating');
+        $ratings = HostReview::whereIn('id', $reviewKeys)
+            ->whereNotNull('rating')
+            ->get()
+            ->pluck('rating');
 
         // To prevent divisible by error, just return 0
         if ($ratings->count() === 0) {
@@ -70,8 +75,13 @@ class Booking extends Model
      *  We need to check if there is a match in bookings during the dates
      *  that we specify, this is kind of hard to visualize but we can do
      *  it using two where queries.
+     * 
+     *  @param Illuminate\Database\Eloquent\Builder $query
+     *  @param string $from
+     *  @param string $to
+     *  @return Illuminate\Database\Eloquent\Builder
      */
-    public function scopeBetweenDates(Builder $query, $from, $to)
+    public function scopeBetweenDates(Builder $query, string $from, string $to) : Builder
     {
         return $query->where('to', '>=', $from)
             ->where('from', '<=', $to);
@@ -80,8 +90,10 @@ class Booking extends Model
     /**
      *  Create a user and host review key when a new Booking
      *  is created.
+     *
+     *  @return void
      */
-    protected static function boot()
+    protected static function boot() : void
     {
         parent::boot();
 

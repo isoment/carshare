@@ -7,6 +7,7 @@ use App\Models\HostReview;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\VehicleImages;
+use Carbon\Carbon;
 
 trait VehicleTrait
 {
@@ -49,11 +50,12 @@ trait VehicleTrait
      */
     public function vehiclesReviewCount(int $vehicleId)
     {
-        $bookings = Booking::where('vehicle_id', $vehicleId)
+        $reviewKeys = Booking::where('vehicle_id', $vehicleId)
             ->get()
             ->pluck('host_review_key');
 
-        return HostReview::whereIn('id', $bookings)->whereNotNull('rating')->count();
+        return HostReview::whereIn('id', $reviewKeys)
+            ->whereNotNull('rating')->count();
     }
 
     /**
@@ -63,6 +65,8 @@ trait VehicleTrait
      */
     public function vehicleTripCount(int $vehicleId)
     {
-        return Booking::where('vehicle_id', $vehicleId)->count();
+        return Booking::where('vehicle_id', $vehicleId)
+            ->where('to', '<=', Carbon::now())
+            ->count();
     }
 }

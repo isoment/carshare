@@ -7,6 +7,9 @@ use App\Http\Traits\VehicleTrait;
 use App\Models\Booking;
 use App\Models\Vehicle;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
+use App\Http\Requests\VehicleIndexRequest;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class VehicleService
 {
@@ -15,8 +18,11 @@ class VehicleService
     /**
      *  Return an index of vehicles and filter by parameters
      *  in the request.
+     * 
+     *  @param App\Http\Requests\VehicleIndexRequest
+     *  @return Illuminate\Pagination\LengthAwarePaginator
      */
-    public function index($request)
+    public function index(VehicleIndexRequest $request) : LengthAwarePaginator
     {
         $from = Carbon::parse($request['from'])->toDateString();
         $to = Carbon::parse($request['to'])->toDateString();
@@ -40,8 +46,11 @@ class VehicleService
 
     /**
      *  Get information for an individual vehicle
+     * 
+     *  @param Vehicle $vehicle
+     *  @return Illuminate\Support\Collection
      */
-    public function show(Vehicle $vehicle)
+    public function show(Vehicle $vehicle) : Collection
     {
         return collect($vehicle)->merge([
             'vehicle_images' => $this->vehicleImages($vehicle->id),
