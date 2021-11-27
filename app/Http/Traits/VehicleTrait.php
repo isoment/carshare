@@ -4,7 +4,6 @@ namespace App\Http\Traits;
 
 use App\Models\Booking;
 use App\Models\HostReview;
-use App\Models\RenterReview;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\VehicleImages;
@@ -41,30 +40,6 @@ trait VehicleTrait
         $vehicles = Vehicle::where('user_id', $userId)->get()->pluck('id');
 
         return Booking::whereIn('vehicle_id', $vehicles)->count();
-    }
-
-    /**
-     *  Calculate a users total rating, ie both as host and renter
-     * 
-     *  @param int $userId
-     */
-    public function calculateUserTotalRating(int $userId)
-    {
-        $hostRatings = HostReview::where('user_id', $userId)
-            ->get()
-            ->pluck('rating');
-
-        $ratings = $hostRatings->merge(
-            RenterReview::where('user_id', $userId)
-                ->get()
-                ->pluck('rating')
-        );
-
-        if ($ratings->count() === 0) {
-            return 0;
-        }
-
-        return round($ratings->sum() / $ratings->count(), 1);
     }
 
     /**

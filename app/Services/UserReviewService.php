@@ -3,13 +3,15 @@
 namespace App\Services;
 
 use App\Http\Requests\UserReviewRequest;
+use App\Http\Traits\ReviewTrait;
 use App\Models\HostReview;
 use App\Models\RenterReview;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 
 class UserReviewService
 {
+    use ReviewTrait;
+
     /**
      *  Create a review of a host
      *  
@@ -60,5 +62,23 @@ class UserReviewService
         ]);
 
         return response()->json('You have left a review', 201);
+    }
+
+    /**
+     *  Show a users review ratings
+     * 
+     *  @return Illuminate\Http\JsonResponse
+     */
+    public function showReviewRating() : JsonResponse
+    {
+        $id = current_user()->id;
+
+        $ratings = [
+            'total' => $this->calculateUserTotalRating($id),
+            'asHost' => $this->calculateUserRatingAsHost($id),
+            'asRenter' => $this->calculateUserRatingAsRenter($id)
+        ];
+
+        return response()->json($ratings, 200);
     }
 }

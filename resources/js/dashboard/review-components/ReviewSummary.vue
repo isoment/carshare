@@ -10,7 +10,9 @@
                 </div>
                 <div class="flex items-center">
                     <div class="mr-2">
-                        <h5 class="text-4xl text-gray-800 font-bold font-boldnosans header-rating">4.8</h5>
+                        <h5 class="text-4xl text-gray-800 font-bold font-boldnosans header-rating">
+                            {{ratings.total}}
+                        </h5>
                     </div>
                     <div class="h-12 w-12 rounded-full border-2 border-purple-300 flex 
                                 justify-center items-center shadow-lg star-rating-icon">
@@ -27,7 +29,9 @@
                 </div>
                 <div class="flex items-center">
                     <div class="mr-2">
-                        <h5 class="text-4xl text-gray-800 font-bold font-boldnosans header-rating">4.3</h5>
+                        <h5 class="text-4xl text-gray-800 font-bold font-boldnosans header-rating">
+                            {{ratings.asRenter}}
+                        </h5>
                     </div>
                     <div class="h-12 w-12 rounded-full border-2 border-purple-300 flex 
                                 justify-center items-center shadow-lg star-rating-icon">
@@ -44,7 +48,9 @@
                 </div>
                 <div class="flex items-center">
                     <div class="mr-2">
-                        <h5 class="text-4xl text-gray-800 font-bold font-boldnosans header-rating">3.5</h5>
+                        <h5 class="text-4xl text-gray-800 font-bold font-boldnosans header-rating">
+                            {{ratings.asHost}}
+                        </h5>
                     </div>
                     <div class="h-12 w-12 rounded-full border-2 border-purple-300 flex 
                                 justify-center items-center shadow-lg star-rating-icon">
@@ -58,7 +64,23 @@
 
 <script>
     export default {
-        
+        data() {
+            return {
+                ratings: null
+            }
+        },
+
+        methods: {
+            async fetchRatings() {
+                let response = await axios.get('/api/dashboard/show-review-rating');
+
+                this.ratings = response.data;
+            }
+        },
+
+        created() {
+            this.fetchRatings();
+        }
     }
 </script>
 

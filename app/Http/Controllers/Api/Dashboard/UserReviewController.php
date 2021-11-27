@@ -104,4 +104,12 @@ class UserReviewController extends Controller
     {
         return $this->userReviewService->createReviewOfRenter($request);
     }
+
+    /**
+     *  Show a users review rating
+     */
+    public function showReviewRating() : JsonResponse
+    {
+        return $this->userReviewService->showReviewRating();
+    }
 }

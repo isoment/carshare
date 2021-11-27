@@ -124,6 +124,10 @@ Route::middleware('auth:sanctum')->group(function() {
         [App\Http\Controllers\Api\Dashboard\DriversLicenseController::class, 'show']
     )->name('dashboard.show-drivers-license');
 
+    /************************
+     *  Vehicle API Routes  *
+     ***********************/
+
     // Show a users vehicles
     Route::get(
         'dashboard/index-users-vehicles',
@@ -152,35 +156,47 @@ Route::middleware('auth:sanctum')->group(function() {
      *  Review API Routes  *
      **********************/
 
+    // Users completed reviews of hosts
     Route::get(
         'dashboard/host-users-reviews-complete',
         [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'ofHostComplete']
     )->name('dashboard.host-users-reviews-complete');
 
+    // Users uncompleted reviews of hosts
     Route::get(
         'dashboard/host-users-reviews-uncompleted',
         [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'ofHostUncompleted']
     )->name('dashboard.host-users-reviews-incomplete');
 
+    // Create a review of a host
     Route::post(
         'dashboard/create-review-of-host',
         [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'createReviewOfHost']
     )->name('dashboard.create-review-of-host');
 
+    // Users completed reviews of renters
     Route::get(
         'dashboard/renter-users-reviews-complete',
         [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'ofRenterComplete']
     )->name('dashboard.renter-users-reviews-complete');
 
+    // Users uncompleted reviews of renters
     Route::get(
         'dashboard/renter-users-reviews-uncompleted',
         [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'ofRenterUncompleted']
     )->name('dashboard.renter-users-reviews-complete');
 
+    // Create a review of a renter
     Route::post(
         'dashboard/create-review-of-renter',
         [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'createReviewOfRenter']
     )->name('dashboard.create-review-of-renter');
+
+    // The users review ratings
+    Route::get(
+        'dashboard/show-review-rating',
+        [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'showReviewRating']
+    )->name('dashboard.show-review-rating');
 
     /*************************
      *  Checkout API Routes  *

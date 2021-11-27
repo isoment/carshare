@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Traits\ReviewTrait;
 use App\Http\Traits\VehicleTrait;
 use App\Models\Booking;
 use App\Models\Vehicle;
@@ -9,7 +10,7 @@ use Carbon\Carbon;
 
 class VehicleService
 {
-    use VehicleTrait;
+    use VehicleTrait, ReviewTrait;
 
     /**
      *  Return an index of vehicles and filter by parameters
