@@ -18,7 +18,7 @@ class BookingSeeder extends Seeder
      * @param int $max the max number of bookings to create
      * @return void
      */
-    public static function run(int $min = 1, int $max = 10)
+    public static function run(int $min = 5, int $max = 18)
     {
         Vehicle::all()->each(function ($vehicle) use ($min, $max) {
             // The initial booking

@@ -25,7 +25,7 @@ class RenterReviewFactory extends Factory
         return [
             'id' => Str::uuid(),
             'content' => $this->faker->sentences(5, true),
-            'rating' => random_int(1, 5)
+            'rating' => random_int(3, 5)
         ];
     }
 }
