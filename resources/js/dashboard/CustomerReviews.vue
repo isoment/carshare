@@ -43,7 +43,7 @@
                                             <option value="HostIncomplete">Needs Review</option>
                                             <option value="HostComplete">You Reviewed</option>
                                         </optgroup>
-                                        <optgroup label="As Host">
+                                        <optgroup label="As Host" v-if="userIsHost">
                                             <option value="RenterIncomplete">Needs Review</option>
                                             <option value="RenterComplete">You Reviewed</option>
                                         </optgroup>
@@ -54,8 +54,12 @@
 
                         <div class="grid grid-cols-5">
                             <!-- Select large scree -->
-                            <div class="border-l border-gray-300 pl-3 review-select-menu hidden sm:block">
-                                <!-- From Hosts -->
+                            <div class="border-l border-gray-300 pl-3 hidden sm:block"
+                                 :class="{ 
+                                    'review-select-menu': userIsHost,
+                                    'review-select-menu-short': !userIsHost}"
+                            >
+                                <!-- Users reviews of hosts -->
                                 <div class="mb-5">
                                     <h4 class="text-lg font-boldnosans font-semibold tracking-wider mb-2">
                                         As Renter
@@ -73,21 +77,21 @@
                                         You Reviewed
                                     </div>
                                 </div>
-                                <!-- From Renters -->
-                                <div>
+                                <!-- Users reviews of renters -->
+                                <div v-if="userIsHost">
                                     <h4 class="text-lg font-boldnosans font-semibold tracking-wider mb-2">
                                         As Host
                                     </h4>
                                     <div class="my-1 ml-2 text-purple-400 font-bold text-sm cursor-pointer
-                                               hover:text-purple-500 transition-all duration-200"
-                                         :class="{ 'text-purple-800 hover:text-purple-800': renterIncomplete }"
-                                         @click="reviewTypeSelect('RenterIncomplete')">
+                                            hover:text-purple-500 transition-all duration-200"
+                                        :class="{ 'text-purple-800 hover:text-purple-800': renterIncomplete }"
+                                        @click="reviewTypeSelect('RenterIncomplete')">
                                         Needs Review
                                     </div>
                                     <div class="mt-2 ml-2 text-purple-400 font-bold text-sm cursor-pointer
-                                               hover:text-purple-500 transition-all duration-200"
-                                         :class="{ 'text-purple-800 hover:text-purple-800': renterComplete }"
-                                         @click="reviewTypeSelect('RenterComplete')">
+                                            hover:text-purple-500 transition-all duration-200"
+                                        :class="{ 'text-purple-800 hover:text-purple-800': renterComplete }"
+                                        @click="reviewTypeSelect('RenterComplete')">
                                         You Reviewed
                                     </div>
                                 </div>
@@ -139,6 +143,10 @@
                 user: "user"
             }),
 
+            userIsHost() {
+                return this.user.host === 1;
+            },
+
             hostIncomplete() {
                 return this.reviewSelect === 'HostIncomplete';
             },
@@ -186,6 +194,10 @@
 <style scoped>
     .review-select-menu {
         max-height: 11.85rem;
+    }
+
+    .review-select-menu-short {
+        max-height: 5.55rem;
     }
 
     .filter-dropdown-boxshadow {

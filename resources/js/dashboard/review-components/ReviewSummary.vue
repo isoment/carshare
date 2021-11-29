@@ -1,5 +1,5 @@
 <template>
-    <div class="mb-4">
+    <div class="mb-4" v-if="ratings !== null">
         <div class="flex flex-row main-summary-wrapper">
             <div class="p-4 border rounded-md w-1/3 text-center flex flex-col items-center">
                 <div class="relative">
@@ -49,7 +49,7 @@
                 <div class="flex items-center">
                     <div class="mr-2">
                         <h5 class="text-4xl text-gray-800 font-bold font-boldnosans header-rating">
-                            {{ratings.asHost}}
+                            {{userIsHost ? ratings.asHost : 'N/A'}}
                         </h5>
                     </div>
                     <div class="h-12 w-12 rounded-full border-2 border-purple-300 flex 
@@ -63,7 +63,19 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex';
+
     export default {
+        computed: {
+            ...mapState({
+                user: "user"
+            }),
+
+            userIsHost() {
+                return this.user.host === 1;
+            }
+        },
+
         data() {
             return {
                 ratings: null
