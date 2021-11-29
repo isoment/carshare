@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\VehicleImages;
-use Barryvdh\Debugbar\Twig\Extension\Dump;
 use Database\Seeders\Testing\TestingVehicleMakeModelSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;

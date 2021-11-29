@@ -24,7 +24,7 @@ class CreateDriversLicensesTable extends Migration
             $table->string('street');
             $table->string('city');
             $table->string('zip');
-            $table->string('license_image');
+            $table->string('license_image')->nullable();
             $table->boolean('verified')->default(0);
             $table->timestamps();
 

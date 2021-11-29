@@ -4,7 +4,7 @@
         <div class="border rounded-md">
             <div class="mx-4 my-2">
                 <div class="pb-2 mb-4 border-b border-gray-200">
-                    <h5 class="font-semibold font-boldnosans">Reviews of renters.</h5>
+                    <h5 class="font-semibold font-boldnosans">Completed reviews.</h5>
                     <h6 class="text-gray-600 text-xs font-light">
                         These are the reviews you have left for users who booked your vehicles.
                     </h6>

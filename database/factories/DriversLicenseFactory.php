@@ -33,7 +33,7 @@ class DriversLicenseFactory extends Factory
             'street' => $this->faker->streetAddress,
             'city' => $this->faker->city,
             'zip' => $this->faker->postcode,
-            'license_image' => 'dummy',
+            'license_image' => NULL,
             'verified' => 1
         ];
     }

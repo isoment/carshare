@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Http\Traits\FileTrait;
 use App\Models\DriversLicense;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,7 +19,7 @@ class DriversLicenseService
         $user = current_user();
 
         // Check if the user has a license on record
-        if ($user->driversLicense) {
+        if (isset($user->driversLicense->license_image)) {
             $this->licenseImageCleanup($user->driversLicense->license_image);
         }
 

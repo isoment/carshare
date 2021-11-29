@@ -1,5 +1,8 @@
 <template>
     <div class="mb-4" v-if="ratings !== null">
+        <div>
+            <h5 class="mb-1 font-bold font-boldnosans">Your ratings</h5>
+        </div>
         <div class="flex flex-row main-summary-wrapper">
             <div class="p-4 border rounded-md w-1/3 text-center flex flex-col items-center">
                 <div class="relative">

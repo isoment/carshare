@@ -4,9 +4,9 @@
         <div class="border rounded-md">
             <div class="mx-4 my-2">
                 <div class="pb-2 mb-4 border-b border-gray-200">
-                    <h5 class="font-semibold font-boldnosans">Leave reviews for those who've rented your vehicles.</h5>
+                    <h5 class="font-semibold font-boldnosans">Leave reviews here.</h5>
                     <h6 class="text-gray-600 text-xs font-light">
-                        Here you can review renters of your vehicles.
+                        Tell us your experience with this renter.
                     </h6>
                 </div>
 
