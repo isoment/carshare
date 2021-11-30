@@ -23,4 +23,17 @@ trait UserTrait
         RenterReviewSeeder::run();
         HostReviewSeeder::run();
     }
+
+    /**
+     *  Create a small database set using seeders
+     */
+    public function createSingleRenterDatabase()
+    {
+        UserSeeder::run(1, 1, 0);
+        TestingVehicleMakeModelSeeder::run();
+        VehicleSeeder::run(1, 2);
+        BookingSeeder::run(1, 1);
+        RenterReviewSeeder::run();
+        HostReviewSeeder::run();
+    }
 }
