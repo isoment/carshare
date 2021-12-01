@@ -8,6 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 use Tests\Trait\UserReviewTrait;
 use Tests\Trait\UserTrait;
@@ -119,5 +120,104 @@ class UserReviewTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure($this->reviewIndexStructure());
+    }
+
+    /**
+     *  @test
+     *  A completed review is not seen in the uncompleted reviews of hosts
+     */
+    public function a_completed_review_is_not_seen_in_the_uncompleted_reviews_of_hosts()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::where('host', 0)->first();
+
+        $this->actingAs($user);
+
+        $reviewId = $this->setReviewedCompletedBooking($user);
+
+        $response = $this->json('GET', '/api/dashboard/host-users-reviews-uncompleted');
+
+        $response->assertJsonMissing(['id' => $reviewId]);
+    }
+
+    /**
+     *  @test
+     *  The create review of a host api endpoint requires user to be authenticated
+     */
+    public function create_review_of_host_api_endpoint_required_user_to_be_authenticated()
+    {
+        $this->json('POST', '/api/dashboard/create-review-of-host')
+            ->assertStatus(401);
+    }
+
+    /**
+     *  @test
+     *  Error 422 is returned if no data is passed in request
+     */
+    public function error_422_is_returned_if_no_data_is_passed_in_request()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::where('host', 0)->first();
+
+        $this->actingAs($user);
+
+        $response = $this->json('POST', '/api/dashboard/create-review-of-host');
+
+        $response->assertStatus(422)
+            ->assertSee('The id field is required.')
+            ->assertSee('The rating field is required.')
+            ->assertSee('The content field is required.');
+    }
+
+    /**
+     *  @test
+     *  Error 422 is returned if the host review id is invalid
+     */
+    public function error_422_is_returned_if_host_review_id_is_invalid()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::where('host', 0)->first();
+
+        $this->actingAs($user);
+
+        $data = $this->dataForCreateReviewOfHostRequest([
+            'id' => Uuid::uuid4()->toString(),
+            'rating' => 5,
+            'content' => 'This is valid review text'
+        ]);
+
+        $response = $this->json('POST', '/api/dashboard/create-review-of-host', $data);
+            
+        $response->assertStatus(422)
+            ->assertSee('Review id is invalid.');
+    }
+
+    /**
+     * @test
+     * The host cannot be reviewed before the booking has ended
+     */
+    public function the_host_cannot_be_reviewed_before_the_booking_has_ended()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::where('host', 0)->first();
+
+        $this->actingAs($user);
+
+        $reviewId = $this->setUnreviewedUncompletedBooking($user);
+
+        $data = $this->dataForCreateReviewOfHostRequest([
+            'id' => $reviewId,
+            'rating' => 5,
+            'content' => 'This is valid review text'
+        ]);
+
+        $response = $this->json('POST', '/api/dashboard/create-review-of-host', $data);
+
+        $response->assertStatus(422)
+            ->assertSee('Booking has not ended, unable to review now.');
     }
 }
