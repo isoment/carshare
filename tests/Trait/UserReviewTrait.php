@@ -3,8 +3,10 @@
 namespace Tests\Trait;
 
 use App\Models\Booking;
+use App\Models\RenterReview;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 trait UserReviewTrait 
 {
@@ -64,9 +66,9 @@ trait UserReviewTrait
      *  leave of a host.
      * 
      *  @param User $user
-     *  @return void
+     *  @return string
      */
-    private function setUnreviewedCompletedBooking(User $user) : void
+    private function setUnreviewedCompletedBookingOfHost(User $user) : string
     {
         $order = $user->orders->first();
 
@@ -80,6 +82,8 @@ trait UserReviewTrait
             'rating' => NULL,
             'content' => NULL
         ]);
+
+        return $hostReview->id;
     }
 
     /**
@@ -89,7 +93,7 @@ trait UserReviewTrait
      *  @param User $user
      *  @return string
      */
-    private function setReviewedCompletedBooking(User $user) : string
+    private function setReviewedCompletedBookingOfHost(User $user) : string
     {
         $order = $user->orders->first();
 
@@ -114,7 +118,7 @@ trait UserReviewTrait
      *  @param User $user
      *  @return string
      */
-    private function setUnreviewedUncompletedBooking(User $user) : string
+    private function setUnreviewedUncompletedBookingOfHost(User $user) : string
     {
         $order = $user->orders->first();
 
@@ -133,6 +137,32 @@ trait UserReviewTrait
         ]);
 
         return $hostReview->id;
+    }
+
+    /**
+     *  Set users reviews of renters to uncompleted and return the
+     *  RenterReview ids that were changed as a Collection
+     * 
+     *  @param User $user
+     *  @return Illuminate\Support\Collection
+     */
+    private function setUsersReviewsOfRentersToUncompleted(User $user) : Collection
+    {
+        // Get the users vehicles
+        $vehicles = $user->vehicles->pluck('id');
+
+        // Get all the bookings of the users vehicles
+        $reviewIds = Booking::whereIn('vehicle_id', $vehicles)
+            ->get()
+            ->pluck('renter_review_key');
+
+        // Clear all the completed reviews of this host
+        RenterReview::whereIn('id', $reviewIds)->update([
+            'rating' => NULL,
+            'content' => NULL
+        ]);
+
+        return $reviewIds;
     }
 
     /**

@@ -25,7 +25,7 @@ class UserReviewService
 
         // Check that the user is allowed to review this
         if (!$review->userCanLeaveReview()) {
-            return response()->json('You are not allowed to review this', 403);
+            return response()->json('You are not allowed to review this.', 403);
         }
 
         $review->update([
@@ -33,7 +33,7 @@ class UserReviewService
             'content' => $request['content']
         ]);
 
-        return response()->json('You have left a review', 201);
+        return response()->json('You have left a review.', 201);
     }
 
     /**
@@ -53,7 +53,7 @@ class UserReviewService
 
         // Check that the user is allowed to review this
         if (!$review->userCanLeaveReview()) {
-            return response()->json('You are not allowed to review this', 403);
+            return response()->json('You are not allowed to review this.', 403);
         }
 
         $review->update([
@@ -61,7 +61,7 @@ class UserReviewService
             'content' => $request['content']
         ]);
 
-        return response()->json('You have left a review', 201);
+        return response()->json('You have left a review.', 201);
     }
 
     /**

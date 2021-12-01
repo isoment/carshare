@@ -67,7 +67,7 @@ class UserReviewController extends Controller
      */
     public function ofRenterComplete() : AnonymousResourceCollection|JsonResponse
     {
-        if (current_user()->host === 0) {
+        if ((int)current_user()->host === 0) {
             return response()->json('You are not a host', 403);
         }
 
@@ -84,7 +84,7 @@ class UserReviewController extends Controller
      */
     public function ofRenterUncompleted() : AnonymousResourceCollection|JsonResponse
     {
-        if (current_user()->host === 0) {
+        if ((int)current_user()->host === 0) {
             return response()->json('You are not a host', 403);
         }
 
