@@ -283,6 +283,32 @@ class UserReviewTest extends TestCase
 
     /**
      *  @test
+     *  A review of a host cannot be changed
+     */
+    public function a_review_of_a_host_cannot_be_changed()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::has('orders')->where('host', 0)->first();
+
+        $this->actingAs($user);
+
+        $reviewId = $this->setReviewedCompletedBookingOfHost($user);
+
+        $data = $this->dataForCreateReviewRequest([
+            'id' => $reviewId,
+            'rating' => 5,
+            'content' => 'This is valid review text'
+        ]);
+
+        $response = $this->json('POST', '/api/dashboard/create-review-of-host', $data);
+
+        $response->assertStatus(403)
+            ->assertSee('You have already reviewed this.');
+    }
+
+    /**
+     *  @test
      *  Unauthenticated users cannot access the renter-users-reviews-complete api endpoint
      */
     public function unauthenticated_users_cannot_access_the_renter_users_reviews_complete_endpoint()
@@ -629,5 +655,36 @@ class UserReviewTest extends TestCase
         $review = RenterReview::find($reviewIds->first());
 
         $this->assertEquals($review->content, $data['content']);
+    }
+
+    /**
+     *  @test
+     *  A review of a renter cannot be changed
+     */
+    public function a_review_of_a_renter_cannot_be_changed()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::has('vehicles.bookings')->where('host', 1)->first();
+
+        $reviewIds = $this->setUsersReviewsOfRenters($user);
+
+        $this->actingAs($user);
+
+        $reviewIds = $this->setUsersReviewsOfRenters($user, [
+            'rating' => 5,
+            'content' => 'This is an example of a completed review.'
+        ]);
+
+        $data = [
+            'id' => $reviewIds->first(),
+            'rating' => 5,
+            'content' => 'Some review text here'
+        ];
+
+        $response = $this->json('POST', '/api/dashboard/create-review-of-renter', $data);
+
+        $response->assertStatus(403)
+            ->assertSee('You have already reviewed this.');
     }
 }

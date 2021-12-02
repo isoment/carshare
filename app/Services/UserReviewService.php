@@ -28,6 +28,10 @@ class UserReviewService
             return response()->json('You are not allowed to review this.', 403);
         }
 
+        if ($review->rating !== NULL) {
+            return response()->json('You have already reviewed this.', 403);
+        }
+
         $review->update([
             'rating' => $request['rating'],
             'content' => $request['content']
@@ -54,6 +58,10 @@ class UserReviewService
         // Check that the user is allowed to review this
         if (!$review->userCanLeaveReview()) {
             return response()->json('You are not allowed to review this.', 403);
+        }
+
+        if ($review->rating !== NULL) {
+            return response()->json('You have already reviewed this.', 403);
         }
 
         $review->update([
