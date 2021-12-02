@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\HostReview;
 use App\Models\RenterReview;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Ramsey\Uuid\Uuid;
@@ -274,6 +275,10 @@ class UserReviewTest extends TestCase
 
         $response->assertStatus(201)
             ->assertSee('You have left a review.');
+
+        $review = HostReview::find($reviewId);
+
+        $this->assertEquals($review->content, $data['content']);
     }
 
     /**
@@ -519,5 +524,110 @@ class UserReviewTest extends TestCase
 
         $response->assertStatus(422)
             ->assertSee('Review id is invalid.');
+    }
+
+    /**
+     *  @test
+     *  The renter cannot be reviewed before the booking has ended
+     */
+    public function the_renter_cannot_be_reviewed_before_the_booking_has_ended()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::has('vehicles.bookings')->where('host', 1)->first();
+
+        $reviewIds = $this->setUsersReviewsOfRenters($user);
+
+        $this->actingAs($user);
+
+        $booking = Booking::where('renter_review_key', $reviewIds->first())->first();
+
+        $booking->update([
+            'from' => Carbon::now()->addWeeks(2),
+            'to' => Carbon::now()->addWeeks(3)
+        ]);
+
+        $data = $this->dataForCreateReviewRequest([
+            'id' => $reviewIds->first(),
+            'rating' => 5,
+            'content' => 'Some review text here'
+        ]);
+
+        $response = $this->json('POST', '/api/dashboard/create-review-of-renter', $data);
+
+        $response->assertStatus(422)
+            ->assertSee('Booking has not ended, unable to review now.');
+    }
+
+    /**
+     *  @test
+     *  A user cannot review a renter if the booking is not for their vehicle
+     */
+    public function a_user_cannot_review_a_renter_if_the_booking_is_not_for_their_vehicle()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::has('vehicles.bookings')->where('host', 1)->first();
+
+        $this->actingAs($user);
+
+        $vehicleIds = $user->vehicles->pluck('id');
+
+        // We need to get a booking that is not for one of the users vehicle
+        $booking = Booking::whereNotIn('vehicle_id', $vehicleIds)->first();
+
+        // Make sure the booking is finished
+        $booking->update([
+            'from' => Carbon::now()->subWeeks(3),
+            'to' => Carbon::now()->subWeeks(2)
+        ]);
+
+        $data = [
+            'id' => $booking->renter_review_key,
+            'rating' => 5,
+            'content' => 'Some review text here'
+        ];
+
+        $response = $this->json('POST', '/api/dashboard/create-review-of-renter', $data);
+
+        $response->assertStatus(403)
+            ->assertSee('You are not allowed to review this.');
+    }
+
+    /**
+     *  @test
+     *  A user can leave a review of a renter
+     */
+    public function a_user_can_leave_a_review_of_a_renter()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::has('vehicles.bookings')->where('host', 1)->first();
+
+        $reviewIds = $this->setUsersReviewsOfRenters($user);
+
+        $this->actingAs($user);
+
+        $booking = Booking::where('renter_review_key', $reviewIds->first())->first();
+
+        $booking->update([
+            'from' => Carbon::now()->subWeeks(3),
+            'to' => Carbon::now()->subWeeks(2)
+        ]);
+
+        $data = [
+            'id' => $reviewIds->first(),
+            'rating' => 5,
+            'content' => 'Some review text here'
+        ];
+
+        $response = $this->json('POST', '/api/dashboard/create-review-of-renter', $data);
+
+        $response->assertStatus(201)
+            ->assertSee('You have left a review.');
+
+        $review = RenterReview::find($reviewIds->first());
+
+        $this->assertEquals($review->content, $data['content']);
     }
 }
