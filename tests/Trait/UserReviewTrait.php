@@ -140,13 +140,14 @@ trait UserReviewTrait
     }
 
     /**
-     *  Set users reviews of renters to uncompleted and return the
+     *  Set users reviews of renters and return the
      *  RenterReview ids that were changed as a Collection
      * 
      *  @param User $user
-     *  @return Illuminate\Support\Collection
+     *  @param array $params
+     *  @return Illuminate\Support\Collection of RenterReview id's
      */
-    private function setUsersReviewsOfRentersToUncompleted(User $user) : Collection
+    private function setUsersReviewsOfRenters(User $user, array $params = []) : Collection
     {
         // Get the users vehicles
         $vehicles = $user->vehicles->pluck('id');
@@ -158,8 +159,8 @@ trait UserReviewTrait
 
         // Clear all the completed reviews of this host
         RenterReview::whereIn('id', $reviewIds)->update([
-            'rating' => NULL,
-            'content' => NULL
+            'rating' => $params['rating'] ?? NULL,
+            'content' => $params['content'] ?? NULL
         ]);
 
         return $reviewIds;
@@ -186,7 +187,7 @@ trait UserReviewTrait
      *  @param array $params
      *  @return array
      */
-    private function dataForCreateReviewOfHostRequest(array $params = []) : array
+    private function dataForCreateReviewRequest(array $params = []) : array
     {
         return [
             'id' => $params['id'] ?? NULL,

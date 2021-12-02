@@ -46,7 +46,7 @@ class UserReviewService
     public function createReviewOfRenter(UserReviewRequest $request) : JsonResponse
     {
         if (current_user()->host === 0) {
-            return response()->json('You are not a host', 403);
+            return response()->json('You are not a host.', 403);
         }
 
         $review = RenterReview::find($request['id']);
