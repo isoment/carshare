@@ -53,7 +53,7 @@
                         </div>
 
                         <div class="grid grid-cols-5">
-                            <!-- Select large scree -->
+                            <!-- Select large screen -->
                             <div class="border-l border-gray-300 pl-3 hidden sm:block"
                                  :class="{ 
                                     'review-select-menu': userIsHost,

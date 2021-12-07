@@ -126,6 +126,18 @@ class User extends Authenticatable
     }
 
     /**
+     *  Get a collection of bookings of a users vehicles
+     * 
+     *  @return Illuminate\Database\Eloquent\Collection
+     */
+    public function getVehicleBookings() : Collection
+    {
+        $usersVehicles = $this->vehicles->pluck('id');
+
+        return Booking::whereIn('vehicle_id', $usersVehicles)->get();
+    }
+
+    /**
      *  Get a collection of users bookings with completed host reviews
      * 
      *  @return Illuminate\Pagination\LengthAwarePaginator

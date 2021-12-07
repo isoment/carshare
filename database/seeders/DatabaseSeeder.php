@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             BookingSeeder::class,
             RenterReviewSeeder::class,
             HostReviewSeeder::class,
-            CleanupDuplicatedUserBookings::class
+            CleanupDuplicatedUserBookings::class,
+            SetReviewsToLeave::class
         ]);
     }
 }
