@@ -205,7 +205,8 @@
                     end: dateTypeCheck(this.range.end)
                 });
 
-                // Get and parse dates from local storage
+                // Get and parse dates from local storage to pass as
+                // query parameters.
                 let dates = localStorage.getItem('searchDates');
                 let start = JSON.parse(dates).start;
                 let end = JSON.parse(dates).end;
@@ -222,9 +223,9 @@
         },
 
         created() {
-            this.range.start = dateSetterStart(this.$store.state.searchDates.start);
+            this.$store.dispatch('checkSearchDates');
 
-            this.range.end = dateSetterEnd(this.$store.state.searchDates.end);
+            this.range = this.$store.state.searchDates;
         }
     }
 </script>

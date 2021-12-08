@@ -1,4 +1,5 @@
 import { isLoggedIn, logOut } from "./shared/utils/auth";
+import moment from "moment";
 
 export default {
     state: {
@@ -142,6 +143,36 @@ export default {
         setSearchDates(context, payload) {
             context.commit('setSearchDates', payload);
             localStorage.setItem('searchDates', JSON.stringify(payload));
+        },
+
+        // Get the search dates from the store and reset them if they are in the past
+        checkSearchDates(context) {
+            // Get the current date using moment.js
+            let now = moment().format('MM/DD/YYYY');
+
+            // Set a default start and end date
+            let start = moment().add(2, 'days').format('MM/DD/YYYY');
+            let end = moment(start, 'MM/DD/YYYY').add(2, 'days').format('MM/DD/YYYY');
+
+            // If the start dates are null, set the default
+            if (context.state.searchDates.start === null || context.state.searchDates.end === null) {
+                context.dispatch('setSearchDates', {
+                    start: start,
+                    end: end
+                });
+            }
+
+            // Check if the set search start date is before now
+            let isBefore = moment(context.state.searchDates.start, 'MM/DD/YYYY')
+                .isBefore(moment(now, 'MM/DD/YYYY'));
+
+            // If the search start date is in the past set a new one
+            if (isBefore) {
+                context.dispatch('setSearchDates', {
+                    start: start,
+                    end: end
+                });
+            }
         },
 
         // Set the price range and store in local storage.
