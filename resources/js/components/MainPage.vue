@@ -178,7 +178,7 @@
     import HostsSlider from './../sliders/HostsSlider';
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
-    import { dateTypeCheck, dateSetterStart, dateSetterEnd } from './../shared/utils/dateHelpers';
+    import { dateTypeCheck } from './../shared/utils/dateHelpers';
 
     export default {
         components: {
@@ -223,8 +223,8 @@
         },
 
         created() {
+            // Check and set search dates
             this.$store.dispatch('checkSearchDates');
-
             this.range = this.$store.state.searchDates;
         }
     }

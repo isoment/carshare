@@ -43,7 +43,7 @@
 <script>
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
-    import { dateTypeCheck, dateSetterStart, dateSetterEnd, dateValid } from './../shared/utils/dateHelpers';
+    import { dateTypeCheck } from './../shared/utils/dateHelpers';
     import { mapState } from 'vuex';
 
     export default {
@@ -139,9 +139,9 @@
         },
 
         created() {
-            // Set the date range
-            this.range.start = dateSetterStart(this.$store.state.searchDates.start);
-            this.range.end = dateSetterEnd(this.$store.state.searchDates.end);
+            // Check and set search dates
+            this.$store.dispatch('checkSearchDates');
+            this.range = this.$store.state.searchDates;
 
             // Previous dates
             this.previousDates = this.range;

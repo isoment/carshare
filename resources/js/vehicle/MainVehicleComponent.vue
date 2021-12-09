@@ -142,7 +142,7 @@
 <script>
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
-    import { dateTypeCheck, dateSetterStart, dateSetterEnd } from './../shared/utils/dateHelpers';
+    import { dateTypeCheck } from './../shared/utils/dateHelpers';
     import { wholeDollars } from './../shared/utils/currency';
     import VueSlider from 'vue-slider-component';
     import 'vue-slider-component/theme/material.css';
@@ -203,7 +203,7 @@
             // Redirect to same page to update query string
             // Don't log the error router throws when navigating to
             // same page if the query string isn't updated.
-            refeshPage() {
+            refreshPage() {
                 // Get and parse dates from local storage.
                 let dates = localStorage.getItem('searchDates');
                 let start = JSON.parse(dates).start;
@@ -232,7 +232,7 @@
                     end: dateTypeCheck(this.range.end)
                 });
 
-                this.refeshPage();
+                this.refreshPage();
 
                 // Clear the vehicles array.
                 this.vehicles = [];
@@ -301,28 +301,18 @@
             // Set the dates based on query strings, we do this so manual changes
             // to the URL are reflected in the local store.
             if (this.$route.query.start && this.$route.query.end) {
-
                 this.$store.dispatch('setSearchDates', {
                     start: this.$route.query.start,
                     end: this.$route.query.end
                 });
-
             }
 
-            // Set the date range and dispatch an event to vuex to store them
-            let start = dateSetterStart(this.$store.state.searchDates.start);
-            let end = dateSetterEnd(this.$store.state.searchDates.end);
-
-            this.range.start = start;
-            this.range.end = end;
-
-            this.$store.dispatch('setSearchDates', {
-                start: start,
-                end: end
-            });
+            // Check and set search dates
+            this.$store.dispatch('checkSearchDates');
+            this.range = this.$store.state.searchDates;
 
             // We want to update the query strings each time the component is created
-            this.refeshPage();
+            this.refreshPage();
 
             // We need to get the min and max vehicle prices from the api.
             let prices = await axios.get('/api/vehicles/price-range');
