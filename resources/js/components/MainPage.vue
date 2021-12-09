@@ -188,35 +188,31 @@
             DatePicker
         },
 
-        data() {
-            return {
-                range: {
-                    start: null,
-                    end: null
+        computed: {
+            // Use a computed getter and setter to interact with the vuex
+            // store directly.
+            range: {
+                set(range) {
+                    this.$store.dispatch('setSearchDates', {
+                        start: dateTypeCheck(range.start),
+                        end: dateTypeCheck(range.end)
+                    });
                 },
-            };
+
+                get() {
+                    return this.$store.state.searchDates;
+                }
+            }
         },
 
         methods: {
             search() {
-                // Call the action to set local storage
-                this.$store.dispatch('setSearchDates', {
-                    start: dateTypeCheck(this.range.start),
-                    end: dateTypeCheck(this.range.end)
-                });
-
-                // Get and parse dates from local storage to pass as
-                // query parameters.
-                let dates = localStorage.getItem('searchDates');
-                let start = JSON.parse(dates).start;
-                let end = JSON.parse(dates).end;
-
-                // Redirect to main vehicle page with dates are query string 
+                // Redirect to main vehicle page with dates as query string 
                 this.$router.push({
                     name: 'main-vehicle',
                     query: {
-                        start: start,
-                        end: end
+                        start: this.$store.state.searchDates.start,
+                        end: this.$store.state.searchDates.end
                     }
                 });
             },
@@ -225,7 +221,6 @@
         created() {
             // Check and set search dates
             this.$store.dispatch('checkSearchDates');
-            this.range = this.$store.state.searchDates;
         }
     }
 </script>
