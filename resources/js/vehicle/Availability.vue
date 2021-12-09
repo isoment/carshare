@@ -43,14 +43,16 @@
 <script>
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
-    import { dateTypeCheck } from './../shared/utils/dateHelpers';
     import { mapState } from 'vuex';
+    import vehicleSearchDatesComputed from './../shared/mixins/vehicleSearchDatesComputed';
 
     export default {
         components: {
             Calendar,
             DatePicker
         },
+
+        mixins: [vehicleSearchDatesComputed],
 
         watch: {
             // Set a watcher to trigger the changedDate method when 
@@ -65,10 +67,6 @@
 
         data() {
             return {
-                range: {
-                    start: null,
-                    end: null,
-                },
                 previousDates: null,
                 status: null,
                 availabilityError: null
@@ -86,17 +84,11 @@
 
             available() {
                 return this.status === 200;
-            },
+            }
         },
 
         methods: {
             changedDate() {
-                // Call the action to change dates in local storage.
-                this.$store.dispatch('setSearchDates', {
-                    start: dateTypeCheck(this.range.start),
-                    end: dateTypeCheck(this.range.end)
-                });
-
                 this.checkAvailability();
             },
 
@@ -141,7 +133,6 @@
         created() {
             // Check and set search dates
             this.$store.dispatch('checkSearchDates');
-            this.range = this.$store.state.searchDates;
 
             // Previous dates
             this.previousDates = this.range;

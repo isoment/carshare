@@ -29,15 +29,6 @@
                             Price
                         </div>
                     </button>
-                    
-                    <!-- <button class="border rounded-md border-gray-300 flex items-center py-2 px-3 mb-2 ml-2
-                                text-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-100
-                                transition-all duration-300">
-                        <i class="fas fa-sliders-h"></i>
-                        <div class="font-bold font-mono text-sm ml-2">
-                            Filters
-                        </div>
-                    </button> -->
                 </div>
 
                 <transition name="slide-fade">
@@ -142,10 +133,10 @@
 <script>
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
-    import { dateTypeCheck } from './../shared/utils/dateHelpers';
     import { wholeDollars } from './../shared/utils/currency';
     import VueSlider from 'vue-slider-component';
     import 'vue-slider-component/theme/material.css';
+    import vehicleSearchDatesComputed from  './../shared/mixins/vehicleSearchDatesComputed';
 
     export default {
         components: {
@@ -153,6 +144,8 @@
             DatePicker,
             VueSlider
         },
+
+        mixins: [vehicleSearchDatesComputed],
 
         data() {
             return {
@@ -166,10 +159,6 @@
                 priceRange: [],
                 maxPrice: 1000,
                 minPrice: 0,
-                range: {
-                    start: null,
-                    end: null
-                },
             }
         },
 
@@ -204,16 +193,11 @@
             // Don't log the error router throws when navigating to
             // same page if the query string isn't updated.
             refreshPage() {
-                // Get and parse dates from local storage.
-                let dates = localStorage.getItem('searchDates');
-                let start = JSON.parse(dates).start;
-                let end = JSON.parse(dates).end;
-
                 this.$router.push({
                     name: 'main-vehicle',
                     query: {
-                        start: start,
-                        end: end
+                        start: this.$store.state.searchDates.start,
+                        end: this.$store.state.searchDates.end
                     }
                 }).catch(error => {
                     if (
@@ -226,12 +210,6 @@
             },
 
             updateDates() {
-                // Call the action to set local storage.
-                this.$store.dispatch('setSearchDates', {
-                    start: dateTypeCheck(this.range.start),
-                    end: dateTypeCheck(this.range.end)
-                });
-
                 this.refreshPage();
 
                 // Clear the vehicles array.
@@ -309,15 +287,12 @@
 
             // Check and set search dates
             this.$store.dispatch('checkSearchDates');
-            this.range = this.$store.state.searchDates;
 
             // We want to update the query strings each time the component is created
             this.refreshPage();
 
-            // We need to get the min and max vehicle prices from the api.
+            // Set a base price range based on the most and least expensive vehicles
             let prices = await axios.get('/api/vehicles/price-range');
-
-            // Set this to the price range state
             this.priceRange = Array(Number(prices.data.max), Number(prices.data.min));
 
             this.$store.dispatch('setPriceRange', {

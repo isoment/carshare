@@ -40,7 +40,9 @@ trait VehicleTrait
     {
         $vehicles = Vehicle::where('user_id', $userId)->get()->pluck('id');
 
-        return Booking::whereIn('vehicle_id', $vehicles)->count();
+        return Booking::whereIn('vehicle_id', $vehicles)
+            ->where('to', '<=', Carbon::now())
+            ->count();
     }
 
     /**

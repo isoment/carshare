@@ -178,7 +178,7 @@
     import HostsSlider from './../sliders/HostsSlider';
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
-    import { dateTypeCheck } from './../shared/utils/dateHelpers';
+    import vehicleSearchDatesComputed from './../shared/mixins/vehicleSearchDatesComputed';
 
     export default {
         components: {
@@ -188,22 +188,7 @@
             DatePicker
         },
 
-        computed: {
-            // Use a computed getter and setter to interact with the vuex
-            // store directly.
-            range: {
-                set(range) {
-                    this.$store.dispatch('setSearchDates', {
-                        start: dateTypeCheck(range.start),
-                        end: dateTypeCheck(range.end)
-                    });
-                },
-
-                get() {
-                    return this.$store.state.searchDates;
-                }
-            }
-        },
+        mixins: [vehicleSearchDatesComputed],
 
         methods: {
             search() {
