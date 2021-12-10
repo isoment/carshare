@@ -137,6 +137,7 @@
     import VueSlider from 'vue-slider-component';
     import 'vue-slider-component/theme/material.css';
     import vehicleSearchDatesComputed from  './../shared/mixins/vehicleSearchDatesComputed';
+    import moment from 'moment';
 
     export default {
         components: {
@@ -224,23 +225,39 @@
             async fetchVehicles() {
                 this.loading = true;
 
-                let vehicles = await axios.get('/api/vehicles-index', {
-                    params: {
-                        page: this.page,
-                        from: this.$store.state.searchDates.start,
-                        to: this.$store.state.searchDates.end,
-                        min: this.$store.state.priceRange.min,
-                        max: this.$store.state.priceRange.max
+                try {
+                    let vehicles = await axios.get('/api/vehicles-index', {
+                        params: {
+                            page: this.page,
+                            from: this.$store.state.searchDates.start,
+                            to: this.$store.state.searchDates.end,
+                            min: this.$store.state.priceRange.min,
+                            max: this.$store.state.priceRange.max
+                        }
+                    });
+
+                    // Each time this method is called we will push the new page to the vehicles array.
+                    this.vehicles.push(...vehicles.data.data);
+
+                    // Each time this method is called we update the last page
+                    this.lastPage = vehicles.data.meta.last_page;
+                } catch (error) {
+                    // If the dates are invalid reset to the defaults. Refresh the url query
+                    // strings and fetch the vehicles again.
+                    if (error.response && error.response.status === 422) {
+                        let start = moment().add(2, 'days').format('MM/DD/YYYY');
+                        let end = moment(start, 'MM/DD/YYYY').add(2, 'days').format('MM/DD/YYYY');
+
+                        this.$store.dispatch('setSearchDates', {
+                            start: start,
+                            end: end
+                        });
+
+                        this.refreshPage();
+
+                        this.fetchVehicles();
                     }
-                });
-
-                // Each time this method is called we will push the 
-                // new page to the vehicles array.
-                this.vehicles.push(...vehicles.data.data);
-
-                // Each time this method is called we update the last_page from
-                // the laravel paginator.
-                this.lastPage = vehicles.data.meta.last_page;
+                }
 
                 this.loading = false;
             },
@@ -272,18 +289,22 @@
                 this.page++;
 
                 this.fetchVehicles();
+            },
+
+            // Set the dates based on query strings, we do this so manual changes
+            // to the URL are reflected in the local store.
+            handleQueryStrings() {
+                if (this.$route.query.start && this.$route.query.end) {
+                    this.$store.dispatch('setSearchDates', {
+                        start: this.$route.query.start,
+                        end: this.$route.query.end
+                    });
+                }
             }
         },
 
         async created() {
-            // Set the dates based on query strings, we do this so manual changes
-            // to the URL are reflected in the local store.
-            if (this.$route.query.start && this.$route.query.end) {
-                this.$store.dispatch('setSearchDates', {
-                    start: this.$route.query.start,
-                    end: this.$route.query.end
-                });
-            }
+            this.handleQueryStrings();
 
             // Check and set search dates
             this.$store.dispatch('checkSearchDates');
