@@ -5,27 +5,29 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AvailabilityCheckRequest;
 use App\Models\Vehicle;
+use App\Services\AvailabilityService;
 use Illuminate\Http\JsonResponse;
 
 class AvailabilityController extends Controller
 {
+    protected AvailabilityService $availabilityService;
+
+    public function __construct(AvailabilityService $availabilityService)
+    {
+        $this->availabilityService = $availabilityService;
+    }
+
     /**
      *  Check if a vehicle is available
      * 
      *  @param int $vehicleId
-     *  @param Illuminate\Http\Request $request
+     *  @param Illuminate\Http\AvailabilityCheckRequest $request
      * 
      *  @return Illuminate\Http\JsonResponse
      */
-    public function guestCheck(int $vehicleId, AvailabilityCheckRequest $request) : JsonResponse
+    public function guestCheck(int $vehicleId, AvailabilityCheckRequest $checkRequest) : JsonResponse
     {
-        $vehicle = Vehicle::findOrFail($vehicleId);
-
-        if (!$vehicle->isAvailable($request['from'], $request['to'])) {
-            return response()->json('Vehicle unavailable on these dates.', 404);
-        }
-
-        return response()->json('Vehicle available');
+        return $this->availabilityService->guestAvailCheck($vehicleId, $checkRequest);
     }
 
     /**
@@ -36,26 +38,9 @@ class AvailabilityController extends Controller
      * 
      *  @return Illuminate\Http\JsonResponse
      */
-    public function authCheck(int $vehicleId, AvailabilityCheckRequest $request) : JsonResponse
+    public function authCheck(int $vehicleId, AvailabilityCheckRequest $checkRequest) : JsonResponse
     {
-        $vehicle = Vehicle::findOrFail($vehicleId);
-
-        if (!$vehicle->isAvailable($request['from'], $request['to'])) {
-            return response()->json('Vehicle unavailable on these dates', 404);
-        }
-
-        // Check if the user is free to book on the given dates.
-        if (!auth()->user()->hasNoBooking($request['from'], $request['to'])) {
-            return response()->json('You already have a booking on these dates', 404);
-        }
-
-        // Check if the vehicle is owned by the user. Typecase $vehicle->user_id or associated
-        // test will fail. Feature works without this though.
-        if ((int) $vehicle->user_id === current_user()->id) {
-            return response()->json('You cannot book your own vehicle', 404);
-        }
-
-        return response()->json('Vehicle available');
+        return $this->availabilityService->authAvailCheck($vehicleId, $checkRequest);
     }
 
     /**
