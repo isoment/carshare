@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Vehicle extends Model
 {
@@ -103,12 +104,33 @@ class Vehicle extends Model
     }
 
     /**
-     *  Determine if the vehilce has images
+     *  Determine if the vehicle has images
      * 
      *  @return bool
      */
     public function vehicleHasImages() : bool
     {
         return $this->vehicleImages->count() !== 0;
+    }
+
+    /**
+     *  The date ranges that the vehicle is booked. Don't want dates before today
+     * 
+     *  @return array
+     */
+    public function bookedDates() : array
+    {
+        $dates = [];
+
+        $bookings = $this->bookings->where('to', '>=', Carbon::now());
+
+        foreach ($bookings as $booking) {
+            array_push($dates, [
+                'from' => Carbon::parse($booking->from)->format('m/d/Y'),
+                'to' => Carbon::parse($booking->to)->format('m/d/Y')
+            ]);
+        }
+
+        return $dates;
     }
 }

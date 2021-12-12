@@ -68,6 +68,7 @@
         data() {
             return {
                 previousDates: null,
+                availabilityData: null,
                 status: null,
                 availabilityError: null
             }
@@ -84,7 +85,7 @@
 
             available() {
                 return this.status === 200;
-            }
+            },
         },
 
         methods: {
@@ -97,14 +98,18 @@
                 const authorization = this.isLoggedIn ? 'auth' : 'guest';
 
                 try {
-                    this.status = (await axios.get(
+                    let response = (await axios.get(
                         `/api/vehicle-availability-${authorization}/${this.$route.params.id}`, 
                         {
                             params: {
                                 from: this.$store.state.searchDates.start,
                                 to: this.$store.state.searchDates.end
                             }
-                        })).status
+                        }));
+
+                    this.status = response.status;
+
+                    this.availabilityData = response.data;
 
                     this.$emit('renderPrice');
 
@@ -119,9 +124,11 @@
                         });
                     }
 
+                    this.availabilityData = error.response.data;
+
                     this.status = error.response.status;
 
-                    this.availabilityError = error.response.data;
+                    this.availabilityError = error.response.data.message;
 
                     this.$emit('renderPrice');
 

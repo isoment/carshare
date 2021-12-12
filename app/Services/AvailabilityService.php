@@ -19,15 +19,23 @@ class AvailabilityService
     {
         $vehicle = Vehicle::findOrFail($vehicleId);
 
+        $vehicleBookings = $vehicle->bookedDates();
+
         if (!$vehicle->isAvailable($request['from'], $request['to'])) {
-            return response()->json('Vehicle unavailable on these dates.', 404);
+            return response()->json([
+                'message' => 'Vehicle unavailable on these dates.',
+                'bookedDates' => $vehicleBookings
+            ], 404);
         }
 
-        return response()->json('Vehicle available');
+        return response()->json([
+            'message' => 'Vehicle available',
+            'bookedDates' => $vehicleBookings
+        ]);
     }
 
     /**
-     *  Check if a vehicle is available for a authenticated user
+     *  Check if a vehicle is available for an authenticated user
      * 
      *  @param int $vehicleId
      *  @param Illuminate\Http\AvailabilityCheckRequest $request
