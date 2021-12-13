@@ -126,8 +126,8 @@ class Vehicle extends Model
 
         foreach ($bookings as $booking) {
             array_push($dates, [
-                'from' => Carbon::parse($booking->from)->format('m/d/Y'),
-                'to' => Carbon::parse($booking->to)->format('m/d/Y')
+                'start' => Carbon::parse($booking->from)->format('m/d/Y'),
+                'end' => Carbon::parse($booking->to)->format('m/d/Y')
             ]);
         }
 

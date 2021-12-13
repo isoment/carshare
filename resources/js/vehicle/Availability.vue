@@ -1,42 +1,51 @@
 <template>
     <div class="w-3/4 md:w-full">
+        <div v-if="unavailableDates">
 
-        <date-picker v-model="range" 
-                    color="purple" 
-                    is-range
-                    :min-date="new Date()">
-            <template v-slot="{ inputValue, inputEvents }">
-                <div class="flex flex-col">
-                    <label for="start" class="font-bold text-xs tracking-wider">Trip start</label>
-                    <input type="text" class="border border-gray-300 mt-1 py-1 px-2 focus:outline-none text-sm"
-                           :value="inputValue.start"
-                           v-on="inputEvents.start"
-                           readonly>
-                </div>
-                <div class="flex flex-col mt-3">
-                    <label for="start" class="font-bold text-xs tracking-wider">Trip end</label>
-                    <input type="text" class="border border-gray-300 mt-1 py-1 px-2 focus:outline-none text-sm"
-                           :value="inputValue.end"
-                           v-on="inputEvents.end"
-                           readonly>
-                </div>
-            </template>
-        </date-picker>
+            <date-picker v-model="range" 
+                        color="purple" 
+                        is-range
+                        :min-date="new Date()"
+                        :disabled-dates='unavailableDates'>
+                <template v-slot="{ inputValue, inputEvents }">
+                    <div class="flex flex-col">
+                        <label for="start" class="font-bold text-xs tracking-wider">Trip start</label>
+                        <input type="text" class="border border-gray-300 mt-1 py-1 px-2 focus:outline-none text-sm"
+                            :value="inputValue.start"
+                            v-on="inputEvents.start"
+                            readonly>
+                    </div>
+                    <div class="flex flex-col mt-3">
+                        <label for="start" class="font-bold text-xs tracking-wider">Trip end</label>
+                        <input type="text" class="border border-gray-300 mt-1 py-1 px-2 focus:outline-none text-sm"
+                            :value="inputValue.end"
+                            v-on="inputEvents.end"
+                            readonly>
+                    </div>
+                </template>
+            </date-picker>
 
-        <div v-if="notAvailable" class="mt-4 -mb-2">
-            <h5 class="text-red-400 text-xs flex items-center">
-                <span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span> 
-                <span class="ml-1" v-text="availabilityError"></span>
-            </h5>
+            <div v-if="notAvailable" class="mt-4 -mb-2">
+                <h5 class="text-red-400 text-xs flex items-center">
+                    <span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span> 
+                    <span class="ml-1" v-text="responseMessage"></span>
+                </h5>
+            </div>
+
+            <div v-if="available" class="mt-4 -mb-2">
+                <h5 class="text-green-400 text-xs flex items-center">
+                    <span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span> 
+                    <span class="ml-1" v-text="responseMessage"></span>
+                </h5>
+            </div>
+
         </div>
 
-        <div v-if="available" class="mt-4 -mb-2">
-            <h5 class="text-green-400 text-xs flex items-center">
-                <span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span> 
-                <span class="ml-1">Vehicle available on these dates!</span>
-            </h5>
+        <div v-else>
+            <div class="text-center mt-8">
+                <i class="fas fa-spinner fa-spin text-purple-500 text-4xl"></i>
+            </div>
         </div>
-
     </div>
 </template>
 
@@ -68,9 +77,9 @@
         data() {
             return {
                 previousDates: null,
-                availabilityData: null,
+                unavailableDates: null,
                 status: null,
-                availabilityError: null
+                responseMessage: null
             }
         },
 
@@ -109,7 +118,11 @@
 
                     this.status = response.status;
 
-                    this.availabilityData = response.data;
+                    this.responseMessage = response.data.message;
+
+                    this.unavailableDates = this.prepareUnavailableDatesForCalendar(
+                        response.data.unavailableDates
+                    );
 
                     this.$emit('renderPrice');
 
@@ -124,17 +137,30 @@
                         });
                     }
 
-                    this.availabilityData = error.response.data;
-
                     this.status = error.response.status;
 
-                    this.availabilityError = error.response.data.message;
+                    this.responseMessage = error.response.data.message;
+
+                    this.unavailableDates = this.prepareUnavailableDatesForCalendar(
+                        error.response.data.unavailableDates
+                    );
 
                     this.$emit('renderPrice');
 
                     this.$emit('availability', this.available);
                 }
             },
+
+            // Loop over the array and instantiate new date object passing in the string
+            // so it is displayable in v-calendar.
+            prepareUnavailableDatesForCalendar(datesArray) {
+                datesArray.forEach(element => {
+                    element.start = new Date(element.start);
+                    element.end = new Date(element.end);
+                });
+
+                return datesArray;
+            }
         },
 
         created() {

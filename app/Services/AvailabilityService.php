@@ -24,13 +24,13 @@ class AvailabilityService
         if (!$vehicle->isAvailable($request['from'], $request['to'])) {
             return response()->json([
                 'message' => 'Vehicle unavailable on these dates.',
-                'bookedDates' => $vehicleBookings
+                'unavailableDates' => $vehicleBookings
             ], 404);
         }
 
         return response()->json([
-            'message' => 'Vehicle available',
-            'bookedDates' => $vehicleBookings
+            'message' => 'Vehicle available on these dates',
+            'unavailableDates' => $vehicleBookings
         ]);
     }
 
