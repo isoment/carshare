@@ -126,6 +126,27 @@ class User extends Authenticatable
     }
 
     /**
+     *  An array of dates of users bookings
+     * 
+     *  @return array
+     */
+    public function bookingDates() : array
+    {
+        $dates = [];
+
+        $bookings = $this->getBookings()->where('to', '>=', Carbon::now());
+
+        foreach ($bookings as $booking) {
+            array_push($dates, [
+                'start' => Carbon::parse($booking->from)->format('m/d/Y'),
+                'end' => Carbon::parse($booking->to)->format('m/d/Y')
+            ]);
+        }
+
+        return $dates;
+    }
+
+    /**
      *  Get a collection of bookings of a users vehicles
      * 
      *  @return Illuminate\Database\Eloquent\Collection

@@ -45,21 +45,50 @@ class AvailabilityService
     {
         $vehicle = Vehicle::findOrFail($vehicleId);
 
+        $bookingDates = $this->bookingsMerge($vehicle);
+
         if (!$vehicle->isAvailable($request['from'], $request['to'])) {
-            return response()->json('Vehicle unavailable on these dates', 404);
+            return response()->json([
+                'message' => 'Vehicle unavailable on these dates',
+                'unavailableDates' => $bookingDates
+            ], 404);
         }
 
         // Check if the user is free to book on the given dates.
         if (!auth()->user()->hasNoBooking($request['from'], $request['to'])) {
-            return response()->json('You already have a booking on these dates', 404);
+            return response()->json([
+                'message' => 'You already have a booking on these dates',
+                'unavailableDates' => $bookingDates
+            ], 404);
         }
 
         // Check if the vehicle is owned by the user. Typecast $vehicle->user_id or associated
         // test will fail. Feature works without this though.
         if ((int) $vehicle->user_id === current_user()->id) {
-            return response()->json('You cannot book your own vehicle', 404);
+            return response()->json([
+                'message' => 'You cannot book your own vehicle',
+                'unavailableDates' => $bookingDates
+            ], 404);
         }
 
-        return response()->json('Vehicle available');
+        return response()->json([
+            'message' => 'Vehicle available',
+            'unavailableDates' => $bookingDates
+        ]);
+    }
+
+    /**
+     *  Get the vehicle books and users bookings and merge them together
+     * 
+     *  @param Vehicle $vehicle
+     *  @return array
+     */
+    private function bookingsMerge(Vehicle $vehicle) : array
+    {
+        $vehicleBookings = $vehicle->bookedDates();
+
+        $userBookings = current_user()->bookingDates();
+
+        return array_merge($vehicleBookings, $userBookings);
     }
 }
