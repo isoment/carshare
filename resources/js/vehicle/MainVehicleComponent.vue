@@ -138,9 +138,8 @@
     import VueSlider from 'vue-slider-component';
     import 'vue-slider-component/theme/material.css';
     import vehicleSearchDatesComputed from  './../shared/mixins/vehicleSearchDatesComputed';
-    import calendarDatesFormat from './../shared/mixins/calendarDatesFormat';
+    import setCalendarDates from './../shared/mixins/setCalendarDates';
     import moment from 'moment';
-    import { mapState } from 'vuex';
 
     export default {
         components: {
@@ -149,18 +148,11 @@
             VueSlider
         },
 
-        mixins: [vehicleSearchDatesComputed, calendarDatesFormat],
-
-        computed: {
-            ...mapState({
-                isLoggedIn: state => state.isLoggedIn
-            }),
-        },
+        mixins: [vehicleSearchDatesComputed, setCalendarDates],
 
         data() {
             return {
                 loading: false,
-                userBookedDates: null,
                 vehicles: [],
                 page: 1,
                 lastPage: 1,
@@ -311,20 +303,6 @@
                     });
                 }
             },
-
-            async setUserBookedDates() {
-                if (this.isLoggedIn) {
-                    try {
-                        let response = await axios.get('/api/users-booking-dates');
-
-                        this.userBookedDates = this.prepareUnavailableDatesForCalendar(
-                            response.data.unavailableDates
-                        );
-                    } catch (error) {
-                        this.userBookedDates = [];
-                    }  
-                }
-            }
         },
 
         async created() {

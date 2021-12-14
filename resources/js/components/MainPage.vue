@@ -23,7 +23,8 @@
                             <date-picker v-model="range" 
                                          color="purple" 
                                          is-range
-                                         :min-date="new Date()">
+                                         :min-date="new Date()"
+                                         :disabled-dates="userBookedDates">
                                 <template v-slot="{ inputValue, inputEvents }">
                                     <div class="flex flex-col md:flex-row justify-around">
                                         <div class="flex flex-col md:border-r border-gray-300 md:px-3 border-b 
@@ -179,6 +180,7 @@
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
     import vehicleSearchDatesComputed from './../shared/mixins/vehicleSearchDatesComputed';
+    import setCalendarDates from './../shared/mixins/setCalendarDates';
 
     export default {
         components: {
@@ -188,7 +190,7 @@
             DatePicker
         },
 
-        mixins: [vehicleSearchDatesComputed],
+        mixins: [vehicleSearchDatesComputed, setCalendarDates],
 
         methods: {
             search() {
@@ -206,6 +208,8 @@
         created() {
             // Check and set search dates
             this.$store.dispatch('checkSearchDates');
+
+            this.setUserBookedDates();
         }
     }
 </script>
