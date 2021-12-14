@@ -96,6 +96,12 @@ Route::middleware('auth:sanctum')->group(function() {
         [App\Http\Controllers\Api\AvailabilityController::class, 'authCheck']
     )->name('vehicle.availability.auth');
 
+    // A list of dates the user has bookings
+    Route::get(
+        'users-booking-dates',
+        [App\Http\Controllers\Api\AvailabilityController::class, 'userBookedDates']
+    )->name('');
+
     /**************************
      *  Dashboard API Routes  *
      *************************/
@@ -116,7 +122,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post(
         'dashboard/create-drivers-license',
         [App\Http\Controllers\Api\Dashboard\DriversLicenseController::class, 'create']
-    )->name('dashboard.create-driverse-license');
+    )->name('dashboard.create-drivers-license');
 
     // Show a users drivers license
     Route::get(

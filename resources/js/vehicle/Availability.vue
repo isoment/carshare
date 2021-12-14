@@ -50,10 +50,11 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex';
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
-    import { mapState } from 'vuex';
     import vehicleSearchDatesComputed from './../shared/mixins/vehicleSearchDatesComputed';
+    import calendarDatesFormat from './../shared/mixins/calendarDatesFormat';
 
     export default {
         components: {
@@ -61,7 +62,7 @@
             DatePicker
         },
 
-        mixins: [vehicleSearchDatesComputed],
+        mixins: [vehicleSearchDatesComputed, calendarDatesFormat],
 
         watch: {
             // Set a watcher to trigger the changedDate method when 
@@ -150,17 +151,6 @@
                     this.$emit('availability', this.available);
                 }
             },
-
-            // Loop over the array and instantiate new date object passing in the string
-            // so it is displayable in v-calendar.
-            prepareUnavailableDatesForCalendar(datesArray) {
-                datesArray.forEach(element => {
-                    element.start = new Date(element.start);
-                    element.end = new Date(element.end);
-                });
-
-                return datesArray;
-            }
         },
 
         created() {

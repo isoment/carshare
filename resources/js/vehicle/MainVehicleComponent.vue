@@ -36,7 +36,8 @@
                         <date-picker v-model="range" 
                                     color="purple" 
                                     is-range
-                                    :min-date="new Date()">
+                                    :min-date="new Date()"
+                                    :disabled-dates="userBookedDates">
                             <template v-slot="{ inputValue, inputEvents }">
                                 <div class="flex items-center">
                                     <div class="flex items-center border-b border-gray-300">
@@ -137,7 +138,9 @@
     import VueSlider from 'vue-slider-component';
     import 'vue-slider-component/theme/material.css';
     import vehicleSearchDatesComputed from  './../shared/mixins/vehicleSearchDatesComputed';
+    import calendarDatesFormat from './../shared/mixins/calendarDatesFormat';
     import moment from 'moment';
+    import { mapState } from 'vuex';
 
     export default {
         components: {
@@ -146,11 +149,18 @@
             VueSlider
         },
 
-        mixins: [vehicleSearchDatesComputed],
+        mixins: [vehicleSearchDatesComputed, calendarDatesFormat],
+
+        computed: {
+            ...mapState({
+                isLoggedIn: state => state.isLoggedIn
+            }),
+        },
 
         data() {
             return {
                 loading: false,
+                userBookedDates: null,
                 vehicles: [],
                 page: 1,
                 lastPage: 1,
@@ -300,6 +310,20 @@
                         end: this.$route.query.end
                     });
                 }
+            },
+
+            async setUserBookedDates() {
+                if (this.isLoggedIn) {
+                    try {
+                        let response = await axios.get('/api/users-booking-dates');
+
+                        this.userBookedDates = this.prepareUnavailableDatesForCalendar(
+                            response.data.unavailableDates
+                        );
+                    } catch (error) {
+                        this.userBookedDates = [];
+                    }  
+                }
             }
         },
 
@@ -311,6 +335,8 @@
 
             // We want to update the query strings each time the component is created
             this.refreshPage();
+
+            this.setUserBookedDates();
 
             // Set a base price range based on the most and least expensive vehicles
             let prices = await axios.get('/api/vehicles/price-range');

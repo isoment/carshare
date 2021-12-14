@@ -44,6 +44,18 @@ class AvailabilityController extends Controller
     }
 
     /**
+     *  User bookings dates
+     * 
+     *  @return Illuminate\Http\JsonResponse
+     */
+    public function userBookedDates()
+    {
+        return response()->json([
+            'unavailableDates' => current_user()->bookingDates()
+        ]);
+    }
+
+    /**
      *  Calculate price of the rental
      * 
      *  @param int $vehicleId the vehicle id
