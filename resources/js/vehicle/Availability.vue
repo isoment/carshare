@@ -54,7 +54,7 @@
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
     import vehicleSearchDatesComputed from './../shared/mixins/vehicleSearchDatesComputed';
-    import calendarDatesFormat from './../shared/mixins/calendarDatesFormat';
+    import { prepareUnavailableDatesForCalendar } from './../shared/utils/bookedDatesHelpers';
 
     export default {
         components: {
@@ -62,7 +62,7 @@
             DatePicker
         },
 
-        mixins: [vehicleSearchDatesComputed, calendarDatesFormat],
+        mixins: [vehicleSearchDatesComputed],
 
         watch: {
             // Set a watcher to trigger the changedDate method when 
@@ -121,7 +121,7 @@
 
                     this.responseMessage = response.data.message;
 
-                    this.unavailableDates = this.prepareUnavailableDatesForCalendar(
+                    this.unavailableDates = prepareUnavailableDatesForCalendar(
                         response.data.unavailableDates
                     );
 
@@ -142,7 +142,7 @@
 
                     this.responseMessage = error.response.data.message;
 
-                    this.unavailableDates = this.prepareUnavailableDatesForCalendar(
+                    this.unavailableDates = prepareUnavailableDatesForCalendar(
                         error.response.data.unavailableDates
                     );
 

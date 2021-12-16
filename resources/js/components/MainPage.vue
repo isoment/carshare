@@ -21,7 +21,6 @@
                         <div class="relative">
 
                             <date-picker v-model="range"
-                                         v-if="bookedDates" 
                                          color="purple" 
                                          is-range
                                          :min-date="new Date()"

@@ -37,7 +37,7 @@
                                     color="purple" 
                                     is-range
                                     :min-date="new Date()"
-                                    :disabled-dates="userBookedDates">
+                                    :disabled-dates="bookedDates">
                             <template v-slot="{ inputValue, inputEvents }">
                                 <div class="flex items-center">
                                     <div class="flex items-center border-b border-gray-300">
@@ -138,8 +138,8 @@
     import VueSlider from 'vue-slider-component';
     import 'vue-slider-component/theme/material.css';
     import vehicleSearchDatesComputed from  './../shared/mixins/vehicleSearchDatesComputed';
-    import setCalendarDates from './../shared/mixins/setCalendarDates';
     import moment from 'moment';
+    import { mapState } from 'vuex';
 
     export default {
         components: {
@@ -148,7 +148,13 @@
             VueSlider
         },
 
-        mixins: [vehicleSearchDatesComputed, setCalendarDates],
+        mixins: [vehicleSearchDatesComputed],
+
+        computed: {
+            ...mapState({
+                bookedDates: state => state.bookedDates
+            }),
+        },
 
         data() {
             return {
@@ -313,8 +319,6 @@
 
             // We want to update the query strings each time the component is created
             this.refreshPage();
-
-            this.setUserBookedDates();
 
             // Set a base price range based on the most and least expensive vehicles
             let prices = await axios.get('/api/vehicles/price-range');

@@ -83,13 +83,17 @@ export default {
     actions: {
         // Load stored state when we initialize Vue.
         loadStoredState(context) {
-            // Get the last date seach from local storage.
+            // Get the last date search from local storage.
             const lastSearchDates = localStorage.getItem('searchDates');
-
+            const bookedDates = localStorage.getItem('userBookedDates');
             const cart = localStorage.getItem('cart');
 
             if (lastSearchDates) {
                 context.commit('setSearchDates', JSON.parse(lastSearchDates));
+            }
+
+            if (bookedDates) {
+                context.commit('setBookedDates', JSON.parse(bookedDates));
             }
 
             if (cart) {
@@ -112,29 +116,6 @@ export default {
                     context.dispatch("logOut");
                 }
             }
-        },
-
-        // Load users booked dates
-        async setUserBookedDates(context) {
-            try {
-                let dates = await axios.get('/api/users-booking-dates');
-
-                console.log('Success');
-                console.log(dates);
-
-                let userBookedDates = prepareUnavailableDatesForCalendar(
-                    dates.data.unavailableDates
-                );
-
-                context.commit('setBookedDates', userBookedDates);
-
-                localStorage.setItem('userBookedDates', JSON.stringify(userBookedDates));
-            } catch (error) {
-                console.log('Error');
-                console.log(error);
-
-                context.commit('setBookedDates', []);
-            }  
         },
 
         // Logout a user.
@@ -202,6 +183,23 @@ export default {
                     end: end
                 });
             }
+        },
+
+        // Load users booked dates
+        async setUserBookedDates(context) {
+            try {
+                let dates = await axios.get('/api/users-booking-dates');
+
+                let userBookedDates = prepareUnavailableDatesForCalendar(
+                    dates.data.unavailableDates
+                );
+
+                context.commit('setBookedDates', userBookedDates);
+
+                localStorage.setItem('userBookedDates', JSON.stringify(userBookedDates));
+            } catch (error) {
+                context.commit('setBookedDates', []);
+            }  
         },
 
         // Set the price range and store in local storage.

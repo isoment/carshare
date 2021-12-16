@@ -70,7 +70,7 @@
                                             <div class="absolute bg-white shadow-lg rounded-full border border-gray-200 px-4
                                                         flex top-16">
                                                 <span class="mr-1 font-semibold">
-                                                    {{userRatingFromat}}
+                                                    {{userRatingFormat}}
                                                     </span>
                                                 <span><i class="fas fa-star text-purple-500 text-md"></i></span>
                                             </div>
@@ -205,7 +205,7 @@
                 }
             },
 
-            userRatingFromat() {
+            userRatingFormat() {
                 if (this.vehicleData.host_rating === 0) {
                     return 'N/A';
                 } else {
