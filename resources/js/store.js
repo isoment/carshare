@@ -123,6 +123,8 @@ export default {
             context.commit("setUser", {});
             context.commit("setLoggedIn", false);
             context.dispatch("clearCart");
+            context.dispatch("clearUserBookedDates");
+            context.dispatch("resetSearchDates");
             logOut();
         },
 
@@ -185,6 +187,18 @@ export default {
             }
         },
 
+        resetSearchDates(context) {
+            let start = moment().add(2, 'days').format('MM/DD/YYYY');
+            let end = moment(start, 'MM/DD/YYYY').add(2, 'days').format('MM/DD/YYYY');
+
+            context.commit("setSearchDates", {
+                start: start,
+                end: end
+            });
+            
+            localStorage.removeItem('searchDates');
+        },
+
         // Load users booked dates
         async setUserBookedDates(context) {
             try {
@@ -200,6 +214,11 @@ export default {
             } catch (error) {
                 context.commit('setBookedDates', []);
             }  
+        },
+
+        clearUserBookedDates(context) {
+            context.commit("setBookedDates", []);
+            localStorage.removeItem('userBookedDates');
         },
 
         // Set the price range and store in local storage.
