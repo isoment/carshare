@@ -1,10 +1,12 @@
 import { isLoggedIn, logOut } from "./shared/utils/auth";
+import { prepareUnavailableDatesForCalendar } from "./shared/utils/bookedDatesHelpers";
 import moment from "moment";
 
 export default {
     state: {
         isLoggedIn: false,
         user: {},
+        bookedDates: [],
         notifications: [],
         cart: {
             items: []
@@ -72,6 +74,10 @@ export default {
         setPriceRange(state, payload) {
             state.priceRange = payload;
         },
+
+        setBookedDates(state, payload) {
+            state.bookedDates = payload;
+        }
     },
 
     actions: {
@@ -106,6 +112,29 @@ export default {
                     context.dispatch("logOut");
                 }
             }
+        },
+
+        // Load users booked dates
+        async setUserBookedDates(context) {
+            try {
+                let dates = await axios.get('/api/users-booking-dates');
+
+                console.log('Success');
+                console.log(dates);
+
+                let userBookedDates = prepareUnavailableDatesForCalendar(
+                    dates.data.unavailableDates
+                );
+
+                context.commit('setBookedDates', userBookedDates);
+
+                localStorage.setItem('userBookedDates', JSON.stringify(userBookedDates));
+            } catch (error) {
+                console.log('Error');
+                console.log(error);
+
+                context.commit('setBookedDates', []);
+            }  
         },
 
         // Logout a user.

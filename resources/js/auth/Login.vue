@@ -106,6 +106,8 @@
 
                     this.$store.dispatch("loadUser");
 
+                    this.$store.dispatch("setUserBookedDates");
+
                     // Return to previous page in router history
                     this.$router.go(-1);
                 } catch(error) {
