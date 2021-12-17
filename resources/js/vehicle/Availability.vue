@@ -5,7 +5,8 @@
             <date-picker v-model="range" 
                         color="purple" 
                         is-range
-                        :min-date="new Date()"
+                        :min-date="minDate"
+                        :max-date="maxDate"
                         :disabled-dates='unavailableDates'>
                 <template v-slot="{ inputValue, inputEvents }">
                     <div class="flex flex-col">
@@ -55,6 +56,7 @@
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
     import vehicleSearchDatesComputed from './../shared/mixins/vehicleSearchDatesComputed';
     import { prepareUnavailableDatesForCalendar } from './../shared/utils/bookedDatesHelpers';
+    import calendarMinMaxDate from './../shared/mixins/calendarMinMaxDate';
 
     export default {
         components: {
@@ -62,7 +64,7 @@
             DatePicker
         },
 
-        mixins: [vehicleSearchDatesComputed],
+        mixins: [vehicleSearchDatesComputed, calendarMinMaxDate],
 
         watch: {
             // Set a watcher to trigger the changedDate method when 

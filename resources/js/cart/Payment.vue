@@ -182,6 +182,10 @@
 
                             this.$store.dispatch('clearCart');
 
+                            this.$store.dispatch('resetSearchDates');
+
+                            this.$store.dispatch('setUserBookedDates');
+
                             this.$router.push({ name: 'confirmation', params: { pid: paymentMethod.id } });
                         })
                         .catch((error) => {

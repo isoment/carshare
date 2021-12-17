@@ -36,7 +36,8 @@
                         <date-picker v-model="range" 
                                     color="purple" 
                                     is-range
-                                    :min-date="new Date()"
+                                    :min-date="minDate"
+                                    :max-date="maxDate"
                                     :disabled-dates="bookedDates">
                             <template v-slot="{ inputValue, inputEvents }">
                                 <div class="flex items-center">
@@ -138,6 +139,7 @@
     import VueSlider from 'vue-slider-component';
     import 'vue-slider-component/theme/material.css';
     import vehicleSearchDatesComputed from  './../shared/mixins/vehicleSearchDatesComputed';
+    import calendarMinMaxDate from './../shared/mixins/calendarMinMaxDate';
     import moment from 'moment';
     import { mapState } from 'vuex';
 
@@ -148,7 +150,7 @@
             VueSlider
         },
 
-        mixins: [vehicleSearchDatesComputed],
+        mixins: [vehicleSearchDatesComputed, calendarMinMaxDate],
 
         computed: {
             ...mapState({

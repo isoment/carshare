@@ -23,7 +23,8 @@
                             <date-picker v-model="range"
                                          color="purple" 
                                          is-range
-                                         :min-date="new Date()"
+                                         :min-date="minDate"
+                                         :max-date="maxDate"
                                          :disabled-dates="bookedDates">
                                 <template v-slot="{ inputValue, inputEvents }">
                                     <div class="flex flex-col md:flex-row justify-around">
@@ -181,6 +182,8 @@
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
     import vehicleSearchDatesComputed from './../shared/mixins/vehicleSearchDatesComputed';
     import { mapState } from 'vuex';
+    import calendarMinMaxDate from './../shared/mixins/calendarMinMaxDate';
+
 
     export default {
         components: {
@@ -190,7 +193,7 @@
             DatePicker
         },
 
-        mixins: [vehicleSearchDatesComputed],
+        mixins: [vehicleSearchDatesComputed, calendarMinMaxDate],
 
         computed: {
             ...mapState({
