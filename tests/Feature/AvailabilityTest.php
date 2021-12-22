@@ -3,15 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\Booking;
-use App\Models\Order;
 use App\Models\User;
 use App\Models\Vehicle;
 use Carbon\Carbon;
 use Database\Seeders\Testing\TestingVehicleMakeModelSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Request;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 use Tests\Trait\UserTrait;
 
@@ -30,6 +27,34 @@ class AvailabilityTest extends TestCase
 
         $this->json('GET', '/api/vehicle-availability-guest/' . Vehicle::first()->id)
             ->assertStatus(422);
+    }
+
+    /**
+     *  @test
+     *  The json response from guest vehicle availability route has the correct structure
+     */
+    public function the_json_response_from_guest_availability_route_has_correct_structure()
+    {
+        $this->createSmallDatabase();
+
+        $from = Carbon::now()->format('n/j/Y');
+
+        $to = Carbon::parse($from)->addYear()->format('n/j/Y');
+
+        $response = $this->json(
+            'GET', 
+            '/api/vehicle-availability-guest/' . Vehicle::first()->id,
+            ['from' => $from, 'to' => $to]
+        );
+
+        $response->assertJsonStructure([
+            'message',
+            'unavailableDates' => [
+                '*' => [
+                    'start', 'end'
+                ]
+            ]
+        ]);
     }
 
     /**
@@ -59,6 +84,38 @@ class AvailabilityTest extends TestCase
 
         $this->json('GET', '/api/vehicle-availability-auth/' . Vehicle::first()->id)
             ->assertStatus(401);
+    }
+
+        /**
+     *  @test
+     *  The json response from guest vehicle availability route has the correct structure
+     */
+    public function the_json_response_from_auth_availability_route_has_correct_structure()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $from = Carbon::now()->format('n/j/Y');
+
+        $to = Carbon::parse($from)->addYear()->format('n/j/Y');
+
+        $response = $this->json(
+            'GET', 
+            '/api/vehicle-availability-auth/' . Vehicle::first()->id,
+            ['from' => $from, 'to' => $to]
+        );
+
+        $response->assertJsonStructure([
+            'message',
+            'unavailableDates' => [
+                '*' => [
+                    'start', 'end'
+                ]
+            ]
+        ]);
     }
 
     /**
@@ -107,16 +164,22 @@ class AvailabilityTest extends TestCase
 
         $vehicle = Vehicle::inRandomOrder()->first();
 
-        $booking = $vehicle->bookings->where('from', '>=', Carbon::now()->addDay())->first();
+        $booking = $vehicle->bookings->first();
 
-        $from = Carbon::parse($booking->from)->subDay()->format('n/j/Y');
+        $from = Carbon::now()->addWeeks(40);
+        $to = Carbon::now()->addWeeks(42);
 
-        $to = Carbon::parse($booking->from)->addDays(3)->format('n/j/Y');
+        // Change the booking dates for the vehicle to the ones specified above 
+        // and check against them below
+        Booking::where('id', $booking->id)->update([
+            'from' => $from,
+            'to' => $to
+        ]);
 
         $response = $this->json(
             'GET',
             '/api/vehicle-availability-guest/' . $vehicle->id,
-            ['from' => $from, 'to' => $to]
+            ['from' => $from->format('n/j/Y'), 'to' => $to->format('n/j/Y')]
         );
 
         $response->assertStatus(404)
@@ -153,49 +216,36 @@ class AvailabilityTest extends TestCase
      *  @test
      *  A 404 response is returned if the vehicle is available but the authenticated user already has a booking.
      */
-    // public function vehicle_availability_response_404_is_returned_if_vehicle_is_available_but_authenticated_user_already_has_a_booking()
-    // {
-    //     TestingVehicleMakeModelSeeder::run();
+    public function vehicle_availability_response_404_is_returned_if_vehicle_is_available_but_authenticated_user_already_has_a_booking()
+    {
+        $this->createSmallDatabase();
 
-    //     $user = User::factory()->create();
+        $user = User::where('host', 0)->first();
 
-    //     $this->actingAs($user);
+        $this->actingAs($user);
 
-    //     // Create a vehicle with no bookings, it has open availability
-    //     $vehicleOne = Vehicle::factory()->create([
-    //         'user_id' => User::factory()->create()->id
-    //     ]);
+        $from = Carbon::now()->addWeeks(50);
+        $to = Carbon::parse($from)->addWeeks(2);
 
-    //     // Create a second vehicle which the user will have a booking for
-    //     $vehicleTwo = Vehicle::factory()->create([
-    //         'user_id' => User::factory()->create()->id
-    //     ]);
+        // Get a users booking and set it far into the future
+        $usersBooking = $user->getBookings()->first();
 
-    //     $from = Carbon::now()->format('n/j/Y');
-    //     $to = Carbon::parse($from)->addWeek()->format('n/j/Y');
+        Booking::where('id', $usersBooking->id)->update([
+            'from' => $from,
+            'to' => $to
+        ]);
 
-    //     $order = Order::create([
-    //         'user_id' => $user->id,
-    //         'transaction_id' => 'x0000000',
-    //         'total' => 500
-    //     ]);
+        $vehicle = Vehicle::where('id', '!=', $usersBooking->vehicle_id)->first();
 
-    //     Booking::factory()->create([
-    //         'order_id' => $order->id,
-    //         'vehicle_id' => $vehicleTwo->id,
-    //         'from' => $from,
-    //         'to' => $to,
-    //     ]);
+        $response = $this->json(
+            'GET',
+            '/api/vehicle-availability-auth/' . $vehicle->id,
+            ['from' => $from->format('n/j/Y'), 'to' => $to->format('n/j/Y')]
+        );
 
-    //     $response = $this->json(
-    //         'GET',
-    //         '/api/vehicle-availability-auth/' . $vehicleOne->id,
-    //         ['from' => $from, 'to' => $to]
-    //     );
-
-    //     $response->assertStatus(404)
-    //         ->assertSee('You already have a booking on these dates');
-    // }
+        $response->assertStatus(404)
+            ->assertSee('You already have a booking on these dates');
+    }
 
     /**
      *  @test
@@ -302,5 +352,67 @@ class AvailabilityTest extends TestCase
                     'total' => ($randomDays * $vehicle->price_day)
                 ]
             ]);
+    }
+
+    /**
+     *  @test
+     *  The users booking dates api route is only allowed for authenticated users
+     */
+    public function the_users_booking_dates_api_route_is_only_available_for_authenticated_users()
+    {
+        $this->json('GET', '/api/users-booking-dates')
+            ->assertStatus(401);
+    }
+
+    /**
+     *  @test
+     *  The response from users booking dates route contains the correct json response
+     */
+    public function the_response_from_users_booking_dates_route_contains_the_correct_json_structure()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::has('orders')->first();
+
+        $this->actingAs($user);
+
+        $this->json('GET', '/api/users-booking-dates')
+            ->assertJsonStructure([
+                'unavailableDates' => [
+                    '*' => [
+                        'start', 'end'
+                    ]
+                ]
+            ]);
+    }
+
+    /**
+     *  @test
+     *  The response from users booking dates route contains the users future booking date
+     */
+    public function the_response_from_users_booking_dates_route_contains_the_users_booking_date()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::has('orders.bookings')->first();
+
+        $this->actingAs($user);
+
+        $booking = $user->getBookings()->first();
+
+        $from = Carbon::now()->addWeeks(20);
+        $to = Carbon::now()->addWeeks(21);
+
+        Booking::where('id', $booking->id)->update([
+            'from' => $from,
+            'to' => $to
+        ]);
+
+        $response = $this->json('GET', '/api/users-booking-dates');
+
+        $response->assertJsonFragment([
+            'start' => $from->format('m/d/Y'),
+            'end' => $to->format('m/d/Y')
+        ]);
     }
 }
