@@ -15,6 +15,7 @@ import Confirmation from './cart/Confirmation';
 import CustomerSharedVehicles from './dashboard/CustomerSharedVehicles';
 import CustomerEditVehicle from './dashboard/CustomerEditVehicle';
 import CustomerReviews from './dashboard/CustomerReviews';
+import CustomerBookings from './dashboard/CustomerBookings';
 
 const routes = [
     {
@@ -85,6 +86,11 @@ const routes = [
         path: "/dashboard/customer/reviews",
         component: CustomerReviews,
         name: "customer-reviews"
+    },
+    {
+        path: "/dashboard/customer/bookings",
+        component: CustomerBookings,
+        name: "customer-bookings"
     },
 
     /** CART **/
