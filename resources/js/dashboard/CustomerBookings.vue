@@ -142,6 +142,15 @@
             filterMenuClose() {
                 this.filterMenu = false;
             }
+        },
+
+        async created() {
+            try {
+                let results = await axios.get('/api/dashboard/booking-counts');
+                console.log(results);
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 </script>

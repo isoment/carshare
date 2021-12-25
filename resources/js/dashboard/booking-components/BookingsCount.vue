@@ -1,7 +1,7 @@
 <template>
     <div class="mt-2">
         <div class="flex flex-row">
-            <div class="p-4 border rounded-md w-1/3 text-center flex flex-col items-center mr-1">
+            <div class="p-2 border rounded-md w-1/3 text-center flex flex-col items-center mr-1">
                 <h6 class="font-boldnosans font-semibold mb-2">As Renter</h6>
                 <div>
                     <label for="booking-stat-toggle" class="flex items-center cursor-pointer">
@@ -13,7 +13,7 @@
                     </label>
                 </div>
             </div>
-            <div class="p-4 border rounded-md w-1/3 text-center flex flex-col items-center mr-1">
+            <div class="p-2 border rounded-md w-1/3 text-center flex flex-col items-center mr-1">
                 <div class="relative">
                     <div class="header-bar-wrap">
                         <h6 class="font-bold font-boldnosans mb-2">Total</h6>
@@ -32,7 +32,7 @@
                     </div>
                 </div>
             </div>
-            <div class="p-4 border rounded-md w-1/3 text-center flex flex-col items-center ml-1">
+            <div class="p-2 border rounded-md w-1/3 text-center flex flex-col items-center ml-1">
                 <div class="relative">
                     <div class="header-bar-wrap">
                         <h6 class="font-bold font-boldnosans mb-2">Cancelled</h6>
@@ -68,5 +68,15 @@
 
     input:checked ~ .booking-stat-toggle-bg {
         background-color: rgb(167, 134, 255);
+    }
+
+    @media screen and (max-width: 315px) {
+        h6 {
+            font-size: 0.8rem;
+        }
+
+        h5 {
+            font-size: 1rem;
+        }
     }
 </style>
