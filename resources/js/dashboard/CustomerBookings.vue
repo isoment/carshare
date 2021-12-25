@@ -5,20 +5,157 @@
             <error :message="'Not Authorized'"></error>
         </div>
         <div v-else>
-            TEST
+                <div class="customer-profile-banner h-36 border-b border-gray-200 pb-8"></div>
+
+                <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
+                    <div class="relative md:mr-20">
+                        <div class="absolute -top-8 mb-12">
+                            <div class="rounded border-2 border-purple-400 bg-white px-6 py-3">
+                                <h3 class="text-lg font-boldnosans font-bold">Bookings</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
+                    <div class="mt-6 sm:mt-12">
+                        <!-- Select small screen -->
+                        <div class="mb-2 text-right w-full relative">
+                            <button class="focus:outline-none px-2 py-1 border border-gray-800 text-gray-800"
+                                    @click="toggleFilterMenu">
+                                <span class="text-sm font-semibold">Filter</span>
+                                <span><i class="fas fa-sliders-h text-sm"></i></span>
+                            </button>
+
+                            <div class="absolute bg-white right-0 top-10 rounded-sm z-40
+                                        border border-gray-200 filter-dropdown-boxshadow"
+                                 v-if="filterMenu"
+                                 v-click-outside="filterMenuClose">
+                                <div class="px-3 py-5">
+                                    <h5 class="text-left text-xs font-semibold mb-1">Review type:</h5>
+                                    <!-- <select class="w-full bg-white border border-gray-300 
+                                                   rounded-sm text-sm focus:outline-none py-1"
+                                            @change="reviewTypeSelectMobile($event)">
+                                        <optgroup label="As Renter">
+                                            <option value="HostIncomplete">Needs Review</option>
+                                            <option value="HostComplete">You Reviewed</option>
+                                        </optgroup>
+                                        <optgroup label="As Host" v-if="userIsHost">
+                                            <option value="RenterIncomplete">Needs Review</option>
+                                            <option value="RenterComplete">You Reviewed</option>
+                                        </optgroup>
+                                    </select> -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-5">
+                            <!-- Select large screen -->
+                            <div class="border-l border-gray-300 pl-3 hidden sm:block">
+                                <!-- Users reviews of hosts -->
+                                <div class="mb-6">
+                                    <h4 class="text-lg font-boldnosans font-semibold tracking-wider text-purple-500 underline">
+                                        As Renter
+                                    </h4>
+                                    <div class="mt-1">
+                                        <h6 class="font-boldnosans font-light">Total</h6>
+                                        <div class="text-2xl font-boldnosans font-semibold text-gray-700">142</div>
+                                    </div>
+                                    <div class="mt-1">
+                                        <h6 class="font-boldnosans font-light">Cancelled</h6>
+                                        <div class="text-2xl font-boldnosans font-semibold text-gray-700">8</div>
+                                    </div>
+                                </div>
+                                <!-- Users reviews of renters -->
+                                <div v-if="userIsHost">
+                                    <h4 class="text-lg font-boldnosans font-semibold tracking-wider text-purple-500 underline">
+                                        As Host
+                                    </h4>
+                                    <div class="mt-1">
+                                        <h6 class="font-boldnosans font-light">Total</h6>
+                                        <div class="text-2xl font-boldnosans font-semibold text-gray-700">232</div>
+                                    </div>
+                                    <div class="mt-1">
+                                        <h6 class="font-boldnosans font-light">Cancelled</h6>
+                                        <div class="text-2xl font-boldnosans font-semibold text-gray-700">15</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reviews -->
+                            <div class="col-span-5 sm:col-span-4 sm:hidden">
+                                <bookings-count></bookings-count>
+
+                                <!-- <div>
+                                    <div v-if="hostIncomplete">
+                                        <of-host-incomplete></of-host-incomplete>
+                                    </div>
+                                    <div v-if="hostComplete">
+                                        <of-host-complete></of-host-complete>
+                                    </div>
+                                    <div v-if="renterIncomplete">
+                                        <of-renter-incomplete></of-renter-incomplete>
+                                    </div>
+                                    <div v-if="renterComplete">
+                                        <of-renter-complete></of-renter-complete>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
 </template>
 
 <script>
     import { mapState } from 'vuex';
+    import BookingsCount from './booking-components/BookingsCount.vue';
 
     export default {
+        components: {
+            BookingsCount
+        },
+
         computed: {
             ...mapState({
                 isLoggedIn: "isLoggedIn",
                 user: "user"
             }),
+
+            userIsHost() {
+                return this.user.host === 1;
+            },
+        },
+
+        data() {
+            return {
+                filterMenu: false
+            }
+        },
+
+        methods: {
+            toggleFilterMenu() {
+                this.filterMenu = !this.filterMenu;
+            },
+
+            filterMenuClose() {
+                this.filterMenu = false;
+            }
         }
     }
 </script>
+
+<style scoped>
+    .review-select-menu {
+        max-height: 11.85rem;
+    }
+
+    .review-select-menu-short {
+        max-height: 5.55rem;
+    }
+
+    .filter-dropdown-boxshadow {
+        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    }
+</style>

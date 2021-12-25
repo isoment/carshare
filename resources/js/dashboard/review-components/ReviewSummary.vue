@@ -99,7 +99,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .header-wrap-wrap {
         z-index: 20;
     }
