@@ -32,8 +32,8 @@ class UserBookingService
     {
         return [
             'asRenter' => [
-                'total' => $user->getBookings()->count(),
-                'cancels' => rand(1,10)
+                'bookings' => $user->getBookings()->count(),
+                'cancels' => rand(1,5)
             ]
         ];
     }
@@ -48,12 +48,12 @@ class UserBookingService
     {
         return [
             'asRenter' => [
-                'total' => $user->getBookings()->count(),
-                'cancels' => rand(1,10)
+                'bookings' => $user->getBookings()->count(),
+                'cancels' => rand(1,5)
             ],
             'asHost' => [
-                'total' => $user->getVehicleBookings()->count(),
-                'cancels' => rand(1,10)
+                'bookings' => $user->getVehicleBookings()->count(),
+                'cancels' => rand(1,5)
             ]
         ];
     }

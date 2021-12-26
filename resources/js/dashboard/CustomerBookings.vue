@@ -51,19 +51,24 @@
 
                         <div class="grid grid-cols-5">
                             <!-- Select large screen -->
-                            <div class="border-l border-gray-300 pl-3 hidden sm:block">
+                            <div class="border-l border-gray-300 pl-3 hidden sm:block" 
+                                 v-if="bookingCounts">
                                 <!-- Users reviews of hosts -->
                                 <div class="mb-6">
                                     <h4 class="text-lg font-boldnosans font-semibold tracking-wider text-purple-500 underline">
                                         As Renter
                                     </h4>
                                     <div class="mt-1">
-                                        <h6 class="font-boldnosans font-light">Total</h6>
-                                        <div class="text-2xl font-boldnosans font-semibold text-gray-700">142</div>
+                                        <h6 class="font-boldnosans font-light text-sm">Total</h6>
+                                        <div class="text-2xl font-boldnosans font-semibold text-gray-700">
+                                            {{bookingCountFormat(bookingCounts.asRenter.bookings)}}
+                                        </div>
                                     </div>
                                     <div class="mt-1">
-                                        <h6 class="font-boldnosans font-light">Cancelled</h6>
-                                        <div class="text-2xl font-boldnosans font-semibold text-gray-700">8</div>
+                                        <h6 class="font-boldnosans font-light text-sm">Cancelled</h6>
+                                        <div class="text-2xl font-boldnosans font-semibold text-gray-700">
+                                            {{bookingCountFormat(bookingCounts.asRenter.cancels)}}
+                                        </div>
                                     </div>
                                 </div>
                                 <!-- Users reviews of renters -->
@@ -72,19 +77,23 @@
                                         As Host
                                     </h4>
                                     <div class="mt-1">
-                                        <h6 class="font-boldnosans font-light">Total</h6>
-                                        <div class="text-2xl font-boldnosans font-semibold text-gray-700">232</div>
+                                        <h6 class="font-boldnosans font-light text-sm">Total</h6>
+                                        <div class="text-2xl font-boldnosans font-semibold text-gray-700">
+                                            {{bookingCountFormat(bookingCounts.asHost.bookings)}}
+                                        </div>
                                     </div>
                                     <div class="mt-1">
-                                        <h6 class="font-boldnosans font-light">Cancelled</h6>
-                                        <div class="text-2xl font-boldnosans font-semibold text-gray-700">15</div>
+                                        <h6 class="font-boldnosans font-light text-sm">Cancelled</h6>
+                                        <div class="text-2xl font-boldnosans font-semibold text-gray-700">
+                                            {{bookingCountFormat(bookingCounts.asHost.cancels)}}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Reviews -->
                             <div class="col-span-5 sm:col-span-4 sm:hidden">
-                                <bookings-count></bookings-count>
+                                <bookings-count v-if="bookingCounts" :stats="bookingCounts"></bookings-count>
 
                                 <!-- <div>
                                     <div v-if="hostIncomplete">
@@ -130,7 +139,8 @@
 
         data() {
             return {
-                filterMenu: false
+                filterMenu: false,
+                bookingCounts: null
             }
         },
 
@@ -141,16 +151,32 @@
 
             filterMenuClose() {
                 this.filterMenu = false;
+            },
+
+            bookingCountFormat(count) {
+                if (count > 1000) {
+                    return '+999';
+                } else {
+                    return count;
+                }
+            },
+
+            async fetchCounts() {
+                try {
+                    let results = await axios.get('/api/dashboard/booking-counts');
+
+                    this.bookingCounts = results.data;
+                } catch (error) {
+                    this.$store.dispatch('addNotification', {
+                        type: 'error',
+                        message: 'Error, please refresh page'
+                    });
+                }
             }
         },
 
-        async created() {
-            try {
-                let results = await axios.get('/api/dashboard/booking-counts');
-                console.log(results);
-            } catch (error) {
-                console.log(error);
-            }
+        created() {
+            this.fetchCounts();
         }
     }
 </script>
