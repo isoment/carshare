@@ -32,19 +32,13 @@
                                  v-if="filterMenu"
                                  v-click-outside="filterMenuClose">
                                 <div class="px-3 py-5">
-                                    <h5 class="text-left text-xs font-semibold mb-1">Review type:</h5>
-                                    <!-- <select class="w-full bg-white border border-gray-300 
+                                    <h5 class="text-left text-xs font-semibold mb-1">Type:</h5>
+                                    <select class="w-full bg-white border border-gray-300 
                                                    rounded-sm text-sm focus:outline-none py-1"
-                                            @change="reviewTypeSelectMobile($event)">
-                                        <optgroup label="As Renter">
-                                            <option value="HostIncomplete">Needs Review</option>
-                                            <option value="HostComplete">You Reviewed</option>
-                                        </optgroup>
-                                        <optgroup label="As Host" v-if="userIsHost">
-                                            <option value="RenterIncomplete">Needs Review</option>
-                                            <option value="RenterComplete">You Reviewed</option>
-                                        </optgroup>
-                                    </select> -->
+                                            @change="bookingType($event)">
+                                        <option value="asRenter">As Renter</option>
+                                        <option value="asHost">As Host</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -94,21 +88,7 @@
                             <!-- Reviews -->
                             <div class="col-span-5 sm:col-span-4 sm:hidden">
                                 <bookings-count v-if="bookingCounts" :stats="bookingCounts"></bookings-count>
-
-                                <!-- <div>
-                                    <div v-if="hostIncomplete">
-                                        <of-host-incomplete></of-host-incomplete>
-                                    </div>
-                                    <div v-if="hostComplete">
-                                        <of-host-complete></of-host-complete>
-                                    </div>
-                                    <div v-if="renterIncomplete">
-                                        <of-renter-incomplete></of-renter-incomplete>
-                                    </div>
-                                    <div v-if="renterComplete">
-                                        <of-renter-complete></of-renter-complete>
-                                    </div>
-                                </div> -->
+                                <!-- Paginator -->
                             </div>
                         </div>
                     </div>
@@ -172,6 +152,10 @@
                         message: 'Error, please refresh page'
                     });
                 }
+            },
+
+            bookingType(event) {
+                console.log(event.target.value);
             }
         },
 

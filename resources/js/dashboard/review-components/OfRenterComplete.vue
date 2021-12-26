@@ -11,10 +11,10 @@
                 </div>
                 <!-- Paginator of reviews index -->
                 <div class="mt-2" v-if="reviews">
-                    <review-paginator :reviews="reviews"
+                    <simple-paginator :iterable="reviews"
                                     @pageChanged="pageChanged">
                         <display-review-renter-complete :reviews="reviews"></display-review-renter-complete>
-                    </review-paginator>
+                    </simple-paginator>
                 </div>
             </div>
         </div>
@@ -22,13 +22,13 @@
 </template>
 
 <script>
-    import ReviewPaginator from './ReviewPaginator.vue';
+    import SimplePaginator from './../../shared/components/SimplePaginator.vue';
     import DisplayReviewRenterComplete from './DisplayReviewRenterComplete.vue';
     import ReviewSummary from './ReviewSummary.vue';
 
     export default {
         components: {
-            ReviewPaginator,
+            SimplePaginator,
             DisplayReviewRenterComplete,
             ReviewSummary
         },
@@ -43,8 +43,6 @@
         methods: {
             async fetchReviews() {
                 let response = await axios.get(`/api/dashboard/renter-users-reviews-complete?page=${this.page}`);
-
-                console.log(response);
 
                 this.reviews = response.data;
             },

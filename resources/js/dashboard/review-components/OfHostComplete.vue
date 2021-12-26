@@ -15,10 +15,10 @@
                     paginator using a slot.
                 -->
                 <div class="mt-2" v-if="reviews">
-                    <review-paginator :reviews="reviews"
+                    <simple-paginator :iterable="reviews"
                                     @pageChanged="pageChanged">
                         <display-review-host-complete :reviews="reviews"></display-review-host-complete>        
-                    </review-paginator>
+                    </simple-paginator>
                 </div>
             </div>
         </div>
@@ -26,13 +26,13 @@
 </template>
 
 <script>
-    import ReviewPaginator from './ReviewPaginator.vue';
+    import SimplePaginator from './../../shared/components/SimplePaginator.vue';
     import DisplayReviewHostComplete from './DisplayReviewHostComplete.vue';
     import ReviewSummary from './ReviewSummary.vue';
 
     export default {
         components: {
-            ReviewPaginator, 
+            SimplePaginator, 
             DisplayReviewHostComplete,
             ReviewSummary
         },
@@ -47,8 +47,6 @@
         methods: {
             async fetchReviews() {
                 let response = await axios.get(`/api/dashboard/host-users-reviews-complete?page=${this.page}`);
-
-                console.log(response);
 
                 this.reviews = response.data;
             },

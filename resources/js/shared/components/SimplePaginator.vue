@@ -28,9 +28,14 @@
 </template>
 
 <script>
+    /**
+     *  A simple paginator for general use. The iterable is passed in as a prop. Every time the Prev or Next
+     *  button is clicked an even is emitted to the parent that with the current page. We can also pass in
+     *  a styled card or list item in the slot for displaying each iterable. 
+     */
     export default {
         props: {
-            reviews: Object
+            iterable: Object
         },
 
         data() {
@@ -69,10 +74,10 @@
                 }
             },
 
-            // Set the page info state from the reviews prop
+            // Set the page info state from the iterable prop
             setPaginationData() {
-                this.page = this.reviews.meta.current_page ?? 1;
-                this.lastPage = this.reviews.meta.last_page ?? null;
+                this.page = this.iterable.meta.current_page ?? 1;
+                this.lastPage = this.iterable.meta.last_page ?? null;
             },
         },
 

@@ -12,12 +12,12 @@
                 </div>
 
                 <div class="mt-2" v-if="reviews">
-                    <review-paginator :reviews="reviews"
+                    <simple-paginator :iterable="reviews"
                                     @pageChanged="pageChanged">
                         <display-review-host-uncomplete :reviews="reviews"
                                                         @reviewSubmit="reviewSubmitted">
                         </display-review-host-uncomplete>
-                    </review-paginator>
+                    </simple-paginator>
                 </div>
             </div>
         </div>
@@ -25,13 +25,13 @@
 </template>
 
 <script>
-    import ReviewPaginator from './ReviewPaginator.vue';
+    import SimplePaginator from './../../shared/components/SimplePaginator.vue';
     import DisplayReviewHostUncomplete from './DisplayReviewHostUncomplete.vue';
     import ReviewSummary from './ReviewSummary.vue';
 
     export default {
         components: {
-            ReviewPaginator,
+            SimplePaginator,
             DisplayReviewHostUncomplete,
             ReviewSummary
         },

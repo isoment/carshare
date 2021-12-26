@@ -83,11 +83,19 @@
             }),
 
             bookingCount() {
-                return this.isHost ? this.stats.asHost.bookings : this.stats.asRenter.bookings;
+                if (this.isHost && this.user.host === 1) {
+                    return this.stats.asHost.bookings;
+                }
+
+                return this.stats.asRenter.bookings;
             },
 
             cancelCount() {
-                return this.isHost ? this.stats.asHost.cancels : this.stats.asRenter.cancels;
+                if (this.isHost && this.user.host === 1) {
+                    return this.stats.asHost.cancels;
+                }
+
+                return this.stats.asRenter.cancels;
             },
 
             toggleLabel() {
