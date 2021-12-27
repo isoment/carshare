@@ -4,48 +4,14 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Http\Requests\UserBookingIndexRequest;
 use App\Models\Booking;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 
 class UserBookingService
 {
-    /**
-     *  A paginated index of users bookings
-     * 
-     *  @param Request $request
-     */
-    public function index(Request $request)
-    {
-        $user = current_user();
-
-        if ($request['type'] === 'asHost') {
-            return $this->bookingsAsHost($request, $user);
-        } else {
-            return $this->bookingsAsRenter($request, $user);
-        }
-    }
-
-    /**
-     *  Index of bookings as renter
-     */
-    private function bookingsAsRenter($request, $user)
-    {
-        return Booking::with('order')
-            ->whereIn('order_id', $user->orders->pluck('id'))
-            ->paginate(4);
-    }
-
-    /**
-     *  Index of bookings as host
-     */
-    private function bookingsAsHost($request, $user)
-    {
-        return Booking::whereIn('vehicle_id', $user->vehicles->pluck('id'))
-            ->paginate(4);
-    }
-
     /**
      *  Get a count of the bookings and cancellations for a user
      * 
@@ -60,6 +26,45 @@ class UserBookingService
         }
 
         return $this->bookingsCountForRenter($user);
+    }
+
+    /**
+     *  A paginated index of users bookings
+     * 
+     *  @param App\Http\Requests\UserBookingIndexRequest $request
+     */
+    public function index(UserBookingIndexRequest $request) : LengthAwarePaginator
+    {
+        $user = current_user();
+
+        if ($request['type'] === 'asHost') {
+            return $this->bookingsAsHost($request, $user);
+        } else {
+            return $this->bookingsAsRenter($request, $user);
+        }
+    }
+
+    /**
+     *  Index of bookings as renter
+     * 
+     *  @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    private function bookingsAsRenter(UserBookingIndexRequest $request, $user) : LengthAwarePaginator
+    {
+        return Booking::with('order')
+            ->whereIn('order_id', $user->orders->pluck('id'))
+            ->paginate(4);
+    }
+
+    /**
+     *  Index of bookings as host
+     * 
+     *  @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    private function bookingsAsHost(UserBookingIndexRequest $request, $user) : LengthAwarePaginator
+    {
+        return Booking::whereIn('vehicle_id', $user->vehicles->pluck('id'))
+            ->paginate(4);
     }
 
     /**

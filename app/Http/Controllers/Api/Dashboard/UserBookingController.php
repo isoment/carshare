@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserBookingIndexRequest;
 use App\Services\UserBookingService;
-use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 
 class UserBookingController extends Controller
@@ -32,9 +33,10 @@ class UserBookingController extends Controller
     /**
      *  Get a paginated index of users bookings
      * 
-     *  @param Request $request
+     *  @param App\Http\Requests\UserBookingIndexRequest $request
+     *  @return LengthAwarePaginator
      */
-    public function bookingIndex(Request $request)
+    public function bookingIndex(UserBookingIndexRequest $request) : LengthAwarePaginator
     {
         Log::info($request->toArray());
 

@@ -27,7 +27,7 @@
                                 <span><i class="fas fa-sliders-h text-sm"></i></span>
                             </button>
 
-                            <div class="absolute bg-white right-0 top-10 rounded-sm z-40
+                            <div class="absolute bg-white right-0 top-10 rounded-sm z-40 w-48
                                         border border-gray-200 filter-dropdown-boxshadow"
                                  v-if="filterMenu"
                                  v-click-outside="filterMenuClose">
@@ -35,7 +35,8 @@
                                     <h5 class="text-left text-xs font-semibold mb-1">Type:</h5>
                                     <select class="w-full bg-white border border-gray-300 
                                                    rounded-sm text-sm focus:outline-none py-1"
-                                            @change="bookingType($event)">
+                                            v-model="params.type"
+                                            @change="fetchBookings()">
                                         <option value="asRenter">As Renter</option>
                                         <option value="asHost">As Host</option>
                                     </select>
@@ -91,8 +92,6 @@
                                     <bookings-count v-if="bookingCounts" :stats="bookingCounts"></bookings-count>
                                 </div>
                                 <!-- Paginator -->
-                                <button class="border border-gray-400 px-3 py-1" 
-                                        @click="fetchBookings()">Get Bookings</button>
                             </div>
                         </div>
                     </div>
@@ -126,7 +125,11 @@
         data() {
             return {
                 filterMenu: false,
-                bookingCounts: null
+                bookingCounts: null,
+                bookings: null,
+                params: {
+                    type: 'asRenter'
+                }
             }
         },
 
@@ -163,22 +166,26 @@
                 try {
                     let results = await axios.get('/api/dashboard/booking-index', {
                         params: {
-                            type: 'asHost'
+                            type: this.params.type
                         }
                     });
+                    this.bookings = results.data;
                     console.log(results);
                 } catch (error) {
-                    console.log(error);
+                    console.log(error.response.data.errors.type[0]);
+                    if (error.response.status === 422) {
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: error.response.data.errors.type[0]
+                        });
+                    }
                 }
             },
-
-            bookingType(event) {
-                console.log(event.target.value);
-            }
         },
 
         created() {
             this.fetchCounts();
+            this.fetchBookings();
         }
     }
 </script>
