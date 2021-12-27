@@ -86,9 +86,13 @@
                             </div>
 
                             <!-- Reviews -->
-                            <div class="col-span-5 sm:col-span-4 sm:hidden">
-                                <bookings-count v-if="bookingCounts" :stats="bookingCounts"></bookings-count>
+                            <div class="col-span-5 sm:col-span-4">
+                                <div class="sm:hidden">
+                                    <bookings-count v-if="bookingCounts" :stats="bookingCounts"></bookings-count>
+                                </div>
                                 <!-- Paginator -->
+                                <button class="border border-gray-400 px-3 py-1" 
+                                        @click="fetchBookings()">Get Bookings</button>
                             </div>
                         </div>
                     </div>
@@ -100,10 +104,12 @@
 <script>
     import { mapState } from 'vuex';
     import BookingsCount from './booking-components/BookingsCount.vue';
+    import SimplePaginator from './../shared/components/SimplePaginator.vue';
 
     export default {
         components: {
-            BookingsCount
+            BookingsCount,
+            SimplePaginator
         },
 
         computed: {
@@ -144,13 +150,25 @@
             async fetchCounts() {
                 try {
                     let results = await axios.get('/api/dashboard/booking-counts');
-
                     this.bookingCounts = results.data;
                 } catch (error) {
                     this.$store.dispatch('addNotification', {
                         type: 'error',
                         message: 'Error, please refresh page'
                     });
+                }
+            },
+
+            async fetchBookings() {
+                try {
+                    let results = await axios.get('/api/dashboard/booking-index', {
+                        params: {
+                            type: 'asHost'
+                        }
+                    });
+                    console.log(results);
+                } catch (error) {
+                    console.log(error);
                 }
             },
 

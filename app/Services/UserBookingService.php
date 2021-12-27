@@ -1,11 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
+use App\Models\Booking;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class UserBookingService
 {
+    /**
+     *  A paginated index of users bookings
+     * 
+     *  @param Request $request
+     */
+    public function index(Request $request)
+    {
+        $user = current_user();
+
+        if ($request['type'] === 'asHost') {
+            return $this->bookingsAsHost($request, $user);
+        } else {
+            return $this->bookingsAsRenter($request, $user);
+        }
+    }
+
+    /**
+     *  Index of bookings as renter
+     */
+    private function bookingsAsRenter($request, $user)
+    {
+        return Booking::with('order')
+            ->whereIn('order_id', $user->orders->pluck('id'))
+            ->paginate(4);
+    }
+
+    /**
+     *  Index of bookings as host
+     */
+    private function bookingsAsHost($request, $user)
+    {
+        return Booking::whereIn('vehicle_id', $user->vehicles->pluck('id'))
+            ->paginate(4);
+    }
+
     /**
      *  Get a count of the bookings and cancellations for a user
      * 

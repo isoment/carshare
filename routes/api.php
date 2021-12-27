@@ -205,12 +205,17 @@ Route::middleware('auth:sanctum')->group(function() {
     )->name('dashboard.show-review-rating');
 
     /*************************
-     *  Checkout API Routes  *
+     *  Booking API Routes  *
      ************************/
     Route::get(
         'dashboard/booking-counts',
         [App\Http\Controllers\Api\Dashboard\UserBookingController::class, 'showBookingCounts']
     )->name('dashboard.booking-counts');
+
+    Route::get(
+        'dashboard/booking-index',
+        [App\Http\Controllers\Api\Dashboard\UserBookingController::class, 'bookingIndex']
+    )->name('dashboard.booking-index');
 
     /*************************
      *  Checkout API Routes  *
