@@ -91,7 +91,13 @@
                                 <div class="sm:hidden">
                                     <bookings-count v-if="bookingCounts" :stats="bookingCounts"></bookings-count>
                                 </div>
-                                <!-- Paginator -->
+                                <div class="mt-2" v-if="bookings">
+                                    <!-- Paginator -->
+                                    <simple-paginator :iterable="bookings"
+                                                    @pageChanged="pageChanged">
+                                        <display-booking-renter :bookings="bookings"></display-booking-renter>
+                                    </simple-paginator>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -104,11 +110,13 @@
     import { mapState } from 'vuex';
     import BookingsCount from './booking-components/BookingsCount.vue';
     import SimplePaginator from './../shared/components/SimplePaginator.vue';
+    import DisplayBookingRenter from './booking-components/DisplayBookingRenter.vue';
 
     export default {
         components: {
             BookingsCount,
-            SimplePaginator
+            SimplePaginator,
+            DisplayBookingRenter
         },
 
         computed: {
@@ -127,6 +135,7 @@
                 filterMenu: false,
                 bookingCounts: null,
                 bookings: null,
+                page: 1,
                 params: {
                     type: 'asRenter'
                 }
@@ -166,6 +175,7 @@
                 try {
                     let results = await axios.get('/api/dashboard/booking-index', {
                         params: {
+                            page: this.page,
                             type: this.params.type
                         }
                     });
@@ -181,6 +191,11 @@
                     }
                 }
             },
+
+            pageChanged(payload) {
+                this.page = payload;
+                this.fetchBookings();
+            }
         },
 
         created() {

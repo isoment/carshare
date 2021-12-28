@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserBookingIndexRequest;
 use App\Services\UserBookingService;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 
@@ -34,12 +35,10 @@ class UserBookingController extends Controller
      *  Get a paginated index of users bookings
      * 
      *  @param App\Http\Requests\UserBookingIndexRequest $request
-     *  @return LengthAwarePaginator
+     *  @return Illuminate\Http\Resources\Json\JsonResource
      */
-    public function bookingIndex(UserBookingIndexRequest $request) : LengthAwarePaginator
+    public function bookingIndex(UserBookingIndexRequest $request) : JsonResource
     {
-        Log::info($request->toArray());
-
         return $this->userBookingService->index($request);
     }
 }

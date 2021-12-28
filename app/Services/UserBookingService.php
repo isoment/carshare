@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Http\Requests\UserBookingIndexRequest;
+use App\Http\Resources\UserBookingsIndexRenterResource;
 use App\Models\Booking;
 use App\Models\User;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 
@@ -32,15 +34,18 @@ class UserBookingService
      *  A paginated index of users bookings
      * 
      *  @param App\Http\Requests\UserBookingIndexRequest $request
+     *  @return Illuminate\Http\Resources\Json\JsonResource
      */
-    public function index(UserBookingIndexRequest $request) : LengthAwarePaginator
+    public function index(UserBookingIndexRequest $request) : JsonResource
     {
         $user = current_user();
 
         if ($request['type'] === 'asHost') {
             return $this->bookingsAsHost($request, $user);
         } else {
-            return $this->bookingsAsRenter($request, $user);
+            return UserBookingsIndexRenterResource::collection(
+                $this->bookingsAsRenter($request, $user)
+            );
         }
     }
 
