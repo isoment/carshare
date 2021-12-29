@@ -88,14 +88,16 @@
 
                             <!-- Reviews -->
                             <div class="col-span-5 sm:col-span-4">
-                                <div class="sm:hidden">
+                                <div class="sm:hidden mb-4">
                                     <bookings-count v-if="bookingCounts" :stats="bookingCounts"></bookings-count>
                                 </div>
                                 <div class="mt-2" v-if="bookings">
                                     <!-- Paginator -->
                                     <simple-paginator :iterable="bookings"
                                                     @pageChanged="pageChanged">
-                                        <display-booking-renter :bookings="bookings"></display-booking-renter>
+                                        <display-booking-renter :bookings="bookings"
+                                                                v-if="displayRenterComponent">
+                                        </display-booking-renter>
                                     </simple-paginator>
                                 </div>
                             </div>
@@ -128,6 +130,10 @@
             userIsHost() {
                 return this.user.host === 1;
             },
+
+            displayRenterComponent() {
+                return this.params.type === 'asRenter';
+            }
         },
 
         data() {
