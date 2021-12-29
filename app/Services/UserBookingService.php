@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Http\Requests\UserBookingIndexRequest;
+use App\Http\Resources\UserBookingIndexHostResource;
 use App\Http\Resources\UserBookingsIndexRenterResource;
 use App\Models\Booking;
 use App\Models\User;
@@ -40,8 +41,10 @@ class UserBookingService
     {
         $user = current_user();
 
-        if ($request['type'] === 'asHost') {
-            return $this->bookingsAsHost($request, $user);
+        if ($request['type'] === 'asHost' && $user->host === 1) {
+            return UserBookingIndexHostResource::collection(
+                $this->bookingsAsHost($request, $user)
+            );
         } else {
             return UserBookingsIndexRenterResource::collection(
                 $this->bookingsAsRenter($request, $user)
@@ -68,7 +71,8 @@ class UserBookingService
      */
     private function bookingsAsHost(UserBookingIndexRequest $request, $user) : LengthAwarePaginator
     {
-        return Booking::whereIn('vehicle_id', $user->vehicles->pluck('id'))
+        return Booking::with('vehicle.vehicleModel.vehicleMake', 'order.user')
+            ->whereIn('vehicle_id', $user->vehicles->pluck('id'))
             ->paginate(4);
     }
 

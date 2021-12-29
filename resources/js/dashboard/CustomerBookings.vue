@@ -46,7 +46,7 @@
 
                         <div class="grid grid-cols-5">
                             <!-- Select large screen -->
-                            <div class="border-l border-gray-300 pl-3 hidden sm:block" 
+                            <div class="border-l border-gray-300 pl-3 hidden sm:block large-screen-booking-stats" 
                                  v-if="bookingCounts">
                                 <!-- Users reviews of hosts -->
                                 <div class="mb-6">
@@ -186,9 +186,7 @@
                         }
                     });
                     this.bookings = results.data;
-                    console.log(results);
                 } catch (error) {
-                    console.log(error.response.data.errors.type[0]);
                     if (error.response.status === 422) {
                         this.$store.dispatch('addNotification', {
                             type: 'error',
@@ -212,12 +210,8 @@
 </script>
 
 <style scoped>
-    .review-select-menu {
-        max-height: 11.85rem;
-    }
-
-    .review-select-menu-short {
-        max-height: 5.55rem;
+    .large-screen-booking-stats {
+        max-height: 19rem;
     }
 
     .filter-dropdown-boxshadow {
