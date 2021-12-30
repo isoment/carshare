@@ -71,7 +71,7 @@ class UserBookingService
      */
     private function bookingsAsHost(UserBookingIndexRequest $request, $user) : LengthAwarePaginator
     {
-        return Booking::with('vehicle.vehicleModel.vehicleMake', 'order.user')
+        return Booking::with('vehicle.vehicleModel.vehicleMake')
             ->whereIn('vehicle_id', $user->vehicles->pluck('id'))
             ->paginate(4);
     }

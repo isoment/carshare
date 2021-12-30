@@ -98,6 +98,9 @@
                                         <display-booking-renter :bookings="bookings"
                                                                 v-if="displayRenterComponent">
                                         </display-booking-renter>
+                                        <display-booking-host :bookings="bookings"
+                                                              v-if="displayHostComponent">
+                                        </display-booking-host>
                                     </simple-paginator>
                                 </div>
                             </div>
@@ -113,12 +116,14 @@
     import BookingsCount from './booking-components/BookingsCount.vue';
     import SimplePaginator from './../shared/components/SimplePaginator.vue';
     import DisplayBookingRenter from './booking-components/DisplayBookingRenter.vue';
+    import DisplayBookingHost from './booking-components/DisplayBookingHost.vue';
 
     export default {
         components: {
             BookingsCount,
             SimplePaginator,
-            DisplayBookingRenter
+            DisplayBookingRenter,
+            DisplayBookingHost
         },
 
         computed: {
@@ -133,6 +138,10 @@
 
             displayRenterComponent() {
                 return this.params.type === 'asRenter';
+            },
+
+            displayHostComponent() {
+                return this.params.type === 'asHost';
             }
         },
 
@@ -143,7 +152,7 @@
                 bookings: null,
                 page: 1,
                 params: {
-                    type: 'asRenter'
+                    type: 'asHost'
                 }
             }
         },

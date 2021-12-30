@@ -1,7 +1,9 @@
 <template>
     <div>
         <div v-if="hasBookings">
-            <h4 class="font-bold text-lg font-boldnosans text-gray-700 mb-2">Vehicles you have booked</h4>
+            <h4 class="font-bold text-lg font-boldnosans text-gray-700 mb-2">
+                Vehicles you have booked
+            </h4>
             <div v-for="booking in bookings.data" :key="booking.id">
                 <div class="mb-2 border border-gray-200 rounded-sm py-3 px-4">
                     <div class="flex justify-between items-center">
@@ -19,8 +21,12 @@
                                         {{booking.vehicle.year}}
                                     </h6>
                                     <div class="text-xs font-light text-gray-500">
-                                        <div>From: <span class="font-bold">{{booking.booking.from}}</span></div>
-                                        <div>To: <span class="font-bold">{{booking.booking.to}}</span></div>
+                                        <div>From: 
+                                            <span class="font-bold">{{formatDates(booking.booking.from)}}</span>
+                                        </div>
+                                        <div>To: 
+                                            <span class="font-bold">{{formatDates(booking.booking.to)}}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -28,10 +28,6 @@ class UserBookingIndexHostResource extends JsonResource
                 'make' => $this->vehicle->vehicleModel->vehicleMake->make,
                 'model' => $this->vehicle->vehicleModel->model,
                 'year' => $this->vehicle->year,
-            ],
-            'renter' => [
-                'id' => $this->order->user->id,
-                'name' => $this->order->user->name,
             ]
         ];
     }
