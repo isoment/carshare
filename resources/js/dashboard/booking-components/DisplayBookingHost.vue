@@ -8,7 +8,7 @@
                 <div class="mb-2 border border-gray-200 rounded-sm py-3 px-4">
                     <div class="flex justify-between items-center">
                         <div class="flex items-start">
-                            <router-link :to="{ 
+                            <router-link v-if="booking" :to="{ 
                                 name: 'customer-edit-vehicle',
                                 params: { id: booking.vehicle.id } 
                             }">

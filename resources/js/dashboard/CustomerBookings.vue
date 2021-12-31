@@ -36,7 +36,7 @@
                                     <select class="w-full bg-white border border-gray-300 
                                                    rounded-sm text-sm focus:outline-none py-1"
                                             v-model="params.type"
-                                            @change="fetchBookings()">
+                                            @change="updateType()">
                                         <option value="asRenter">As Renter</option>
                                         <option value="asHost">As Host</option>
                                     </select>
@@ -152,7 +152,7 @@
                 bookings: null,
                 page: 1,
                 params: {
-                    type: 'asHost'
+                    type: 'asRenter'
                 }
             }
         },
@@ -188,12 +188,15 @@
 
             async fetchBookings() {
                 try {
+                    this.bookings = null;
+                    
                     let results = await axios.get('/api/dashboard/booking-index', {
                         params: {
                             page: this.page,
                             type: this.params.type
                         }
                     });
+
                     this.bookings = results.data;
                 } catch (error) {
                     if (error.response.status === 422) {
@@ -203,6 +206,11 @@
                         });
                     }
                 }
+            },
+
+            updateType() {
+                this.page = 1;
+                this.fetchBookings();
             },
 
             pageChanged(payload) {
