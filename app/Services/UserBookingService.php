@@ -61,6 +61,7 @@ class UserBookingService
     {
         return Booking::with('order', 'vehicle.vehicleModel.vehicleMake')
             ->whereIn('order_id', $user->orders->pluck('id'))
+            ->orderBy($this->sortColumn($request), $this->sortDirection($request))
             ->paginate(4);
     }
 
@@ -73,7 +74,41 @@ class UserBookingService
     {
         return Booking::with('vehicle.vehicleModel.vehicleMake')
             ->whereIn('vehicle_id', $user->vehicles->pluck('id'))
+            ->orderBy($this->sortColumn($request), $this->sortDirection($request))
             ->paginate(4);
+    }
+
+    /**
+     *  The column to sort the index query by
+     * 
+     *  @param UserBookingIndexRequest $user
+     *  @return string
+     */
+    private function sortColumn(UserBookingIndexRequest $request) : string
+    {
+        if ($request['sort'] === 'dateAsc' || $request['sort'] === 'dateDesc') {
+            return 'to';
+        }
+
+        if ($request['sort'] === 'priceTotalDesc') {
+            return 'price_total';
+        }
+    }
+
+    /**
+     *  The direction to sort results, pass Desc into the query parameter string
+     *  to sort in descending order.
+     * 
+     *  @param UserBookingIndexRequest $user
+     *  @return string
+     */
+    private function sortDirection(UserBookingIndexRequest $request) : string
+    {
+        if (str_contains($request['sort'], 'Desc')) {
+            return 'DESC';
+        }
+
+        return 'ASC';
     }
 
     /**

@@ -32,14 +32,27 @@
                                  v-if="filterMenu"
                                  v-click-outside="filterMenuClose">
                                 <div class="px-3 py-5">
-                                    <h5 class="text-left text-xs font-semibold mb-1">Type:</h5>
-                                    <select class="w-full bg-white border border-gray-300 
-                                                   rounded-sm text-sm focus:outline-none py-1"
-                                            v-model="params.type"
-                                            @change="updateType()">
-                                        <option value="asRenter">As Renter</option>
-                                        <option value="asHost">As Host</option>
-                                    </select>
+                                    <div>
+                                        <h5 class="text-left text-xs font-semibold mb-1">Type:</h5>
+                                        <select class="w-full bg-white border border-gray-300 
+                                                    rounded-sm text-sm focus:outline-none py-1"
+                                                v-model="params.type"
+                                                @change="updateType()">
+                                            <option value="asRenter">As Renter</option>
+                                            <option value="asHost">As Host</option>
+                                        </select>
+                                    </div>
+                                    <div class="mt-2">
+                                        <h5 class="text-left text-xs font-semibold mb-1">Sort By:</h5>
+                                        <select class="w-full bg-white border border-gray-300 
+                                                    rounded-sm text-sm focus:outline-none py-1"
+                                                v-model="params.sort"
+                                                @change="updateSort()">
+                                            <option value="dateAsc">Date: Ascending</option>
+                                            <option value="dateDesc">Date: Descending</option>
+                                            <option value="priceTotalDesc">Price: Total</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -152,7 +165,8 @@
                 bookings: null,
                 page: 1,
                 params: {
-                    type: 'asRenter'
+                    type: 'asRenter',
+                    sort: 'dateAsc'
                 }
             }
         },
@@ -193,7 +207,8 @@
                     let results = await axios.get('/api/dashboard/booking-index', {
                         params: {
                             page: this.page,
-                            type: this.params.type
+                            type: this.params.type,
+                            sort: this.params.sort
                         }
                     });
 
@@ -209,6 +224,11 @@
             },
 
             updateType() {
+                this.page = 1;
+                this.fetchBookings();
+            },
+
+            updateSort() {
                 this.page = 1;
                 this.fetchBookings();
             },
