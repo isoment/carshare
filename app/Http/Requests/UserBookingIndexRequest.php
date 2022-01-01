@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UserBookingFilterSort;
 use App\Rules\UserBookingFilterType;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,7 +28,11 @@ class UserBookingIndexRequest extends FormRequest
         return [
             'type' => [
                 'required',
-                new UserBookingFilterType()
+                new UserBookingFilterType(),
+            ],
+            'sort' => [
+                'required',
+                new UserBookingFilterSort()
             ]
         ];
     }

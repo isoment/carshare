@@ -204,9 +204,9 @@ Route::middleware('auth:sanctum')->group(function() {
         [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'showReviewRating']
     )->name('dashboard.show-review-rating');
 
-    /*************************
+    /************************
      *  Booking API Routes  *
-     ************************/
+     ***********************/
     Route::get(
         'dashboard/booking-counts',
         [App\Http\Controllers\Api\Dashboard\UserBookingController::class, 'showBookingCounts']

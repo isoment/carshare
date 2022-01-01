@@ -208,7 +208,8 @@
                         params: {
                             page: this.page,
                             type: this.params.type,
-                            sort: this.params.sort
+                            // sort: this.params.sort
+                            sort: 'dqiasii'
                         }
                     });
 
@@ -217,7 +218,7 @@
                     if (error.response.status === 422) {
                         this.$store.dispatch('addNotification', {
                             type: 'error',
-                            message: error.response.data.errors.type[0]
+                            message: Object.values(error.response.data.errors)[0][0]
                         });
                     }
                 }

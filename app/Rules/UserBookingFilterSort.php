@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class UserBookingFilterType implements Rule
+class UserBookingFilterSort implements Rule
 {
     /**
      * Determine if the validation rule passes.
@@ -15,7 +15,7 @@ class UserBookingFilterType implements Rule
      */
     public function passes($attribute, $value)
     {
-        $types = ['asHost', 'asRenter'];
+        $types = ['dateAsc', 'dateDesc', 'priceTotalDesc'];
 
         return in_array($value, $types);
     }
@@ -27,6 +27,6 @@ class UserBookingFilterType implements Rule
      */
     public function message()
     {
-        return 'Invalid booking type';
+        return 'Invalid sort selection.';
     }
 }
