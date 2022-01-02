@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserBookingIndexRequest;
 use App\Services\UserBookingService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Log;
 
@@ -34,9 +35,9 @@ class UserBookingController extends Controller
      *  Get a paginated index of users bookings
      * 
      *  @param App\Http\Requests\UserBookingIndexRequest $request
-     *  @return Illuminate\Http\Resources\Json\JsonResource
+     *  @return JsonResource|JsonResponse
      */
-    public function bookingIndex(UserBookingIndexRequest $request) : JsonResource
+    public function bookingIndex(UserBookingIndexRequest $request) : JsonResource|JsonResponse
     {
         Log::info($request->toArray());
 

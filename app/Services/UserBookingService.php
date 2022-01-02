@@ -9,6 +9,7 @@ use App\Http\Resources\UserBookingIndexHostResource;
 use App\Http\Resources\UserBookingsIndexRenterResource;
 use App\Models\Booking;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
@@ -35,23 +36,26 @@ class UserBookingService
      *  A paginated index of users bookings
      * 
      *  @param App\Http\Requests\UserBookingIndexRequest $request
-     *  @return Illuminate\Http\Resources\Json\JsonResource
+     *  @return JsonResource|JsonResponse
      */
-    public function index(UserBookingIndexRequest $request) : JsonResource
+    public function index(UserBookingIndexRequest $request) : JsonResource|JsonResponse
     {
         $user = current_user();
+
+        if ($request['type'] === 'asRenter') {
+            return UserBookingsIndexRenterResource::collection(
+                $this->bookingsAsRenter($request, $user)
+            );
+        }
 
         if ($request['type'] === 'asHost' && $user->host === 1) {
             return UserBookingIndexHostResource::collection(
                 $this->bookingsAsHost($request, $user)
             );
-        } else {
-            return UserBookingsIndexRenterResource::collection(
-                $this->bookingsAsRenter($request, $user)
-            );
         }
-    }
 
+        return response()->json(['Error getting bookings'], 404);
+    }
     /**
      *  Index of bookings as renter
      * 

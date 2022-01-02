@@ -32,7 +32,7 @@
                                  v-if="filterMenu"
                                  v-click-outside="filterMenuClose">
                                 <div class="px-3 py-5">
-                                    <div>
+                                    <div v-if="userIsHost">
                                         <h5 class="text-left text-xs font-semibold mb-1">Type:</h5>
                                         <select class="w-full bg-white border border-gray-300 
                                                     rounded-sm text-sm focus:outline-none py-1"
