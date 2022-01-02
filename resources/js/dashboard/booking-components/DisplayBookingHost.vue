@@ -57,6 +57,11 @@
                 </div>
             </div>
         </div>
+        <div v-else>
+            <h4 class="font-bold text-lg font-boldnosans text-gray-700 mb-2">
+                No bookings
+            </h4>
+        </div>
     </div>
 </template>
 

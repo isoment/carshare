@@ -56,19 +56,35 @@
                                     <div class="mt-3">
                                         <h5 class="text-left text-xs font-semibold mb-1">Date Filter:</h5>
                                         <div class="flex flex-wrap items-center text-sm text-white">
-                                            <button class="bg-purple-400 px-2 rounded-sm mr-1 mb-1"
+                                            <button class="px-2 rounded-sm mr-1 mb-1 focus:outline-none"
+                                                    :class="{
+                                                        'bg-purple-200': selectedDateFilter === 'all',
+                                                        'bg-purple-400': selectedDateFilter !== 'all'
+                                                    }"
                                                     @click="dateFilterAll()">
                                                 All
                                             </button>
-                                            <button class="bg-purple-400 px-2 rounded-sm mr-1 mb-1"
+                                            <button class="px-2 rounded-sm mr-1 mb-1 focus:outline-none"
+                                                    :class="{
+                                                        'bg-purple-200': selectedDateFilter === 'past',
+                                                        'bg-purple-400': selectedDateFilter !== 'past'
+                                                    }"
                                                     @click="dateFilterPast()">
                                                 Past till current
                                             </button>
-                                            <button class="bg-purple-400 px-2 rounded-sm mr-1 mb-1"
+                                            <button class="px-2 rounded-sm mr-1 mb-1 focus:outline-none"
+                                                    :class="{
+                                                        'bg-purple-200': selectedDateFilter === 'upcoming',
+                                                        'bg-purple-400': selectedDateFilter !== 'upcoming'
+                                                    }"
                                                     @click="dateFilterUpcoming()">
                                                 Current into future
                                             </button>
-                                            <button class="bg-purple-400 px-2 rounded-sm mr-1 mb-1"
+                                            <button class="px-2 rounded-sm mr-1 mb-1 focus:outline-none"
+                                                    :class="{
+                                                        'bg-purple-200': selectedDateFilter === 'current',
+                                                        'bg-purple-400': selectedDateFilter !== 'current'
+                                                    }"
                                                     @click="dateFilterCurrent()">
                                                 Only Current
                                             </button>
@@ -177,7 +193,7 @@
 
             displayHostComponent() {
                 return this.params.type === 'asHost';
-            }
+            },
         },
 
         data() {
@@ -186,6 +202,7 @@
                 bookingCounts: null,
                 bookings: null,
                 page: 1,
+                selectedDateFilter: 'all',
                 params: {
                     type: 'asRenter',
                     sort: 'dateAsc',
@@ -265,6 +282,7 @@
                 this.params.date.from = '1000-01-01';
                 this.params.date.to = '9999-12-31';
                 this.page = 1;
+                this.selectedDateFilter = 'all';
                 this.fetchBookings();
             },
 
@@ -273,6 +291,7 @@
                 this.params.date.from = '1000-01-01';
                 this.params.date.to = now;
                 this.page = 1;
+                this.selectedDateFilter = 'past';
                 this.fetchBookings();
             },
 
@@ -281,6 +300,7 @@
                 this.params.date.from = now;
                 this.params.date.to = '9999-12-31';
                 this.page = 1;
+                this.selectedDateFilter = 'upcoming';
                 this.fetchBookings();
             },
 
@@ -289,6 +309,7 @@
                 this.params.date.from = now;
                 this.params.date.to = now;
                 this.page = 1;
+                this.selectedDateFilter = 'current';
                 this.fetchBookings();
             },
 
