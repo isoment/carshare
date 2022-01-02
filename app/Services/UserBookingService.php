@@ -61,6 +61,8 @@ class UserBookingService
     {
         return Booking::with('order', 'vehicle.vehicleModel.vehicleMake')
             ->whereIn('order_id', $user->orders->pluck('id'))
+            ->where('to', '>=', $request['from'])
+            ->where('from', '<=', $request['to'])
             ->orderBy($this->sortColumn($request), $this->sortDirection($request))
             ->paginate(4);
     }
@@ -74,6 +76,8 @@ class UserBookingService
     {
         return Booking::with('vehicle.vehicleModel.vehicleMake')
             ->whereIn('vehicle_id', $user->vehicles->pluck('id'))
+            ->where('to', '>=', $request['from'])
+            ->where('from', '<=', $request['to'])
             ->orderBy($this->sortColumn($request), $this->sortDirection($request))
             ->paginate(4);
     }

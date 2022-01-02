@@ -27,7 +27,7 @@
                                 <span><i class="fas fa-sliders-h text-sm"></i></span>
                             </button>
 
-                            <div class="absolute bg-white right-0 top-10 rounded-sm z-40 w-48
+                            <div class="absolute bg-white right-0 top-10 rounded-sm z-40 w-60
                                         border border-gray-200 filter-dropdown-boxshadow"
                                  v-if="filterMenu"
                                  v-click-outside="filterMenuClose">
@@ -42,7 +42,7 @@
                                             <option value="asHost">As Host</option>
                                         </select>
                                     </div>
-                                    <div class="mt-2">
+                                    <div class="mt-3">
                                         <h5 class="text-left text-xs font-semibold mb-1">Sort By:</h5>
                                         <select class="w-full bg-white border border-gray-300 
                                                     rounded-sm text-sm focus:outline-none py-1"
@@ -52,6 +52,27 @@
                                             <option value="dateDesc">Date: Descending</option>
                                             <option value="priceTotalDesc">Price: Total</option>
                                         </select>
+                                    </div>
+                                    <div class="mt-3">
+                                        <h5 class="text-left text-xs font-semibold mb-1">Date Filter:</h5>
+                                        <div class="flex flex-wrap items-center text-sm text-white">
+                                            <button class="bg-purple-400 px-2 rounded-sm mr-1 mb-1"
+                                                    @click="dateFilterAll()">
+                                                All
+                                            </button>
+                                            <button class="bg-purple-400 px-2 rounded-sm mr-1 mb-1"
+                                                    @click="dateFilterPast()">
+                                                Past till current
+                                            </button>
+                                            <button class="bg-purple-400 px-2 rounded-sm mr-1 mb-1"
+                                                    @click="dateFilterUpcoming()">
+                                                Current into future
+                                            </button>
+                                            <button class="bg-purple-400 px-2 rounded-sm mr-1 mb-1"
+                                                    @click="dateFilterCurrent()">
+                                                Only Current
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -126,6 +147,7 @@
 
 <script>
     import { mapState } from 'vuex';
+    import moment from 'moment';
     import BookingsCount from './booking-components/BookingsCount.vue';
     import SimplePaginator from './../shared/components/SimplePaginator.vue';
     import DisplayBookingRenter from './booking-components/DisplayBookingRenter.vue';
@@ -166,7 +188,11 @@
                 page: 1,
                 params: {
                     type: 'asRenter',
-                    sort: 'dateAsc'
+                    sort: 'dateAsc',
+                    date: {
+                        from: '1000-01-01',
+                        to: '9999-12-31'
+                    }
                 }
             }
         },
@@ -208,8 +234,9 @@
                         params: {
                             page: this.page,
                             type: this.params.type,
-                            // sort: this.params.sort
-                            sort: 'dqiasii'
+                            sort: this.params.sort,
+                            from: this.params.date.from,
+                            to: this.params.date.to
                         }
                     });
 
@@ -230,6 +257,37 @@
             },
 
             updateSort() {
+                this.page = 1;
+                this.fetchBookings();
+            },
+
+            dateFilterAll() {
+                this.params.date.from = '1000-01-01';
+                this.params.date.to = '9999-12-31';
+                this.page = 1;
+                this.fetchBookings();
+            },
+
+            dateFilterPast() {
+                let now = moment().format('YYYY-MM-DD');
+                this.params.date.from = '1000-01-01';
+                this.params.date.to = now;
+                this.page = 1;
+                this.fetchBookings();
+            },
+
+            dateFilterUpcoming() {
+                let now = moment().format('YYYY-MM-DD');
+                this.params.date.from = now;
+                this.params.date.to = '9999-12-31';
+                this.page = 1;
+                this.fetchBookings();
+            },
+
+            dateFilterCurrent() {
+                let now = moment().format('YYYY-MM-DD');
+                this.params.date.from = now;
+                this.params.date.to = now;
                 this.page = 1;
                 this.fetchBookings();
             },
