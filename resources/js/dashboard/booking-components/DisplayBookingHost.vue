@@ -39,7 +39,12 @@
                             </div>
                         </div>
                         <div>
-                            Button
+                            <router-link :to="{
+                                name: 'customer-show-booking',
+                                params: { id: booking.booking.id } 
+                            }">
+                                <i class="fas fa-pen-square text-4xl text-purple-400"></i>
+                            </router-link>
                         </div>
                     </div>
                     <div class="mt-2">

@@ -16,6 +16,7 @@ import CustomerSharedVehicles from './dashboard/CustomerSharedVehicles';
 import CustomerEditVehicle from './dashboard/CustomerEditVehicle';
 import CustomerReviews from './dashboard/CustomerReviews';
 import CustomerBookings from './dashboard/CustomerBookings';
+import CustomerShowBooking from './dashboard/booking-components/CustomerShowBooking';
 
 const routes = [
     {
@@ -91,6 +92,11 @@ const routes = [
         path: "/dashboard/customer/bookings",
         component: CustomerBookings,
         name: "customer-bookings"
+    },
+    {
+        path: "/dashboard/customer/booking/:id",
+        component: CustomerShowBooking,
+        name: "customer-show-booking"
     },
 
     /** CART **/

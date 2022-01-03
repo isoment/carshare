@@ -139,7 +139,12 @@
                                                        duration-200 transition-all"
                                                 @click="resetFeaturedImage">
                                             Reset
-                                            </button>
+                                        </button>
+                                    </div>
+
+                                    <div>
+                                        <validation-errors :errors="errorFor('images')"></validation-errors>
+                                        <validation-errors :errors="errorFor('featured_id')"></validation-errors>
                                     </div>
 
                                     <div class="w-full">
@@ -213,8 +218,6 @@
                                     </div>
 
                                 </div>
-                                <validation-errors :errors="errorFor('images')"></validation-errors>
-                                <validation-errors :errors="errorFor('featured_id')"></validation-errors>
                             </div>
 
                         </div>
