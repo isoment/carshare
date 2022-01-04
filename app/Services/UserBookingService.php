@@ -6,7 +6,9 @@ namespace App\Services;
 
 use App\Http\Requests\UserBookingIndexRequest;
 use App\Http\Resources\UserBookingIndexHostResource;
-use App\Http\Resources\UserBookingsIndexRenterResource;
+use App\Http\Resources\UserBookingIndexRenterResource;
+use App\Http\Resources\UserBookingShowHostResource;
+use App\Http\Resources\UserBookingShowRenterResource;
 use App\Models\Booking;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -44,7 +46,7 @@ class UserBookingService
         $user = current_user();
 
         if ($request['type'] === 'asRenter') {
-            return UserBookingsIndexRenterResource::collection(
+            return UserBookingIndexRenterResource::collection(
                 $this->bookingsAsRenter($request, $user)
             );
         }
@@ -62,17 +64,18 @@ class UserBookingService
      *  Show the information from a booking
      * 
      *  @param int $id
+     *  @return JsonResource|JsonResponse
      */
-    public function show(int $id)
+    public function show(int $id) : JsonResource|JsonResponse
     {
         $user = current_user();
 
         if ($this->userIsHostOfBooking($id, $user)) {
-            return $this->showBookingAsHost($id);
+            return new UserBookingShowHostResource($this->showBookingAsHost($id));
         }
 
         if ($this->userIsRenterOfBooking($id, $user)) {
-            return $this->showBookingAsRenter($id);
+            return new UserBookingShowRenterResource($this->showBookingAsRenter($id));
         }
 
         return response()->json(['You cannot access this booking'], 403);
@@ -80,24 +83,24 @@ class UserBookingService
 
     /**
      *  @param int $id
-     *  @return Collection
+     *  @return Booking
      */
-    public function showBookingAsRenter(int $id) : Collection
+    public function showBookingAsRenter(int $id) : Booking
     {
         return Booking::with('order', 'vehicle.vehicleModel.vehicleMake')
             ->where('id', $id)
-            ->get();
+            ->first();
     }
 
     /**
      *  @param int $id
-     *  @return Collection
+     *  @return Booking
      */
-    public function showBookingAsHost(int $id) : Collection
+    public function showBookingAsHost(int $id) : Booking
     {
         return Booking::with('vehicle.vehicleModel.vehicleMake')
             ->where('id', $id)
-            ->get();
+            ->first();
     }
 
     /**

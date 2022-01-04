@@ -3,8 +3,9 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log;
 
-class UserBookingsIndexRenterResource extends JsonResource
+class UserBookingShowRenterResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,24 +16,27 @@ class UserBookingsIndexRenterResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'userIs' => 'renter',
             'booking' => [
                 'id' => $this->id,
                 'from' => $this->from,
                 'to' => $this->to,
                 'price_day' => $this->price_day,
-                'price_total' => $this->price_total
+                'price_total' => $this->price_total,
+                'created_at' => $this->created_at
             ],
             'vehicle' => [
-                'model' => $this->vehicle->vehicleModel->model,
-                'make' => $this->vehicle->vehicleModel->vehicleMake->make,
-                'year' => $this->vehicle->year,
+                'id' => $this->vehicle->id,
                 'image' => $this->vehicle->featured_image,
-                'active' => $this->vehicle->active
+                'make' => $this->vehicle->vehicleModel->vehicleMake->make,
+                'model' => $this->vehicle->vehicleModel->model,
+                'year' => $this->vehicle->year,
             ],
             'order' => [
                 'id' => $this->order->id,
                 'total' => $this->order->total,
-                'transaction_id' => $this->order->transaction_id
+                'transaction_id' => $this->order->transaction_id,
+                'created_at' => $this->order->created_at
             ]
         ];
     }

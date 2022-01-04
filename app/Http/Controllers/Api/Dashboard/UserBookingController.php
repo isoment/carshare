@@ -46,8 +46,9 @@ class UserBookingController extends Controller
      *  Show a booking
      * 
      *  @param int $id
+     *  @return JsonResource|JsonResponse
      */
-    public function bookingShow(int $id)
+    public function bookingShow(int $id) : JsonResource|JsonResponse
     {
         return $this->userBookingService->show($id);
     }
