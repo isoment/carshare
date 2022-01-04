@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class UserBookingService
@@ -56,12 +57,77 @@ class UserBookingService
 
         return response()->json(['Error getting bookings'], 404);
     }
+
     /**
-     *  Index of bookings as renter
+     *  Show the information from a booking
+     * 
+     *  @param int $id
+     */
+    public function show(int $id)
+    {
+        $user = current_user();
+
+        if ($this->userIsHostOfBooking($id, $user)) {
+            return $this->showBookingAsHost($id);
+        }
+
+        if ($this->userIsRenterOfBooking($id, $user)) {
+            return $this->showBookingAsRenter($id);
+        }
+
+        return response()->json(['You cannot access this booking'], 403);
+    }
+
+    /**
+     *  @param int $id
+     *  @return Collection
+     */
+    public function showBookingAsRenter(int $id) : Collection
+    {
+        return Booking::with('order', 'vehicle.vehicleModel.vehicleMake')
+            ->where('id', $id)
+            ->get();
+    }
+
+    /**
+     *  @param int $id
+     *  @return Collection
+     */
+    public function showBookingAsHost(int $id) : Collection
+    {
+        return Booking::with('vehicle.vehicleModel.vehicleMake')
+            ->where('id', $id)
+            ->get();
+    }
+
+    /**
+     *  @param int $bookingId
+     *  @param User $user
+     */
+    private function userIsHostOfBooking(int $bookingId, User $user) : bool
+    {
+        $usersBookings = $user->getVehicleBookings()->pluck('id');
+
+        return $usersBookings->contains($bookingId);
+    }
+
+    /**
+     *  @param int $bookingId
+     *  @param User $user
+     */
+    private function userIsRenterOfBooking(int $bookingId, User $user) : bool
+    {
+        $usersBookings = $user->getBookings()->pluck('id');
+
+        return $usersBookings->contains($bookingId);
+    }
+
+    /**
+     *  The query to run to get an index of the users bookings as a renter
      * 
      *  @return Illuminate\Pagination\LengthAwarePaginator
      */
-    private function bookingsAsRenter(UserBookingIndexRequest $request, $user) : LengthAwarePaginator
+    private function bookingsAsRenter(UserBookingIndexRequest $request, User $user) : LengthAwarePaginator
     {
         return Booking::with('order', 'vehicle.vehicleModel.vehicleMake')
             ->whereIn('order_id', $user->orders->pluck('id'))
@@ -72,11 +138,11 @@ class UserBookingService
     }
 
     /**
-     *  Index of bookings as host
+     *  The query to run to get an index of the users bookings as a host
      * 
      *  @return Illuminate\Pagination\LengthAwarePaginator
      */
-    private function bookingsAsHost(UserBookingIndexRequest $request, $user) : LengthAwarePaginator
+    private function bookingsAsHost(UserBookingIndexRequest $request, User $user) : LengthAwarePaginator
     {
         return Booking::with('vehicle.vehicleModel.vehicleMake')
             ->whereIn('vehicle_id', $user->vehicles->pluck('id'))

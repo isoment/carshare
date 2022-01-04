@@ -39,8 +39,17 @@ class UserBookingController extends Controller
      */
     public function bookingIndex(UserBookingIndexRequest $request) : JsonResource|JsonResponse
     {
-        Log::info($request->toArray());
-
         return $this->userBookingService->index($request);
     }
+
+    /**
+     *  Show a booking
+     * 
+     *  @param int $id
+     */
+    public function bookingShow(int $id)
+    {
+        return $this->userBookingService->show($id);
+    }
+
 }

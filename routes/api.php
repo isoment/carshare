@@ -207,15 +207,24 @@ Route::middleware('auth:sanctum')->group(function() {
     /************************
      *  Booking API Routes  *
      ***********************/
+
+    // Get a count of the users bookings and cancellations
     Route::get(
         'dashboard/booking-counts',
         [App\Http\Controllers\Api\Dashboard\UserBookingController::class, 'showBookingCounts']
     )->name('dashboard.booking-counts');
 
+    // Get an index of the users bookings
     Route::get(
         'dashboard/booking-index',
         [App\Http\Controllers\Api\Dashboard\UserBookingController::class, 'bookingIndex']
     )->name('dashboard.booking-index');
+
+    // Show a users booking
+    Route::get(
+        'dashboard/show-booking/{id}',
+        [App\Http\Controllers\Api\Dashboard\UserBookingController::class, 'bookingShow']
+    )->name('dashboard.booking-show');
 
     /*************************
      *  Checkout API Routes  *
