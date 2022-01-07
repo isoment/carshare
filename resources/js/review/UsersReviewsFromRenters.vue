@@ -14,11 +14,23 @@
     export default {
         components: { IndividualReview },
 
+        props: {
+            userId: Number
+        },
+
         mixins: [reviewList],
 
         methods: {
+            determineId() {
+                return this.userId ?? this.$store.state.user.id;
+            },
+
             async fetchReviews() {
-                let reviews = (await axios.get(`/api/reviews-from-renters/${this.$store.state.user.id}?page=${this.page}`));
+                const idToUse = this.determineId();
+
+                console.log(idToUse);
+
+                const reviews = (await axios.get(`/api/reviews-from-renters/${idToUse}?page=${this.page}`));
 
                 this.reviews.push(...reviews.data.data);
 

@@ -52,8 +52,8 @@
                                     {{formatDate(booking.booking.created_at)}}</span>
                             </div>
                             <div class="mt-10">
-                                <h6 class="uppercase font-bold font-boldnosans text-xs 
-                                        text-gray-500 tracking-widest mb-4">
+                                <h6 class="uppercase font-bold font-boldnosans text-sm 
+                                        text-gray-700 tracking-widest mb-4 underline">
                                     Booking Details
                                 </h6>
                                 <div class="flex justify-between items-center mt-2">
@@ -116,8 +116,8 @@
                     <!-- Right -->
                     <div>
                         <div class="mt-8">
-                            <h6 class="uppercase font-bold font-boldnosans text-xs 
-                                        text-gray-500 tracking-widest mb-4">
+                            <h6 class="uppercase font-bold font-boldnosans text-sm 
+                                        text-gray-600 tracking-widest mb-4">
                                 {{userIsHost ? 'Your Renter' : 'Your Host'}}
                             </h6>
                             <div class="flex items-center">
@@ -135,7 +135,15 @@
                                     <div class="text-xs">Member since {{humanReadableDate(booking.user.created_at)}}</div>
                                 </div>
                             </div>
-                            <div class="mt-8">
+                            <div class="mt-8 flex justify-center items-center">
+                                <div class="shadow-lg px-4 py-1 rounded-full border border-gray-100 w-32 text-center
+                                            cursor-pointer font-boldnosans text-gray-800"
+                                     v-if="!showBio"
+                                     @click="toggleBio()">
+                                    Show Bio <span><i class="fas fa-chevron-down"></i></span>
+                                </div>
+                            </div>
+                            <div class="mt-4" v-if="showBio">
                                 <div>
                                     <h6 class="uppercase font-bold font-boldnosans text-xs 
                                         text-gray-500 tracking-widest">Location</h6>
@@ -161,6 +169,29 @@
                                         text-gray-500 tracking-widest">About</h6>
                                     <div class="text-xs mt-1">{{booking.user.about ? booking.user.about : 'N/A'}}</div>
                                 </div>
+                                <div class="mt-8 flex justify-center items-center">
+                                    <div class="shadow-lg px-4 py-1 rounded-full border border-gray-100 w-32 text-center
+                                                cursor-pointer font-boldnosans text-gray-800"
+                                            @click="toggleBio()">
+                                        Hide Bio <span><i class="fas fa-chevron-up"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <div class="pt-8">
+                                <h6 class="uppercase font-bold font-boldnosans text-sm 
+                                        text-gray-600 tracking-widest mb-2">
+                                    Reviews from hosts
+                                </h6>
+                                <users-reviews-from-hosts :userId="booking.user.id"></users-reviews-from-hosts>
+                            </div>
+                            <div class="pt-12">
+                                <h6 class="uppercase font-bold font-boldnosans text-sm 
+                                        text-gray-600 tracking-widest mb-2">
+                                    Reviews from renters
+                                </h6>
+                                <users-reviews-from-renters :userId="booking.user.id"></users-reviews-from-renters>
                             </div>
                         </div>
                     </div>
@@ -175,8 +206,15 @@
     import { monthDayYearNumbericSlash, humanReadableDate } from './../../shared/utils/dateFormats';
     import { dollarFormat } from './../../shared/utils/currency';
     import moment from 'moment';
+    import UsersReviewsFromHosts from './../../review/UsersReviewsFromHosts.vue';
+    import UsersReviewsFromRenters from './../../review/UsersReviewsFromRenters.vue';
 
     export default {
+        components: {
+            UsersReviewsFromRenters,
+            UsersReviewsFromHosts
+        },
+
         computed: {
             ...mapState({
                 isLoggedIn: "isLoggedIn",
@@ -197,7 +235,8 @@
                 loading: false,
                 booking: null,
                 userRating: null,
-                forbidden: null
+                forbidden: null,
+                showBio: false
             }
         },
 
@@ -241,6 +280,10 @@
                 let from = moment(this.booking.booking.from);
                 let to = moment(this.booking.booking.to);
                 return moment.duration(to.diff(from)).days() + 1;
+            },
+
+            toggleBio() {
+                this.showBio = !this.showBio;
             }
         },
 
