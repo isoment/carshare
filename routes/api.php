@@ -83,6 +83,11 @@ Route::get(
     [App\Http\Controllers\Api\ReviewController::class, 'reviewsFromRenters']
 )->name('reviews.from-renters');
 
+// The users review ratings
+Route::get(
+    'show-review-rating/{id?}',
+    [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'showReviewRating']
+)->name('dashboard.show-review-rating');
 
 /*********************
  *  Auth API Routes  *
@@ -197,12 +202,6 @@ Route::middleware('auth:sanctum')->group(function() {
         'dashboard/create-review-of-renter',
         [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'createReviewOfRenter']
     )->name('dashboard.create-review-of-renter');
-
-    // The users review ratings
-    Route::get(
-        'dashboard/show-review-rating',
-        [App\Http\Controllers\Api\Dashboard\UserReviewController::class, 'showReviewRating']
-    )->name('dashboard.show-review-rating');
 
     /************************
      *  Booking API Routes  *

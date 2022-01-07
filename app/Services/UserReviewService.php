@@ -77,9 +77,13 @@ class UserReviewService
      * 
      *  @return Illuminate\Http\JsonResponse
      */
-    public function showReviewRating() : JsonResponse
+    public function showReviewRating(int $userId = null) : JsonResponse
     {
-        $id = current_user()->id;
+        if (!current_user() && $userId === null) {
+            return response()->json('You must provide a user id to retrieve ratings for', 404);
+        }
+
+        $id = $userId ?? current_user()->id;
 
         $ratings = [
             'total' => $this->calculateUserTotalRating($id),

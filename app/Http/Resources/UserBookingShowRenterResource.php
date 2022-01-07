@@ -40,6 +40,7 @@ class UserBookingShowRenterResource extends JsonResource
                 'created_at' => $this->order->created_at
             ],
             'user' => [
+                'id' => $this->vehicle->user->id,
                 'name' => $this->vehicle->user->name,
                 'image' => $this->vehicle->user->profile->image,
                 'location' => $this->vehicle->user->profile->location,

@@ -121,13 +121,45 @@
                                 {{userIsHost ? 'Your Renter' : 'Your Host'}}
                             </h6>
                             <div class="flex items-center">
-                                <div>
+                                <div class="relative">
                                     <img :src="booking.user.image" alt="profile" 
-                                        class="rounded-full h-14 w-14">
+                                        class="rounded-full h-20 w-20">
+                                    <div class="absolute bg-white rounded-full px-4 shadow-lg text-center top-16
+                                                font-bold font-boldnosans flex items-center border border-gray-100">
+                                        <div class="mr-2">{{userRating}}</div>
+                                        <div><i class="fas fa-star text-purple-400 text-medium"></i></div>
+                                    </div>
                                 </div>
                                 <div class="text-gray-700 ml-3">
                                     <div class="font-bold text-lg">{{booking.user.name}}</div>
                                     <div class="text-xs">Member since {{humanReadableDate(booking.user.created_at)}}</div>
+                                </div>
+                            </div>
+                            <div class="mt-8">
+                                <div>
+                                    <h6 class="uppercase font-bold font-boldnosans text-xs 
+                                        text-gray-500 tracking-widest">Location</h6>
+                                    <div class="text-xs mt-1">{{booking.user.location ? booking.user.location : 'N/A'}}</div>
+                                </div>
+                                <div class="mt-2">
+                                    <h6 class="uppercase font-bold font-boldnosans text-xs 
+                                        text-gray-500 tracking-widest">Languages</h6>
+                                    <div class="text-xs mt-1">{{booking.user.languages ? booking.user.languages : 'N/A'}}</div>
+                                </div>
+                                <div class="mt-2">
+                                    <h6 class="uppercase font-bold font-boldnosans text-xs 
+                                        text-gray-500 tracking-widest">Work</h6>
+                                    <div class="text-xs mt-1">{{booking.user.work ? booking.user.work : 'N/A'}}</div>
+                                </div>
+                                <div class="mt-2">
+                                    <h6 class="uppercase font-bold font-boldnosans text-xs 
+                                        text-gray-500 tracking-widest">School</h6>
+                                    <div class="text-xs mt-1">{{booking.user.school ? booking.user.school : 'N/A'}}</div>
+                                </div>
+                                <div class="mt-2">
+                                    <h6 class="uppercase font-bold font-boldnosans text-xs 
+                                        text-gray-500 tracking-widest">About</h6>
+                                    <div class="text-xs mt-1">{{booking.user.about ? booking.user.about : 'N/A'}}</div>
                                 </div>
                             </div>
                         </div>
@@ -164,6 +196,7 @@
             return {
                 loading: false,
                 booking: null,
+                userRating: null,
                 forbidden: null
             }
         },
@@ -172,15 +205,24 @@
             async fetchBooking() {
                 try {
                     this.loading = true;
-                    let response = await axios.get(`/api/dashboard/show-booking/${this.$route.params.id}`);
-                    this.booking = response.data.data;
+                    let responseBooking = await axios.get(`/api/dashboard/show-booking/${this.$route.params.id}`);
+                    this.booking = responseBooking.data.data;
+                    await this.fetchUserRating();
                 } catch (error) {
-                    console.log(error.response);
                     if (error.response.status === 403) {
                         this.forbidden = true;
                     }
                 }
                 this.loading = false;
+            },
+
+            async fetchUserRating() {
+                try {
+                    let response = await axios.get(`/api/show-review-rating/${this.booking.user.id}`);
+                    this.userRating = response.data.total;
+                } catch (error) {
+                    console.log(error);
+                }
             },
 
             formatDate(date) {
@@ -204,6 +246,6 @@
 
         created() {
             this.fetchBooking();
-        }
+        },
     }
 </script>

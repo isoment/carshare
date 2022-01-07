@@ -108,8 +108,8 @@ class UserReviewController extends Controller
     /**
      *  Show a users review rating
      */
-    public function showReviewRating() : JsonResponse
+    public function showReviewRating(int $id = null) : JsonResponse
     {
-        return $this->userReviewService->showReviewRating();
+        return $this->userReviewService->showReviewRating($id);
     }
 }

@@ -87,7 +87,7 @@
 
         methods: {
             async fetchRatings() {
-                let response = await axios.get('/api/dashboard/show-review-rating');
+                let response = await axios.get('/api/show-review-rating');
 
                 this.ratings = response.data;
             }
