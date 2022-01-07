@@ -31,6 +31,16 @@ class UserBookingShowHostResource extends JsonResource
                 'model' => $this->vehicle->vehicleModel->model,
                 'year' => $this->vehicle->year,
             ],
+            'user' => [
+                'name' => $this->order->user->name,
+                'image' => $this->order->user->profile->image,
+                'location' => $this->order->user->profile->location,
+                'languages' => $this->order->user->profile->languages,
+                'work' => $this->order->user->profile->work,
+                'school' => $this->order->user->profile->school,
+                'about' => $this->order->user->profile->about,
+                'created_at' => $this->order->user->created_at
+            ]
         ];
     }
 }

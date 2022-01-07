@@ -17,7 +17,7 @@
                         <div class="absolute right-2 lg:right-8 top-16 md:top-28">
                             <div>
                                 <a href="#"
-                                    class="bg-white px-4 py-2 text-red-500 border-2 border-red-500 
+                                    class="bg-white px-4 py-2 text-gray-800 border-2 border-gray-800 
                                             font-bold mr-2">
                                     Cancel Booking
                                 </a>
@@ -38,6 +38,9 @@
                             </div>
                         </div>
                         <div class="mt-20">
+                            <h5 class="text-sm font-light text-purple-600">
+                                {{userIsHost ? 'Your...' : 'You booked the...'}}
+                            </h5>
                             <h2 class="text-4xl font-boldnosans font-bold">
                                 {{booking.vehicle.year}} {{booking.vehicle.make}}
                             </h2>
@@ -79,7 +82,7 @@
                                 </div>
                             </div>
                             <div class="mt-10">
-                               <h6 class="uppercase font-bold font-boldnosans text-sm 
+                                <h6 class="uppercase font-bold font-boldnosans text-sm 
                                         text-gray-700 tracking-widest mb-4 underline">
                                     Booking Price
                                 </h6>
@@ -87,7 +90,7 @@
                                     <div class="uppercase font-bold font-boldnosans text-xs text-gray-500 tracking-widest">
                                         Price / Day:
                                     </div>
-                                    <div href="#" class="text-2xl font-bold">
+                                    <div href="#" class="text-xl font-bold">
                                         {{currencyFormat(booking.booking.price_day)}}
                                     </div>
                                 </div>
@@ -95,7 +98,7 @@
                                     <div class="uppercase font-bold font-boldnosans text-xs text-gray-500 tracking-widest">
                                         Total / Days:
                                     </div>
-                                    <div href="#" class="text-2xl font-bold pl-20 border-b border-gray-200 pb-2">
+                                    <div href="#" class="text-xl font-bold pl-20 border-b border-gray-200 pb-2">
                                         <span class="text-sm text-gray-400 font-light">x</span> {{bookingDateCount()}}
                                     </div>
                                 </div>
@@ -103,7 +106,7 @@
                                     <div class="uppercase font-bold font-boldnosans text-xs text-gray-500 tracking-widest">
                                         Price Total:
                                     </div>
-                                    <div href="#" class="text-purple-500 text-2xl font-bold">
+                                    <div href="#" class="text-purple-500 text-xl font-bold">
                                         {{currencyFormat(booking.booking.price_total)}}
                                     </div>
                                 </div>
@@ -112,7 +115,22 @@
                     </div>
                     <!-- Right -->
                     <div>
-                        TEST
+                        <div class="mt-8">
+                            <h6 class="uppercase font-bold font-boldnosans text-xs 
+                                        text-gray-500 tracking-widest mb-4">
+                                {{userIsHost ? 'Your Renter' : 'Your Host'}}
+                            </h6>
+                            <div class="flex items-center">
+                                <div>
+                                    <img :src="booking.user.image" alt="profile" 
+                                        class="rounded-full h-14 w-14">
+                                </div>
+                                <div class="text-gray-700 ml-3">
+                                    <div class="font-bold text-lg">{{booking.user.name}}</div>
+                                    <div class="text-xs">Member since {{humanReadableDate(booking.user.created_at)}}</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -122,7 +140,7 @@
 
 <script>
     import { mapState } from 'vuex';
-    import { monthDayYearNumbericSlash } from './../../shared/utils/dateFormats';
+    import { monthDayYearNumbericSlash, humanReadableDate } from './../../shared/utils/dateFormats';
     import { dollarFormat } from './../../shared/utils/currency';
     import moment from 'moment';
 
@@ -132,6 +150,14 @@
                 isLoggedIn: "isLoggedIn",
                 user: "user"
             }),
+
+            userIsRenter() {
+                return this.booking.userIs === 'renter';
+            },
+
+            userIsHost() {
+                return this.booking.userIs === 'host';
+            }
         },
 
         data() {
@@ -161,6 +187,10 @@
                 return monthDayYearNumbericSlash(date);
             },
 
+            humanReadableDate(date) {
+                return humanReadableDate(date);
+            },
+
             currencyFormat(amount) {
                 return dollarFormat(amount);
             },
@@ -168,7 +198,7 @@
             bookingDateCount() {
                 let from = moment(this.booking.booking.from);
                 let to = moment(this.booking.booking.to);
-                return moment.duration(to.diff(from)).asDays() + 1;
+                return moment.duration(to.diff(from)).days() + 1;
             }
         },
 

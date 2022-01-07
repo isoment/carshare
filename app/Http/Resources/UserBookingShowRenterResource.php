@@ -31,12 +31,23 @@ class UserBookingShowRenterResource extends JsonResource
                 'make' => $this->vehicle->vehicleModel->vehicleMake->make,
                 'model' => $this->vehicle->vehicleModel->model,
                 'year' => $this->vehicle->year,
+                'created_at' => $this->vehicle->created_at
             ],
             'order' => [
                 'id' => $this->order->id,
                 'total' => $this->order->total,
                 'transaction_id' => $this->order->transaction_id,
                 'created_at' => $this->order->created_at
+            ],
+            'user' => [
+                'name' => $this->vehicle->user->name,
+                'image' => $this->vehicle->user->profile->image,
+                'location' => $this->vehicle->user->profile->location,
+                'languages' => $this->vehicle->user->profile->languages,
+                'work' => $this->vehicle->user->profile->work,
+                'school' => $this->vehicle->user->profile->school,
+                'about' => $this->vehicle->user->profile->about,
+                'created_at' => $this->vehicle->user->created_at
             ]
         ];
     }
