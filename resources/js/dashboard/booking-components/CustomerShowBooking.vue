@@ -51,6 +51,13 @@
                                 Booked on: <span class="font-medium text-gray-400 tracking-widest">
                                     {{formatDate(booking.booking.created_at)}}</span>
                             </div>
+                            <div class="mt-2" v-if="userIsRenter">
+                                <button class="bg-purple-400 text-white text-center px-4 py-1 text-sm font-semibold
+                                               hover:bg-purple-300 transition-all duration-200 focus:outline-none">
+                                    <span><i class="far fa-list-alt"></i></span>
+                                    Show Order
+                                </button>
+                            </div>
                             <div class="mt-10">
                                 <h6 class="uppercase font-bold font-boldnosans text-sm 
                                         text-gray-700 tracking-widest mb-4 underline">

@@ -41,11 +41,6 @@
                                         {{currencyFormat(booking.booking.price_total)}}
                                     </span>
                                 </div>
-                                <div class="text-sm w-28 flex items-center mt-2 bg-purple-400 text-white px-2
-                                            justify-center">
-                                    <div class="mr-1">View Order</div>
-                                    <div><i class="far fa-list-alt text-lg"></i></div>
-                                </div>
                             </div>
                         </div>
                         <div>

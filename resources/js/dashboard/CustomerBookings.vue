@@ -141,6 +141,9 @@
                                 <div class="sm:hidden mb-4">
                                     <bookings-count v-if="bookingCounts" :stats="bookingCounts"></bookings-count>
                                 </div>
+                                <div v-if="loading" class="text-center mt-8">
+                                    <i class="fas fa-spinner fa-spin text-purple-500 text-4xl"></i>
+                                </div>
                                 <div class="mt-2" v-if="bookings">
                                     <!-- Paginator -->
                                     <simple-paginator :iterable="bookings"
@@ -210,7 +213,8 @@
                         from: '1000-01-01',
                         to: '9999-12-31'
                     }
-                }
+                },
+                loading: false
             }
         },
 
@@ -244,6 +248,8 @@
             },
 
             async fetchBookings() {
+                this.loading = true;
+
                 try {
                     this.bookings = null;
                     
@@ -266,6 +272,8 @@
                         });
                     }
                 }
+                
+                this.loading = false;
             },
 
             updateType() {
