@@ -62,20 +62,71 @@
                                     Show Order
                                 </button>
                                 <simple-modal v-model="showOrderModal" @close="closeOrderModal">
-                                    <div class="text-2xl font-bold font-boldnosans tracking-wider text-gray-700 text-center">
+                                    <div class="text-2xl font-bold font-boldnosans tracking-wider text-gray-700 
+                                                border-b border-gray-100 pb-3 text-center">
                                         Order Details
                                     </div>
-                                    <div v-if="order">
-                                        <div class="text-center mb-6">
-                                            <h3 class="text-lg font-bold font-boldnosans tracking-wider text-gray-700 text-center">
-                                                Transaction ID:
-                                            </h3>
-                                            <h3 class="text-green-400 text-medium font-boldnosans font-bold">
-                                                {{ order.transaction_id }}
-                                            </h3>
+                                    <div v-if="order" class="mt-2">
+                                        <div class="mb-6">
+                                            <div>
+                                                <h6 class="uppercase font-bold font-boldnosans text-xs 
+                                                          text-gray-600 tracking-widest">Order id:</h6>
+                                                <h3 class="font-boldnosans font-bold">
+                                                    {{ order.id }}
+                                                </h3>
+                                            </div>
+                                            <div class="mt-2">
+                                                <h6 class="uppercase font-bold font-boldnosans text-xs 
+                                                          text-gray-600 tracking-widest">Transaction id:</h6>
+                                                <h3 class="text-green-400 text-medium font-boldnosans font-bold">
+                                                    {{ order.transaction_id }}
+                                                </h3>
+                                            </div>
+                                            <div class="mt-2">
+                                                <h6 class="uppercase font-bold font-boldnosans text-xs 
+                                                          text-gray-600 tracking-widest">Order placed:</h6>
+                                                <h3 class="font-boldnosans font-bold">
+                                                    {{ formatDate(order.order_placed) }}
+                                                </h3>
+                                            </div>
                                         </div>
                                         <div v-for="booking in order.bookings" :key="booking.id">
-                                            <h6>{{booking.id}}</h6>
+                                            <div class="flex items-start mb-4">
+                                                <!-- <router-link :to="{ 
+                                                    name: 'customer-show-booking',
+                                                    params: { id: booking.id } 
+                                                }"> -->
+                                                    <div class="h-20 w-32 rounded-sm cursor-pointer"
+                                                            :style="{ 'background-image': 'url(' + booking.vehicle_image + ')' }"
+                                                            style="background-size: cover; background-position: 50% 50%;">
+                                                    </div>
+                                                <!-- </router-link> -->
+                                                <div class="ml-3">
+                                                    <h6 class="font-bold font-boldnosans text-gray-700 text-sm">
+                                                        {{booking.vehicle_make}} {{booking.vehicle_model}}
+                                                    </h6>
+                                                    <h6 class="text-sm font-bold font-boldnosans text-purple-900">
+                                                        {{booking.vehicle_year}}
+                                                    </h6>
+                                                    <div class="text-xs font-light text-gray-500">
+                                                        <div>From: 
+                                                            <span class="font-bold">{{formatDate(booking.from)}}</span>
+                                                        </div>
+                                                        <div>To: 
+                                                            <span class="font-bold">{{formatDate(booking.to)}}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 flex justify-between items-center">
+                                            <div class="uppercase font-bold font-boldnosans text-xs 
+                                                       text-gray-600 tracking-widest">
+                                                Total:
+                                            </div>
+                                            <div class="font-bold text-lg font-boldnosans text-purple-900">
+                                                {{currencyFormat(order.total_price)}}
+                                            </div>
                                         </div>
                                     </div>
                                     <div v-else class="text-sm text-red-400 mt-2">
@@ -273,7 +324,7 @@
                 order: null,
                 forbidden: null,
                 showBio: false,
-                showOrderModal: false
+                showOrderModal: true
             }
         },
 
