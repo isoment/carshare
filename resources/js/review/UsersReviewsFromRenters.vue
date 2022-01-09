@@ -28,8 +28,6 @@
             async fetchReviews() {
                 const idToUse = this.determineId();
 
-                console.log(idToUse);
-
                 const reviews = (await axios.get(`/api/reviews-from-renters/${idToUse}?page=${this.page}`));
 
                 this.reviews.push(...reviews.data.data);

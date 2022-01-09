@@ -225,6 +225,12 @@ Route::middleware('auth:sanctum')->group(function() {
         [App\Http\Controllers\Api\Dashboard\UserBookingController::class, 'bookingShow']
     )->name('dashboard.booking-show');
 
+    // Show a users order
+    Route::get(
+        'dashboard/order-show/{id}',
+        'App\Http\Controllers\Api\Dashboard\UserShowOrderController'
+    )->name('dashboard.order-show');
+
     /*************************
      *  Checkout API Routes  *
      ************************/

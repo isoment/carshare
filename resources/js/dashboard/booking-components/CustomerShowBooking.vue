@@ -62,13 +62,24 @@
                                     Show Order
                                 </button>
                                 <simple-modal v-model="showOrderModal" @close="closeOrderModal">
-                                    <div>
-                                        <div class="text-2xl font-bold font-boldnosans tracking-wider text-gray-700 text-center">
-                                            Order Details
+                                    <div class="text-2xl font-bold font-boldnosans tracking-wider text-gray-700 text-center">
+                                        Order Details
+                                    </div>
+                                    <div v-if="order">
+                                        <div class="text-center mb-6">
+                                            <h3 class="text-lg font-bold font-boldnosans tracking-wider text-gray-700 text-center">
+                                                Transaction ID:
+                                            </h3>
+                                            <h3 class="text-green-400 text-medium font-boldnosans font-bold">
+                                                {{ order.transaction_id }}
+                                            </h3>
                                         </div>
-                                        <div>
-                                            More details go here now
+                                        <div v-for="booking in order.bookings" :key="booking.id">
+                                            <h6>{{booking.id}}</h6>
                                         </div>
+                                    </div>
+                                    <div v-else class="text-sm text-red-400 mt-2">
+                                        There was a problem getting the order
                                     </div>
                                 </simple-modal>
                             </div>
@@ -259,6 +270,7 @@
                 loading: false,
                 booking: null,
                 userRating: null,
+                order: null,
                 forbidden: null,
                 showBio: false,
                 showOrderModal: false
@@ -272,6 +284,7 @@
                     let responseBooking = await axios.get(`/api/dashboard/show-booking/${this.$route.params.id}`);
                     this.booking = responseBooking.data.data;
                     await this.fetchUserRating();
+                    await this.fetchOrder();
                 } catch (error) {
                     if (error.response.status === 403) {
                         this.forbidden = true;
@@ -284,8 +297,20 @@
                 try {
                     let response = await axios.get(`/api/show-review-rating/${this.booking.user.id}`);
                     this.userRating = response.data.total;
+                } catch (error) {}
+            },
+
+            async fetchOrder() {
+                try {
+                    let response = await axios.get(`/api/dashboard/order-show/${this.booking.order.id}`);
+                    this.order = response.data.data;
                 } catch (error) {
-                    console.log(error);
+                    if (error.response.status === 403 || error.response.status === 404) {
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: error.response.data
+                        });
+                    }
                 }
             },
 
