@@ -37,6 +37,7 @@
                                     style="background-size: cover; background-position: 50% 50%;">
                             </div>
                         </div>
+
                         <div class="mt-20">
                             <h5 class="text-sm font-light text-purple-600">
                                 {{userIsHost ? 'Your...' : 'You booked the...'}}
@@ -51,13 +52,27 @@
                                 Booked on: <span class="font-medium text-gray-400 tracking-widest">
                                     {{formatDate(booking.booking.created_at)}}</span>
                             </div>
+
+                            <!-- Order Modal and Button -->
                             <div class="mt-2" v-if="userIsRenter">
                                 <button class="bg-purple-400 text-white text-center px-4 py-1 text-sm font-semibold
-                                               hover:bg-purple-300 transition-all duration-200 focus:outline-none">
+                                               hover:bg-purple-300 transition-all duration-200 focus:outline-none"
+                                        @click="showOrderModal = true">
                                     <span><i class="far fa-list-alt"></i></span>
                                     Show Order
                                 </button>
+                                <simple-modal v-model="showOrderModal" @close="closeOrderModal">
+                                    <div>
+                                        <div class="text-2xl font-bold font-boldnosans tracking-wider text-gray-700 text-center">
+                                            Order Details
+                                        </div>
+                                        <div>
+                                            More details go here now
+                                        </div>
+                                    </div>
+                                </simple-modal>
                             </div>
+
                             <div class="mt-10">
                                 <h6 class="uppercase font-bold font-boldnosans text-sm 
                                         text-gray-700 tracking-widest mb-4 underline">
@@ -215,11 +230,13 @@
     import moment from 'moment';
     import UsersReviewsFromHosts from './../../review/UsersReviewsFromHosts.vue';
     import UsersReviewsFromRenters from './../../review/UsersReviewsFromRenters.vue';
+    import SimpleModal from '../../shared/components/SimpleModal.vue';
 
     export default {
         components: {
             UsersReviewsFromRenters,
-            UsersReviewsFromHosts
+            UsersReviewsFromHosts,
+            SimpleModal
         },
 
         computed: {
@@ -243,7 +260,8 @@
                 booking: null,
                 userRating: null,
                 forbidden: null,
-                showBio: false
+                showBio: false,
+                showOrderModal: false
             }
         },
 
@@ -291,6 +309,10 @@
 
             toggleBio() {
                 this.showBio = !this.showBio;
+            },
+
+            closeOrderModal() {
+                this.showOrderModal = false; 
             }
         },
 
