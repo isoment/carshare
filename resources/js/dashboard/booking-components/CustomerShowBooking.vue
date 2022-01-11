@@ -8,7 +8,7 @@
             <i class="fas fa-spinner fa-spin text-purple-500 text-4xl"></i>
         </div>
         <div v-else-if="forbidden">
-            <error :message="'You are not associated with this booking'"></error>
+            <error :message="'You cannot access this'"></error>
         </div>
         <div v-else>
             <div class="customer-profile-banner h-36 md:h-56 border-b border-gray-200 pb-8">
@@ -92,15 +92,15 @@
                                         </div>
                                         <div v-for="booking in order.bookings" :key="booking.id">
                                             <div class="flex items-start mb-4">
-                                                <!-- <router-link :to="{ 
+                                                <router-link :to="{ 
                                                     name: 'customer-show-booking',
                                                     params: { id: booking.id } 
-                                                }"> -->
+                                                }">
                                                     <div class="h-20 w-32 rounded-sm cursor-pointer"
                                                             :style="{ 'background-image': 'url(' + booking.vehicle_image + ')' }"
                                                             style="background-size: cover; background-position: 50% 50%;">
                                                     </div>
-                                                <!-- </router-link> -->
+                                                </router-link>
                                                 <div class="ml-3">
                                                     <h6 class="font-bold font-boldnosans text-gray-700 text-sm">
                                                         {{booking.vehicle_make}} {{booking.vehicle_model}}
@@ -316,6 +316,19 @@
             }
         },
 
+        /**
+         *  When opening the order modal and clicking on another booking link there
+         *  is no automatic redirect since this is the same route. Here a watcher is
+         *  set and when the route param changes the modal is closed and the 
+         *  booking is re-fetched.
+         */
+        watch: {
+            $route() {
+                this.showOrderModal = false;
+                this.fetchBooking()
+            }
+        },
+
         data() {
             return {
                 loading: false,
@@ -324,7 +337,7 @@
                 order: null,
                 forbidden: null,
                 showBio: false,
-                showOrderModal: true
+                showOrderModal: false
             }
         },
 
