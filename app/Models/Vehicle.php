@@ -38,6 +38,14 @@ class Vehicle extends Model
     }
 
     /**
+     *  Relationship to cancellations
+     */
+    public function cancellations()
+    {
+        return $this->hasMany(Cancellation::class);
+    }
+
+    /**
      *  Relationship to vehicle images
      */
     public function vehicleImages()

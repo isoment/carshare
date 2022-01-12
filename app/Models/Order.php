@@ -26,4 +26,12 @@ class Order extends Model
     {
         return $this->hasMany(Booking::class);
     }
+
+    /**
+     *  Relationship to cancellations
+     */
+    public function cancellations()
+    {
+        return $this->hasMany(Cancellation::class);
+    }
 }
