@@ -16,11 +16,12 @@
                     <div class="relative">
                         <div class="absolute right-2 lg:right-8 top-16 md:top-28">
                             <div>
-                                <a href="#"
+                                <button href="#"
                                     class="bg-white px-4 py-2 text-gray-800 border-2 border-gray-800 
-                                            font-bold mr-2">
+                                            font-bold mr-2 focus:outline-none"
+                                    @click="cancelBooking">
                                     Cancel Booking
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -375,6 +376,15 @@
                             message: error.response.data
                         });
                     }
+                }
+            },
+
+            async cancelBooking() {
+                try {
+                    let response = await axios.delete(`/api/dashboard/booking-delete/${this.booking.booking.id}`);
+                    console.log(response);
+                } catch (error) {
+                    console.log(error.response);
                 }
             },
 

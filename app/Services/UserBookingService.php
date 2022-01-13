@@ -11,6 +11,7 @@ use App\Http\Resources\UserBookingShowHostResource;
 use App\Http\Resources\UserBookingShowRenterResource;
 use App\Models\Booking;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -94,8 +95,15 @@ class UserBookingService
             // Find booking
             $booking = Booking::findOrFail($id);
 
+            // Check if the booking has started
+            if ($this->bookingHasAlreadyStarted($booking)) {
+                return response()->json(['You cannot cancel a booking that has started',], 403);
+            }
+
             // Determine refund amount
             $refundAmount = $booking->renterInitiatedRefund();
+
+            return $refundAmount;
 
             // Refund renter
 
@@ -114,6 +122,17 @@ class UserBookingService
         // }
 
         return response()->json(['You cannot cancel this booking'], 403);
+    }
+
+    /**
+     *  @param Booking $booking
+     *  @return bool
+     */
+    private function bookingHasAlreadyStarted(Booking $booking) : bool
+    {
+        $from = Carbon::parse($booking->from);
+
+        return Carbon::now()->greaterThanOrEqualTo($from) ? true : false;
     }
 
     /**

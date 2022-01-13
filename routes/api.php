@@ -225,6 +225,12 @@ Route::middleware('auth:sanctum')->group(function() {
         [App\Http\Controllers\Api\Dashboard\UserBookingController::class, 'bookingShow']
     )->name('dashboard.booking-show');
 
+    // Cancel a booking
+    Route::delete(
+        'dashboard/booking-delete/{id}',
+        [App\Http\Controllers\Api\Dashboard\UserBookingController::class, 'bookingDelete']
+    )->name('dashboard.booking-delete');
+
     // Show a users order
     Route::get(
         'dashboard/order-show/{id}',

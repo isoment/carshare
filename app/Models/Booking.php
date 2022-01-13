@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Classes\PaymentMath;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -117,14 +118,19 @@ class Booking extends Model
             if ($this->bookingTotalDays() > 2) {
                 return [
                     'type' => 'Full refund minus one day',
-                    'renterRefund' => round($this->price_total - $this->price_day, 2, PHP_ROUND_HALF_UP),
-                    'hostCredit' => (float) $this->price_day
+                    'renterRefund' => $this->totalMinusPricePerDay(
+                        $this->price_total, 
+                        $this->price_day
+                    ),
+                    'hostCredit' => $this->price_day
                 ];
             } else {
+                $paymentHalf = $this->discountPercent(50, $this->price_total);
+
                 return [
                     'type' => '50% refund',
-                    'renterRefund' => round($this->price_total * .5, 2, PHP_ROUND_HALF_UP),
-                    'hostCredit' => round($this->price_total * .5, 2, PHP_ROUND_HALF_UP)
+                    'renterRefund' => $paymentHalf,
+                    'hostCredit' => $paymentHalf
                 ];
             }
         }
@@ -152,6 +158,30 @@ class Booking extends Model
         $to = Carbon::parse($this->to);
 
         return $from->diffInDays($to) + 1;
+    }
+
+   /**
+     *  @return string
+     */
+    private function totalMinusPricePerDay() : string
+    {
+        return bcsub($this->price_total, $this->price_day, 2);
+    }
+
+    /**
+     *  @param int $percent the percent to discount as a whole integer between 1 and 100
+     *  @param string $amount the amount to calculate the discount on
+     *  @return string
+     */
+    private function discountPercent(int $percent, string $amount) : string
+    {
+        if ($percent >= 1 && $percent <= 100) {
+            $discount = $percent * 0.01;
+        } else {
+            $discount = "1";
+        }
+
+        return bcmul($amount, (string) $discount, 2);
     }
 
     /**
