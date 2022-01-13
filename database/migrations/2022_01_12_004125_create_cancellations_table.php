@@ -19,6 +19,7 @@ class CreateCancellationsTable extends Migration
             $table->unsignedBigInteger('order_id');
             $table->date('from');
             $table->date('to');
+            $table->decimal('original_amount', 9, 2);
             $table->decimal('refund_amount', 9, 2);
             $table->text('reason');
             $table->timestamps();

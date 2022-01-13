@@ -81,6 +81,42 @@ class UserBookingService
     }
 
     /**
+     *  Cancel a users booking
+     * 
+     *  @param int $id
+     */
+    public function cancelBooking(int $id)
+    {
+        $user = current_user();
+
+        // User is renter
+        if ($this->userIsRenterOfBooking($id, $user)) {
+            // Find booking
+            $booking = Booking::findOrFail($id);
+
+            // Determine refund amount
+            $refundAmount = $booking->renterInitiatedRefund();
+
+            // Refund renter
+
+            // Credit host
+
+            // Create a new Cancellation entry
+
+            // Delete the original booking
+
+            // Change the order total or if there are no bookings left in an order delete it
+        }
+
+        // User is host
+        // if ($this->userIsHostOfBooking($id, $user)) {
+
+        // }
+
+        return response()->json(['You cannot cancel this booking'], 403);
+    }
+
+    /**
      *  @param int $id
      *  @return Booking
      */

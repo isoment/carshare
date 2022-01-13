@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -85,6 +86,72 @@ class Booking extends Model
     {
         return $query->where('to', '>=', $from)
             ->where('from', '<=', $to);
+    }
+
+    /**
+     *  Determine charges when a renter initiates a refund
+     * 
+     *  A guest can cancel the day before the booking and get 
+     *  a full refund. If the guest cancels outside of the free period they
+     *  are charged as follows which is paid to the host...
+     * 
+     *  Trip length is 2 days or less 50% refund.
+     *  Trip length greater than 2 days, full refund minus one day.
+     */
+    public function renterInitiatedRefund() : array
+    {
+        $today = Carbon::now();
+
+        $lastDayForFreeCancellation = Carbon::parse($this->from)
+            ->subDays(1);
+
+        if ($today->lessThanOrEqualTo($lastDayForFreeCancellation)) {
+            return [
+                'type' => 'Full refund',
+                'renterRefund' => $this->price_total,
+                'hostCredit' => "0"
+            ];
+        }
+
+        if ($today->greaterThanOrEqualTo($lastDayForFreeCancellation)) {
+            if ($this->bookingTotalDays() > 2) {
+                return [
+                    'type' => 'Full refund minus one day',
+                    'renterRefund' => round($this->price_total - $this->price_day, 2, PHP_ROUND_HALF_UP),
+                    'hostCredit' => (float) $this->price_day
+                ];
+            } else {
+                return [
+                    'type' => '50% refund',
+                    'renterRefund' => round($this->price_total * .5, 2, PHP_ROUND_HALF_UP),
+                    'hostCredit' => round($this->price_total * .5, 2, PHP_ROUND_HALF_UP)
+                ];
+            }
+        }
+    }
+
+    /**
+     *  Determine charges when a host initiates a refund
+     * 
+     *  If a host cancels the guest always gets a full refund. The host will
+     *  be charged a $50 fee if they cancel within 24hours.
+     */
+    public function hostInitiatedRefund()
+    {
+
+    }
+
+    /**
+     *  Get the total length of the booking in days
+     * 
+     *  @return int
+     */
+    public function bookingTotalDays() : int
+    {
+        $from = Carbon::parse($this->from);
+        $to = Carbon::parse($this->to);
+
+        return $from->diffInDays($to) + 1;
     }
 
     /**

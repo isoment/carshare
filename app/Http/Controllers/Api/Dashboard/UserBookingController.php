@@ -53,4 +53,13 @@ class UserBookingController extends Controller
         return $this->userBookingService->show($id);
     }
 
+    /**
+     *  Cancel a booking
+     * 
+     *  @param int $id
+     */
+    public function bookingDelete(int $id)
+    {
+        return $this->userBookingService->cancelBooking($id);
+    }
 }
