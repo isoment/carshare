@@ -11,6 +11,7 @@ use App\Notifications\OrderConfirmation;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class CheckoutService
 {
@@ -39,13 +40,14 @@ class CheckoutService
             // Total price of the order
             $totalPrice = $this->totalPrice($request, $order);
 
-            // Update the order total
-            $order->update([
-                'total' => $totalPrice
-            ]);
-
             // Charge the user
-            $this->oneTimeCharge($request, $totalPrice);
+            $paymentIntent = $this->oneTimeCharge($request, $totalPrice);
+
+            // Update the order total and payment intent
+            $order->update([
+                'total' => $totalPrice,
+                'payment_intent' => $paymentIntent
+            ]);
 
             // Email confirmation
             current_user()->notify(new OrderConfirmation());
@@ -88,6 +90,7 @@ class CheckoutService
         return Order::create([
             'user_id' => current_user()->id,
             'transaction_id' => $request['payment_method_id'],
+            'payment_intent' => 'N/A',
             'total' => 0,
         ]);
     }
@@ -123,7 +126,7 @@ class CheckoutService
      *  @param App\Models\Vehicle $vehicle
      *  @param App\Models\Order $order
      *  @param array $item
-     *  @param int $vehilceTotal
+     *  @param int $vehicleTotal
      * 
      *  @return void
      */
@@ -145,14 +148,16 @@ class CheckoutService
      *  @param App\Http\Requests\CheckoutStoreRequest $request
      *  @param int $totalPrice
      * 
-     *  @return void
+     *  @return string the payment intent id
      */
-    private function oneTimeCharge(CheckoutStoreRequest $request, int $totalPrice) : void
+    private function oneTimeCharge(CheckoutStoreRequest $request, int $totalPrice) : string
     {
-        current_user()->charge(
+        $payment = current_user()->charge(
             $totalPrice * 100,
             $request['payment_method_id'],
         );
+
+        return $payment->id;
     }
 
     /**

@@ -16,6 +16,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
+use Stripe\Exception\ApiErrorException;
+use Stripe\StripeClient;
 
 class UserBookingService
 {
@@ -103,9 +105,12 @@ class UserBookingService
             // Determine refund amount
             $refundAmount = $booking->renterInitiatedRefund();
 
-            return $refundAmount;
-
             // Refund renter
+            $this->refundRenter($refundAmount['renterRefund'], $booking);
+
+            return [
+                'success' => true
+            ];
 
             // Credit host
 
@@ -122,6 +127,35 @@ class UserBookingService
         // }
 
         return response()->json(['You cannot cancel this booking'], 403);
+    }
+
+    /**
+     *  @param string $renterRefund
+     *  @param Booking $booking
+     */
+    public function refundRenter(string $amount, Booking $booking) : bool
+    {
+        $stripe = new \Stripe\StripeClient(
+            env('STRIPE_SECRET')
+        );
+
+        $amountAsCents = dollar_format_to_cents($amount);
+
+        $paymentId = $booking->order->transaction_id;
+
+        current_user()->refund($paymentId, [
+            'amount' => (int) $amountAsCents
+        ]);
+
+        // try {
+        //     $stripe->refunds->create([
+        //         'payment_intent' => $paymentId,
+        //         'amount' => (int) $amountAsCents
+        //     ]);
+        //     return true;
+        // } catch (ApiErrorException $e) {
+        //     return false;
+        // }
     }
 
     /**

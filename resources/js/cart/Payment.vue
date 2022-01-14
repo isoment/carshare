@@ -198,7 +198,7 @@
                             if (error.response.status === 500) {
                                 this.$store.dispatch('addNotification', {
                                     type: 'error',
-                                    message: error.response.data
+                                    message: 'There was an error processing payment'
                                 })
                             }
 

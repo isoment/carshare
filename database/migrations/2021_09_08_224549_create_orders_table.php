@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('transaction_id');
+            $table->string('payment_intent');
             $table->decimal('total', 9, 2);
             $table->timestamps();
         });

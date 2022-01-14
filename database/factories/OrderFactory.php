@@ -25,7 +25,8 @@ class OrderFactory extends Factory
         return [
             'user_id' => User::where('host', 0)->get()->random()->id,
             'transaction_id' => uniqid('id_', true),
-            'total' => $this->faker->randomFloat(0, 100, 9999),
+            'payment_intent' => uniqid('id_', true),
+            'total' => $this->faker->randomFloat(0, 100, 9999)
         ];
     }
 }
