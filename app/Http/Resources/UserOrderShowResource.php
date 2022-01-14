@@ -17,7 +17,7 @@ class UserOrderShowResource extends JsonResource
         return [
             'id' => $this->id,
             'order_placed' => $this->created_at,
-            'transaction_id' => $this->transaction_id,
+            'transaction_id' => $this->payment_method,
             'total_price' => $this->total,
             'bookings' => UserOrderShowBookingsResource::collection($this->bookings)
         ];

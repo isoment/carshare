@@ -2,7 +2,7 @@
     <div>
         <main-navigation></main-navigation>
 
-        <div v-if="!isLoggedIn || !pid">
+        <div v-if="!isLoggedIn || !paymentMethodId">
             <error :message="'Not Authorized'"></error>
         </div>
 
@@ -17,7 +17,7 @@
                     </div>
                     <div class="text-center mb-6">
                         <h3 class="text-2xl sm:text-3xl font-boldnosans font-bold text-center">Confirmation:</h3>
-                        <h3 class="text-green-400 md:text-2xl font-boldnosans font-bold">{{ pid }}</h3>
+                        <h3 class="text-green-400 md:text-2xl font-boldnosans font-bold">{{ paymentMethodId }}</h3>
                     </div>
                     <div class="text-center">
                         <h3 class="text-xl sm:text-2xl font-boldnosans font-bold">Thank you for booking with us!</h3>
@@ -51,8 +51,8 @@
                 isLoggedIn: "isLoggedIn",
             }),
 
-            pid() {
-                return this.$route.params.pid;
+            paymentMethodId() {
+                return this.$route.params.paymentMethodId;
             }
         }
     }

@@ -89,7 +89,7 @@ class CheckoutService
     {
         return Order::create([
             'user_id' => current_user()->id,
-            'transaction_id' => $request['payment_method_id'],
+            'payment_method' => $request['payment_method_id'],
             'payment_intent' => 'N/A',
             'total' => 0,
         ]);

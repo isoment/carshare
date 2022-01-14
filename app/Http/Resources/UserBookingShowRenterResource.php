@@ -36,7 +36,7 @@ class UserBookingShowRenterResource extends JsonResource
             'order' => [
                 'id' => $this->order->id,
                 'total' => $this->order->total,
-                'transaction_id' => $this->order->transaction_id,
+                'transaction_id' => $this->order->payment_method,
                 'created_at' => $this->order->created_at
             ],
             'user' => [

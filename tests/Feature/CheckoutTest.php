@@ -216,10 +216,10 @@ class CheckoutTest extends TestCase
         $response = $this->json('POST', '/api/checkout', $data);
 
         $this->assertDatabaseHas('orders', [
-            'transaction_id' => $data['payment_method_id']
+            'payment_method' => $data['payment_method_id']
         ]);
 
-        $order = Order::where('transaction_id', $data['payment_method_id'])->first();
+        $order = Order::where('payment_method', $data['payment_method_id'])->first();
 
         $this->assertDatabaseHas('bookings', [
             'order_id' => $order->id

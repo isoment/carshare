@@ -186,7 +186,10 @@
 
                             this.$store.dispatch('setUserBookedDates');
 
-                            this.$router.push({ name: 'confirmation', params: { pid: paymentMethod.id } });
+                            this.$router.push({ 
+                                name: 'confirmation', 
+                                params: { paymentMethodId: paymentMethod.id } 
+                            });
                         })
                         .catch((error) => {
                             this.processingPayment = false;
