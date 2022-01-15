@@ -58,7 +58,7 @@ class UserBookingService
             );
         }
 
-        return response()->json(['Error getting bookings'], 404);
+        return response()->json('Error getting bookings', 404);
     }
 
     /**
@@ -79,60 +79,94 @@ class UserBookingService
             return new UserBookingShowRenterResource($this->showBookingAsRenter($id));
         }
 
-        return response()->json(['You cannot access this booking'], 403);
+        return response()->json('You cannot access this booking', 403);
     }
 
     /**
      *  Cancel a users booking
      * 
      *  @param int $id
+     *  @return JsonResponse
      */
-    public function cancelBooking(int $id)
+    public function cancelBooking(int $id) : JsonResponse
     {
         $user = current_user();
 
+        $booking = Booking::findOrFail($id);
+
+        // Check if the booking has started
+        if ($this->bookingHasAlreadyStarted($booking)) {
+            return response()->json('You cannot cancel a booking that has started', 403);
+        }
+
         // User is renter
         if ($this->userIsRenterOfBooking($id, $user)) {
-            // Find booking
-            $booking = Booking::findOrFail($id);
-
-            // Check if the booking has started
-            if ($this->bookingHasAlreadyStarted($booking)) {
-                return response()->json(['You cannot cancel a booking that has started',], 403);
-            }
-
-            // Determine refund amount
-            $refund = $booking->renterInitiatedRefund();
-
-            // Refund renter
-            $refundStatus = $this->refundRenter($refund['renterRefund'], $booking);
-
-            if ($refundStatus) {
-                // Create a new Cancellation entry
-                $this->createCancellation($booking, $refund);
-
-                // Change the order total
-                $this->updateOrderTotal($booking, $refund['renterRefund']);
-
-                // Delete the original booking
-                $booking->delete();
-
-                return response()->json(['Booking canceled'], 200);
-            }
-
-            return response()->json(['There was an error cancelling this booking'], 404);
+            return $this->cancelBookingAsRenter($booking);
         }
 
         // User is host
-        // if ($this->userIsHostOfBooking($id, $user)) {
+        if ($this->userIsHostOfBooking($id, $user)) {
+            return $this->cancelBookingAsHost($booking);
+        }
 
-        // }
-
-        return response()->json(['You cannot cancel this booking'], 403);
+        return response()->json('You cannot cancel this booking', 403);
     }
 
     /**
-     *  Refund a users payment method using stripe
+     *  @param Booking $booking
+     *  @return JsonResponse
+     */
+    private function cancelBookingAsRenter(Booking $booking) : JsonResponse
+    {
+        // Determine refund amount
+        $refund = $booking->renterInitiatedRefund();
+
+        // Refund renter
+        $refundStatus = $this->refundRenter($refund['amount'], $booking);
+
+        if ($refundStatus) {
+            // Create a new Cancellation entry
+            $this->createCancellation($booking, $refund);
+
+            // Change the order total
+            $this->updateOrderTotal($booking, $refund['amount']);
+
+            // Delete the original booking
+            $booking->delete();
+
+            return response()->json('Booking canceled', 200);
+        }
+
+        return response()->json('There was an error cancelling this booking', 404);
+    }
+
+    /**
+     *  @param Booking
+     *  @return JsonResponse
+     */
+    private function cancelBookingAsHost(Booking $booking) : JsonResponse
+    {
+        $refund = [
+            'type' => 'Full refund',
+            'amount' => $booking->price_total
+        ];
+
+        $refundStatus = $this->refundRenter($refund['amount'], $booking);
+
+        if ($refundStatus) {
+            $this->createCancellation($booking, $refund);
+
+            $this->updateOrderTotal($booking, $refund['amount']);
+
+            $booking->delete();
+
+            return response()->json('Booking canceled', 200);
+        }
+    }
+
+    /**
+     *  Refund a users payment method using stripe and returns a
+     *  boolean if the refund was successful
      * 
      *  @param string $amount
      *  @param Booking $booking
@@ -173,7 +207,7 @@ class UserBookingService
             'from' => $booking->from,
             'to' => $booking->to,
             'original_amount' => $booking->price_total,
-            'refund_amount' => $refund['renterRefund'],
+            'refund_amount' => $refund['amount'],
             'refund_rate' => $refund['type'],
             'reason' => 'TEST'
         ]);
@@ -209,7 +243,7 @@ class UserBookingService
      *  @param int $id
      *  @return Booking
      */
-    public function showBookingAsRenter(int $id) : Booking
+    private function showBookingAsRenter(int $id) : Booking
     {
         return Booking::with('order', 'vehicle.vehicleModel.vehicleMake')
             ->where('id', $id)
@@ -220,7 +254,7 @@ class UserBookingService
      *  @param int $id
      *  @return Booking
      */
-    public function showBookingAsHost(int $id) : Booking
+    private function showBookingAsHost(int $id) : Booking
     {
         return Booking::with('vehicle.vehicleModel.vehicleMake')
             ->where('id', $id)

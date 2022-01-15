@@ -382,6 +382,7 @@
             async cancelBooking() {
                 try {
                     let response = await axios.delete(`/api/dashboard/booking-delete/${this.booking.booking.id}`);
+                    this.$router.push({ name: 'customer-bookings' });
                     console.log(response);
                 } catch (error) {
                     console.log(error.response);

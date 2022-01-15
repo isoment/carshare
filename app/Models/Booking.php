@@ -109,7 +109,7 @@ class Booking extends Model
         if ($today->lessThanOrEqualTo($lastDayForFreeCancellation)) {
             return [
                 'type' => 'Full refund',
-                'renterRefund' => $this->price_total,
+                'amount' => $this->price_total,
             ];
         }
 
@@ -117,7 +117,7 @@ class Booking extends Model
             if ($this->bookingTotalDays() > 2) {
                 return [
                     'type' => 'Full refund minus one day',
-                    'renterRefund' => $this->totalMinusPricePerDay(
+                    'amount' => $this->totalMinusPricePerDay(
                         $this->price_total, 
                         $this->price_day
                     ),
@@ -127,21 +127,10 @@ class Booking extends Model
 
                 return [
                     'type' => '50% refund',
-                    'renterRefund' => $paymentHalf,
+                    'amount' => $paymentHalf,
                 ];
             }
         }
-    }
-
-    /**
-     *  Determine charges when a host initiates a refund
-     * 
-     *  If a host cancels the guest always gets a full refund. The host will
-     *  be charged a $50 fee if they cancel within 24hours.
-     */
-    public function hostInitiatedRefund()
-    {
-
     }
 
     /**
