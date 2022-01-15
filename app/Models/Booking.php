@@ -110,7 +110,6 @@ class Booking extends Model
             return [
                 'type' => 'Full refund',
                 'renterRefund' => $this->price_total,
-                'hostCredit' => "0"
             ];
         }
 
@@ -122,7 +121,6 @@ class Booking extends Model
                         $this->price_total, 
                         $this->price_day
                     ),
-                    'hostCredit' => $this->price_day
                 ];
             } else {
                 $paymentHalf = $this->discountPercent(50, $this->price_total);
@@ -130,7 +128,6 @@ class Booking extends Model
                 return [
                     'type' => '50% refund',
                     'renterRefund' => $paymentHalf,
-                    'hostCredit' => $paymentHalf
                 ];
             }
         }

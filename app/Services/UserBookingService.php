@@ -10,14 +10,13 @@ use App\Http\Resources\UserBookingIndexRenterResource;
 use App\Http\Resources\UserBookingShowHostResource;
 use App\Http\Resources\UserBookingShowRenterResource;
 use App\Models\Booking;
+use App\Models\Cancellation;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Log;
 use Stripe\Exception\ApiErrorException;
-use Stripe\StripeClient;
 
 class UserBookingService
 {
@@ -103,22 +102,25 @@ class UserBookingService
             }
 
             // Determine refund amount
-            $refundAmount = $booking->renterInitiatedRefund();
+            $refund = $booking->renterInitiatedRefund();
 
             // Refund renter
-            $this->refundRenter($refundAmount['renterRefund'], $booking);
+            $refundStatus = $this->refundRenter($refund['renterRefund'], $booking);
 
-            return [
-                'success' => true
-            ];
+            if ($refundStatus) {
+                // Create a new Cancellation entry
+                $this->createCancellation($booking, $refund);
 
-            // Credit host
+                // Change the order total
+                $this->updateOrderTotal($booking, $refund['renterRefund']);
 
-            // Create a new Cancellation entry
+                // Delete the original booking
+                $booking->delete();
 
-            // Delete the original booking
+                return response()->json(['Booking canceled'], 200);
+            }
 
-            // Change the order total or if there are no bookings left in an order delete it
+            return response()->json(['There was an error cancelling this booking'], 404);
         }
 
         // User is host
@@ -130,10 +132,12 @@ class UserBookingService
     }
 
     /**
-     *  @param string $renterRefund
+     *  Refund a users payment method using stripe
+     * 
+     *  @param string $amount
      *  @param Booking $booking
      */
-    public function refundRenter(string $amount, Booking $booking) : bool
+    private function refundRenter(string $amount, Booking $booking) : bool
     {
         $stripe = new \Stripe\StripeClient(
             env('STRIPE_SECRET')
@@ -141,21 +145,53 @@ class UserBookingService
 
         $amountAsCents = dollar_format_to_cents($amount);
 
-        $paymentId = $booking->order->transaction_id;
+        $paymentIntentId = $booking->order->payment_intent;
 
-        current_user()->refund($paymentId, [
-            'amount' => (int) $amountAsCents
+        try {
+            $stripe->refunds->create([
+                'payment_intent' => $paymentIntentId,
+                'amount' => (int) $amountAsCents
+            ]);
+            return true;
+        } catch (ApiErrorException $e) {
+            return false;
+        }
+    }
+
+    /**
+     *  Create a new cancellation entry before deleting the booking
+     * 
+     *  @param Booking $booking
+     *  @param array $refund
+     *  @return void
+     */
+    private function createCancellation(Booking $booking, array $refund) : void
+    {
+        Cancellation::create([
+            'vehicle_id' => $booking->vehicle_id,
+            'order_id' => $booking->order_id,
+            'from' => $booking->from,
+            'to' => $booking->to,
+            'original_amount' => $booking->price_total,
+            'refund_amount' => $refund['renterRefund'],
+            'refund_rate' => $refund['type'],
+            'reason' => 'TEST'
         ]);
+    }
 
-        // try {
-        //     $stripe->refunds->create([
-        //         'payment_intent' => $paymentId,
-        //         'amount' => (int) $amountAsCents
-        //     ]);
-        //     return true;
-        // } catch (ApiErrorException $e) {
-        //     return false;
-        // }
+    /**
+     *  Update the order total
+     * 
+     *  @param Booking $booking
+     *  @param string $refund
+     *  @return void
+     */
+    private function updateOrderTotal(Booking $booking, string $refund) : void
+    {
+        $order = $booking->order;
+        $newTotal = bcsub($order->total, $refund);
+        $order->total = $newTotal;
+        $order->save();
     }
 
     /**
