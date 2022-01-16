@@ -37,4 +37,10 @@
         max-height: 80%;
         max-width: 95%;
     }
+
+    @media screen and (min-width: 750px) {
+        .simple-modal-dimensions {
+            max-width: 35rem;
+        }
+    }
 </style>

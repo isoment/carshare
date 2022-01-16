@@ -19,9 +19,43 @@
                                 <button href="#"
                                     class="bg-white px-4 py-2 text-gray-800 border-2 border-gray-800 
                                             font-bold mr-2 focus:outline-none"
-                                    @click="cancelBooking">
+                                    @click="showCancelModal = true">
                                     Cancel Booking
                                 </button>
+                                <simple-modal v-model="showCancelModal" @close="closeCancelModal">
+                                    <div class="text-2xl font-bold font-boldnosans tracking-wider text-gray-700 
+                                                border-b border-gray-100 pb-3 text-center">
+                                        Cancel Booking?
+                                    </div>
+                                    <div class="text-sm font-light text-gray-500 mt-2">
+                                        Are you sure you want to cancel this booking? This action cannot be undone. Once
+                                        you cancel your reservation will be removed and you will be refunded the
+                                        amount below. Stripe refunds to your card take 5-10 days.
+                                    </div>
+                                    <div class="flex flex-col mt-4">
+                                        <h6 class="text-gray-400 text-xs font-bold uppercase 
+                                                                 tracking-wider mb-2">
+                                            Refund amount
+                                        </h6>
+                                        <h5 class="text-lg font-boldnosans font-bold tracking-wider">$547.00</h5>
+                                    </div>
+                                    <div class="flex flex-col mt-4">
+                                        <h6 class="text-gray-400 text-xs font-bold uppercase 
+                                                                 tracking-wider mb-2">
+                                            Refund type
+                                        </h6>
+                                        <h5 class="text-lg font-boldnosans font-bold tracking-wider">Full refund</h5>
+                                    </div>
+                                    <div class="flex flex-col mt-4">
+                                        <label for="reason" class="text-gray-400 text-xs font-bold uppercase 
+                                                                 tracking-wider mb-2">
+                                            Reason for cancelling
+                                        </label>
+                                        <textarea name="reason" 
+                                                  rows="8" 
+                                                  class="px-2 py-1 border border-gray-300 text-sm"></textarea>
+                                    </div>
+                                </simple-modal>
                             </div>
                         </div>
                     </div>
@@ -338,7 +372,8 @@
                 order: null,
                 forbidden: null,
                 showBio: false,
-                showOrderModal: false
+                showOrderModal: false,
+                showCancelModal: false
             }
         },
 
@@ -349,7 +384,10 @@
                     let responseBooking = await axios.get(`/api/dashboard/show-booking/${this.$route.params.id}`);
                     this.booking = responseBooking.data.data;
                     await this.fetchUserRating();
-                    await this.fetchOrder();
+
+                    if (this.booking.userIs === 'renter') {
+                        await this.fetchOrder();
+                    }
                 } catch (error) {
                     if (error.response.status === 403) {
                         this.forbidden = true;
@@ -382,10 +420,20 @@
             async cancelBooking() {
                 try {
                     let response = await axios.delete(`/api/dashboard/booking-delete/${this.booking.booking.id}`);
+                    
+                    this.$store.dispatch('addNotification', {
+                        type: 'success',
+                        message: 'Booking cancelled'
+                    });
+
                     this.$router.push({ name: 'customer-bookings' });
-                    console.log(response);
                 } catch (error) {
                     console.log(error.response);
+
+                    this.$store.dispatch('addNotification', {
+                        type: 'error',
+                        message: 'Error cancelling booking'
+                    });
                 }
             },
 
@@ -413,6 +461,10 @@
 
             closeOrderModal() {
                 this.showOrderModal = false; 
+            },
+
+            closeCancelModal() {
+                this.showCancelModal = false;
             }
         },
 
