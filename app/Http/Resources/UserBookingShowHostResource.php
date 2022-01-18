@@ -16,6 +16,7 @@ class UserBookingShowHostResource extends JsonResource
     {
         return [
             'userIs' => 'host',
+            'hasStarted' => $this->hasAlreadyStarted(),
             'booking' => [
                 'id' => $this->id,
                 'from' => $this->from,

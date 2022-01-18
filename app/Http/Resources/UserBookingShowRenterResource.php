@@ -17,6 +17,7 @@ class UserBookingShowRenterResource extends JsonResource
     {
         return [
             'userIs' => 'renter',
+            'hasStarted' => $this->hasAlreadyStarted(),
             'booking' => [
                 'id' => $this->id,
                 'from' => $this->from,

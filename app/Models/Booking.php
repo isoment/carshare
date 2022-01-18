@@ -146,6 +146,18 @@ class Booking extends Model
         return $from->diffInDays($to) + 1;
     }
 
+    /**
+     *  Check if the booking has already started.
+     *  
+     *  @return bool
+     */
+    public function hasAlreadyStarted() : bool
+    {
+        $from = Carbon::parse($this->from);
+
+        return Carbon::now()->greaterThanOrEqualTo($from) ? true : false;
+    }
+
    /**
      *  @return string
      */

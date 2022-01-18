@@ -43,8 +43,15 @@ class UserBookingController extends Controller
     }
 
     /**
-     *  Show a booking
-     * 
+     *  @param int $id
+     *  @return JsonResponse
+     */
+    public function showBookingRefund(int $id) : JsonResponse
+    {
+        return $this->userBookingService->showRefundAmount($id);
+    }
+
+    /**
      *  @param int $id
      *  @return JsonResource|JsonResponse
      */
@@ -54,8 +61,6 @@ class UserBookingController extends Controller
     }
 
     /**
-     *  Cancel a booking
-     * 
      *  @param int $id
      */
     public function bookingDelete(int $id)

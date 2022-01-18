@@ -237,6 +237,12 @@ Route::middleware('auth:sanctum')->group(function() {
         'App\Http\Controllers\Api\Dashboard\UserShowOrderController'
     )->name('dashboard.order-show');
 
+    // Determine refund type and amount
+    Route::get(
+        'dashboard/booking-refund-amount/{id}',
+        [App\Http\Controllers\Api\Dashboard\UserBookingController::class, 'showBookingRefund']
+    )->name('dashboard.booking-refund-amount');
+
     /*************************
      *  Checkout API Routes  *
      ************************/

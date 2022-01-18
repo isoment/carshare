@@ -94,8 +94,7 @@ class UserBookingService
 
         $booking = Booking::findOrFail($id);
 
-        // Check if the booking has started
-        if ($this->bookingHasAlreadyStarted($booking)) {
+        if ($booking->hasAlreadyStarted()) {
             return response()->json('You cannot cancel a booking that has started', 403);
         }
 
@@ -110,6 +109,34 @@ class UserBookingService
         }
 
         return response()->json('You cannot cancel this booking', 403);
+    }
+
+    /**
+     *  @param int $id
+     *  @return JsonResponse
+     */
+    public function showRefundAmount(int $id) : JsonResponse
+    {
+        $user = current_user();
+
+        $booking = Booking::findOrFail($id);
+
+        if ($booking->hasAlreadyStarted()) {
+            return response()->json('You cannot cancel a booking that has started', 403);
+        }
+
+        if ($this->userIsRenterOfBooking($id, $user)) {
+            return response()->json($booking->renterInitiatedRefund());
+        }
+
+        if ($this->userIsHostOfBooking($id, $user)) {
+            return response()->json([
+                'type' => 'Full refund',
+                'amount' => $booking->price_total
+            ]);
+        }
+
+        return response()->json('Unauthorized', 403);
     }
 
     /**
@@ -226,17 +253,6 @@ class UserBookingService
         $newTotal = bcsub($order->total, $refund);
         $order->total = $newTotal;
         $order->save();
-    }
-
-    /**
-     *  @param Booking $booking
-     *  @return bool
-     */
-    private function bookingHasAlreadyStarted(Booking $booking) : bool
-    {
-        $from = Carbon::parse($booking->from);
-
-        return Carbon::now()->greaterThanOrEqualTo($from) ? true : false;
     }
 
     /**
