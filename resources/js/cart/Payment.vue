@@ -174,8 +174,6 @@
                         })
                     }
 
-                    console.log(customer);
-
                     axios.post('/api/checkout', customer)
                         .then((response) => {
                             this.processingPayment = false;

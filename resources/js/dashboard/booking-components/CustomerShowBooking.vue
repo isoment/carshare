@@ -31,32 +31,59 @@
                                             Cancel Booking?
                                         </div>
                                         <div class="text-sm font-light text-gray-500 mt-2">
-                                            Are you sure you want to cancel this booking? This action cannot be undone. Once
-                                            you cancel your reservation will be removed and you will be refunded the
-                                            amount below. Stripe refunds to your card take 5-10 days.
+                                            <div v-if="userIsRenter">
+                                                Are you sure you want to cancel this booking? This action cannot be undone. Once
+                                                you cancel your reservation will be removed and you will be refunded the
+                                                amount below. Stripe refunds to your card take 5-10 days.
+                                            </div>
+                                            <div v-else>
+                                                Are you sure you want to cancel this booking? The customer will be given a full
+                                                refund. Note that repeatedly cancelling bookings interferes with the customers
+                                                experience and we reserve the right to charge you a $25 fee for excessive cancellations.
+                                            </div>
                                         </div>
                                         <div class="flex flex-col mt-4">
                                             <h6 class="text-gray-400 text-xs font-bold uppercase 
                                                                     tracking-wider mb-2">
                                                 Refund amount
                                             </h6>
-                                            <h5 class="text-lg font-boldnosans font-bold tracking-wider">${{bookingRefund.amount}}</h5>
+                                            <h5 class="text-lg font-boldnosans font-bold tracking-wider">
+                                                {{currencyFormat(bookingRefund.amount)}}
+                                            </h5>
                                         </div>
                                         <div class="flex flex-col mt-4">
                                             <h6 class="text-gray-400 text-xs font-bold uppercase 
                                                                     tracking-wider mb-2">
                                                 Refund type
                                             </h6>
-                                            <h5 class="text-lg font-boldnosans font-bold tracking-wider">{{bookingRefund.type}}</h5>
+                                            <h5 class="text-lg font-boldnosans font-bold tracking-wider">
+                                                {{bookingRefund.type}}
+                                            </h5>
                                         </div>
                                         <div class="flex flex-col mt-4">
                                             <label for="reason" class="text-gray-400 text-xs font-bold uppercase 
                                                                     tracking-wider mb-2">
                                                 Reason for cancelling
                                             </label>
-                                            <textarea name="reason" 
-                                                    rows="8" 
-                                                    class="px-2 py-1 border border-gray-300 text-sm"></textarea>
+                                            <textarea rows="8" 
+                                                      class="px-2 py-1 border border-gray-300 text-sm"
+                                                      v-model="cancelReason"></textarea>
+                                        </div>
+                                        <validation-errors :errors="errorFor('reason')"></validation-errors>
+                                        <div class="mt-4">
+                                            <button class=" text-white px-4 py-1 focus:outline-none
+                                                             transition-all duration-200"
+                                                    :disabled="cancelInProgress"
+                                                    :class="{
+                                                        'bg-gray-400': cancelInProgress,
+                                                        'bg-purple-400 hover:bg-purple-300': !cancelInProgress
+                                                    }"
+                                                    @click="cancelBooking()">
+                                                <span class="ml-2" v-if="cancelInProgress">
+                                                    <i class="fas fa-spinner fa-spin"></i>
+                                                </span>
+                                                <span>Cancel Booking</span>
+                                            </button>
                                         </div>
                                     </div>
                                     <div v-else class="text-center mt-8">
@@ -336,6 +363,8 @@
     import UsersReviewsFromHosts from './../../review/UsersReviewsFromHosts.vue';
     import UsersReviewsFromRenters from './../../review/UsersReviewsFromRenters.vue';
     import SimpleModal from '../../shared/components/SimpleModal.vue';
+    import validationErrors from '../../shared/mixins/validationErrors';
+
 
     export default {
         components: {
@@ -343,6 +372,8 @@
             UsersReviewsFromHosts,
             SimpleModal
         },
+
+        mixins: [validationErrors],
 
         computed: {
             ...mapState({
@@ -382,7 +413,9 @@
                 showBio: false,
                 showOrderModal: false,
                 showCancelModal: false,
-                bookingRefund: null
+                bookingRefund: null,
+                cancelReason: null,
+                cancelInProgress: false
             }
         },
 
@@ -427,8 +460,13 @@
             },
 
             async cancelBooking() {
+                this.cancelInProgress = true;
+
                 try {
-                    let response = await axios.delete(`/api/dashboard/booking-delete/${this.booking.booking.id}`);
+                    await axios.delete(
+                        `/api/dashboard/booking-delete/${this.booking.booking.id}`,
+                        { data: { reason: this.cancelReason }}
+                    );
                     
                     this.$store.dispatch('addNotification', {
                         type: 'success',
@@ -437,13 +475,17 @@
 
                     this.$router.push({ name: 'customer-bookings' });
                 } catch (error) {
-                    console.log(error.response);
-
-                    this.$store.dispatch('addNotification', {
-                        type: 'error',
-                        message: 'Error cancelling booking'
-                    });
+                    if (error.response && error.response.status === 422) {
+                        this.validationErrors = error.response.data.errors;
+                    } else {
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: 'Error cancelling booking'
+                        });
+                    }
                 }
+
+                this.cancelInProgress = false;
             },
 
             formatDate(date) {
@@ -498,6 +540,7 @@
             },
 
             closeCancelModal() {
+                this.validationErrors = null;
                 this.showCancelModal = false;
             }
         },

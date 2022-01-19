@@ -12,10 +12,11 @@ use App\Http\Resources\UserBookingShowRenterResource;
 use App\Models\Booking;
 use App\Models\Cancellation;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use Stripe\Exception\ApiErrorException;
 
 class UserBookingService
@@ -86,10 +87,15 @@ class UserBookingService
      *  Cancel a users booking
      * 
      *  @param int $id
+     *  @param Request $request
      *  @return JsonResponse
      */
-    public function cancelBooking(int $id) : JsonResponse
+    public function cancelBooking(int $id, Request $request) : JsonResponse
     {
+        $request->validate([
+            'reason' => 'required|string|min:10'
+        ]);
+
         $user = current_user();
 
         $booking = Booking::findOrFail($id);
@@ -100,12 +106,12 @@ class UserBookingService
 
         // User is renter
         if ($this->userIsRenterOfBooking($id, $user)) {
-            return $this->cancelBookingAsRenter($booking);
+            return $this->cancelBookingAsRenter($booking, $request);
         }
 
         // User is host
         if ($this->userIsHostOfBooking($id, $user)) {
-            return $this->cancelBookingAsHost($booking);
+            return $this->cancelBookingAsHost($booking, $request);
         }
 
         return response()->json('You cannot cancel this booking', 403);
@@ -143,10 +149,12 @@ class UserBookingService
      *  @param Booking $booking
      *  @return JsonResponse
      */
-    private function cancelBookingAsRenter(Booking $booking) : JsonResponse
+    private function cancelBookingAsRenter(Booking $booking, Request $request) : JsonResponse
     {
         // Determine refund amount
         $refund = $booking->renterInitiatedRefund();
+        $refund['whoCancelled'] = 'renter';
+        $refund['reason'] = $request['reason'];
 
         // Refund renter
         $refundStatus = $this->refundRenter($refund['amount'], $booking);
@@ -171,11 +179,13 @@ class UserBookingService
      *  @param Booking
      *  @return JsonResponse
      */
-    private function cancelBookingAsHost(Booking $booking) : JsonResponse
+    private function cancelBookingAsHost(Booking $booking, Request $request) : JsonResponse
     {
         $refund = [
             'type' => 'Full refund',
-            'amount' => $booking->price_total
+            'amount' => $booking->price_total,
+            'whoCancelled' => 'host',
+            'reason' => $request['reason']
         ];
 
         $refundStatus = $this->refundRenter($refund['amount'], $booking);
@@ -236,7 +246,8 @@ class UserBookingService
             'original_amount' => $booking->price_total,
             'refund_amount' => $refund['amount'],
             'refund_rate' => $refund['type'],
-            'reason' => 'TEST'
+            'who_cancelled' => $refund['whoCancelled'],
+            'reason' => $refund['reason']
         ]);
     }
 

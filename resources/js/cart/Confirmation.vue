@@ -27,7 +27,7 @@
                         <router-link :to="{ name: 'main-page' }">
                             <i class="fas fa-home text-green-400 hover:text-green-500 text-4xl mx-3"></i>
                         </router-link>
-                        <router-link :to="{ name: 'main-vehicle' }">
+                        <router-link :to="{ name: 'customer-bookings' }">
                             <i class="fas fa-car text-green-400 hover:text-green-500 text-4xl mx-3"></i>
                         </router-link>
                         <router-link :to="{ name: 'customer-profile' }">

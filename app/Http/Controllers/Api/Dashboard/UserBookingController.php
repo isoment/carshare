@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserBookingIndexRequest;
 use App\Services\UserBookingService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Log;
 
@@ -63,8 +64,8 @@ class UserBookingController extends Controller
     /**
      *  @param int $id
      */
-    public function bookingDelete(int $id)
+    public function bookingDelete(int $id, Request $request)
     {
-        return $this->userBookingService->cancelBooking($id);
+        return $this->userBookingService->cancelBooking($id, $request);
     }
 }

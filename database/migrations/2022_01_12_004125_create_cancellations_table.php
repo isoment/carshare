@@ -22,6 +22,7 @@ class CreateCancellationsTable extends Migration
             $table->decimal('original_amount', 9, 2);
             $table->decimal('refund_amount', 9, 2);
             $table->string('refund_rate');
+            $table->string('who_cancelled');
             $table->text('reason');
             $table->timestamps();
 

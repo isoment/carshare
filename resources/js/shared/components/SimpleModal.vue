@@ -5,14 +5,14 @@
                      content-class="relative flex flex-col simple-modal-dimensions mx-4 p-4 border dark:border-gray-800 
                                     rounded bg-white dark:bg-gray-900"
                      v-on="$listeners">
+        <div class="text-right">
+            <button class="text-purple-900 focus:outline-none" 
+                    @click="$emit('close', close)">
+                <i class="fas text-lg fa-times"></i>
+            </button>
+        </div>
         <div class="flex-grow overflow-y-auto overflow-x-auto">
             <slot v-bind:params="params"></slot>
-        </div>
-        <div class="flex-shrink-0 flex justify-center items-center pt-4">
-            <button class="bg-purple-400 px-2 py-1 text-white focus:outline-none" 
-                    @click="$emit('close', close)">
-                Close
-            </button>
         </div>
     </vue-final-modal>
 </template>
