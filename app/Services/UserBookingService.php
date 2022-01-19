@@ -179,7 +179,7 @@ class UserBookingService
      *  @param Booking
      *  @return JsonResponse
      */
-    private function cancelBookingAsHost(Booking $booking, Request $request) : JsonResponse
+    private function cancelBookingAsHost(Booking $booking, Request $request) //: JsonResponse
     {
         $refund = [
             'type' => 'Full refund',
@@ -225,6 +225,7 @@ class UserBookingService
             ]);
             return true;
         } catch (ApiErrorException $e) {
+            Log::error($e);
             return false;
         }
     }
@@ -384,7 +385,7 @@ class UserBookingService
         return [
             'asRenter' => [
                 'bookings' => $user->getBookings()->count(),
-                'cancels' => rand(1,5)
+                'cancels' => $user->getCancellationsAsRenter()->count()
             ]
         ];
     }
@@ -400,11 +401,11 @@ class UserBookingService
         return [
             'asRenter' => [
                 'bookings' => $user->getBookings()->count(),
-                'cancels' => rand(1,5)
+                'cancels' => $user->getCancellationsAsRenter()->count()
             ],
             'asHost' => [
                 'bookings' => $user->getVehicleBookings()->count(),
-                'cancels' => rand(1,5)
+                'cancels' => $user->getCancellationsAsHost()->count()
             ]
         ];
     }

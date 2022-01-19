@@ -483,6 +483,7 @@
                             message: 'Error cancelling booking'
                         });
                     }
+                    this.showCancelModal = false;
                 }
 
                 this.cancelInProgress = false;

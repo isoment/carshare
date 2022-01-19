@@ -126,6 +126,34 @@ class User extends Authenticatable
     }
 
     /**
+     *  The cancellations the user initiated as host
+     * 
+     *  @return Illuminate\Database\Eloquent\Collection
+     */
+    public function getCancellationsAsHost() : Collection
+    {
+        $usersVehicles = $this->vehicles->pluck('id');
+
+        return Cancellation::whereIn('vehicle_id', $usersVehicles)
+            ->where('who_cancelled', 'host')
+            ->get();
+    }
+
+    /**
+     *  The cancellations the user initiated as renter
+     * 
+     *  @return Illuminate\Database\Eloquent\Collection
+     */
+    public function getCancellationsAsRenter() : Collection
+    {
+        $usersOrders = $this->orders->pluck('id');
+
+        return Cancellation::whereIn('order_id', $usersOrders)
+            ->where('who_cancelled', 'renter')
+            ->get();
+    }
+
+    /**
      *  An array of dates of users bookings
      * 
      *  @return array
