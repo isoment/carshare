@@ -4,7 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\BookingDatesAvailable;
-use App\Rules\VehicleAvailabe;
+use App\Rules\VehicleActive;
+use App\Rules\VehicleAvailable;
 
 class CheckoutStoreRequest extends FormRequest
 {
@@ -38,7 +39,10 @@ class CheckoutStoreRequest extends FormRequest
         // Check if vehicle is available and user is free to book
         return array_merge($data, [
             'cart.*' => [
-                'required', new BookingDatesAvailable, new VehicleAvailabe
+                'required', 
+                new BookingDatesAvailable, 
+                new VehicleAvailable,
+                new VehicleActive
             ]
         ]);
     }

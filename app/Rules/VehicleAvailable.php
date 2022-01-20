@@ -6,7 +6,7 @@ use App\Models\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Rule;
 
-class VehicleAvailabe implements Rule
+class VehicleAvailable implements Rule
 {
     private $vehicleYear, $vehicleModel, $start, $end;
 

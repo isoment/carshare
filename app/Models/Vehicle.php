@@ -84,10 +84,10 @@ class Vehicle extends Model
      */
     public function isAvailable(string $from, string $to) : bool
     {
-        $fromFromatted = Carbon::parse($from)->toDateString();
+        $fromFormatted = Carbon::parse($from)->toDateString();
         $toFormatted = Carbon::parse($to)->toDateString();
 
-        return $this->bookings()->betweenDates($fromFromatted, $toFormatted)
+        return $this->bookings()->betweenDates($fromFormatted, $toFormatted)
             ->count() === 0;
     }
 
