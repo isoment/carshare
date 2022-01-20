@@ -477,13 +477,21 @@
                 } catch (error) {
                     if (error.response && error.response.status === 422) {
                         this.validationErrors = error.response.data.errors;
+                    } else if (error.response && error.response.status === 403) {
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: error.response.data
+                        });
+
+                        this.showCancelModal = false;
                     } else {
                         this.$store.dispatch('addNotification', {
                             type: 'error',
                             message: 'Error cancelling booking'
                         });
+
+                        this.showCancelModal = false;
                     }
-                    this.showCancelModal = false;
                 }
 
                 this.cancelInProgress = false;

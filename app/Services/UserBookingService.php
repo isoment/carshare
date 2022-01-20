@@ -100,6 +100,10 @@ class UserBookingService
 
         $booking = Booking::findOrFail($id);
 
+        if ($booking->demo === 1) {
+            return response()->json('You cannot cancel a demo booking', 403);
+        }
+
         if ($booking->hasAlreadyStarted()) {
             return response()->json('You cannot cancel a booking that has started', 403);
         }

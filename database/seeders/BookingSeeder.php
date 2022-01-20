@@ -24,7 +24,8 @@ class BookingSeeder extends Seeder
             // The initial booking
             $booking = Booking::factory()->make([
                 'from' => Carbon::today()->subDays(rand(40,60)),
-                'price_day' => $vehicle->price_day
+                'price_day' => $vehicle->price_day,
+                'demo' => 1
             ]);
 
             // Set the end date for the initial booking
@@ -57,7 +58,8 @@ class BookingSeeder extends Seeder
                     'from' => $from,
                     'to' => $to,
                     'price_total' => $days * $vehicle->price_day,
-                    'price_day' => $vehicle->price_day
+                    'price_day' => $vehicle->price_day,
+                    'demo' => 1
                 ]);
 
                 $bookings->push($booking);

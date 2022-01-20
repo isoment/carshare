@@ -91,7 +91,7 @@
                 <div class="shadow-lg border border-gray-50 rounded-lg"
                      v-for="vehicle in vehicles" 
                      :key="vehicle.id">
-                    <router-link :to="{ name: 'vehicle', params: { id: vehicle.id } }">
+                    <router-link :to="{ name: 'vehicle', params: { id: vehicle.id } }" target="_blank">
                         <div>
                             <div class="h-56 rounded-t-lg"
                                 :style="{ 'background-image': 'url(' + vehicle.featured_image + ')' }"
@@ -311,29 +311,42 @@
                     });
                 }
             },
+
+            async setPriceRange() {
+                try {
+                    // Set a base price range based on the most and least expensive vehicles
+                    let prices = await axios.get('/api/vehicles/price-range');
+                    this.priceRange = Array(Number(prices.data.max), Number(prices.data.min));
+
+                    this.$store.dispatch('setPriceRange', {
+                        min: prices.data.min,
+                        max: prices.data.max
+                    });
+
+                    // Set the min and max price state.
+                    this.minPrice = Number(prices.data.min);
+                    this.maxPrice = Number(prices.data.max);
+                } catch (error) {
+                    this.$store.dispatch('addNotification', {
+                        type: 'error',
+                        message: 'Error setting price range'
+                    })
+                }
+            }
         },
 
-        async created() {
+        created() {
             this.handleQueryStrings();
 
             // Check and set search dates
             this.$store.dispatch('checkSearchDates');
 
+            this.$store.dispatch('setUserBookedDates');
+
             // We want to update the query strings each time the component is created
             this.refreshPage();
 
-            // Set a base price range based on the most and least expensive vehicles
-            let prices = await axios.get('/api/vehicles/price-range');
-            this.priceRange = Array(Number(prices.data.max), Number(prices.data.min));
-
-            this.$store.dispatch('setPriceRange', {
-                min: prices.data.min,
-                max: prices.data.max
-            });
-
-            // Set the min and max price state.
-            this.minPrice = Number(prices.data.min);
-            this.maxPrice = Number(prices.data.max);
+            this.setPriceRange();
 
             this.fetchVehicles();
         },

@@ -23,6 +23,7 @@ class CreateBookingsTable extends Migration
             $table->decimal('price_day', 9, 2);
             $table->uuid('renter_review_key');
             $table->uuid('host_review_key');
+            $table->boolean('demo')->default(0);
             $table->timestamps();
 
             $table->foreign('vehicle_id')->references('id')->on('vehicles');

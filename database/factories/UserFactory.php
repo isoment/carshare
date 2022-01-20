@@ -57,16 +57,18 @@ class UserFactory extends Factory
         return $this->afterCreating(function(User $user) {
             Profile::create([
                 'user_id' => $user->id,
+                'location' => $this->faker->city,
+                 'languages' => 'English',
+                'work' => $this->work(),
+                'school' => 'MIT',
+                'about' => $this->faker->paragraph(3),
                 'phone' => '555-555-5555',
                 'image' => '/storage/avatar-seeder-img/' . $this->imagePicker()
             ]);
         });
     }
 
-    /**
-     *  Randomly pick an avatar image
-     */
-    public function imagePicker()
+    private function imagePicker() : string
     {
         $images = [
             '01.jpg', '03.jpg', '05.jpg', '07.jpg', '09.jpg', '11.jpg', '13.jpg', '16.jpg',
@@ -76,5 +78,12 @@ class UserFactory extends Factory
         ];
 
         return $images[array_rand($images)];
+    }
+
+    private function work() : string
+    {
+        $jobs = ['Engineer', 'Doctor', 'Lawyer', 'Self employed', 'Marketing', 'Sales', 'Transportation'];
+
+        return $jobs[array_rand($jobs)];
     }
 }
