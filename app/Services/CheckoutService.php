@@ -132,7 +132,7 @@ class CheckoutService
      */
     private function createBooking(Vehicle $vehicle, Order $order, array $item, int $vehicleTotal) : void
     {
-        Booking::create([
+        $booking = Booking::create([
             'vehicle_id' => $vehicle->id,
             'order_id' => $order->id,
             'from' => Carbon::parse($item['dates']['start']),
@@ -140,6 +140,9 @@ class CheckoutService
             'price_total' => $vehicleTotal,
             'price_day' => $vehicle->price_day
         ]);
+
+        $booking->createRenterReview();
+        $booking->createHostReview();
     }
 
     /**

@@ -164,13 +164,12 @@ class UserBookingService
         $refundStatus = $this->refundRenter($refund['amount'], $booking);
 
         if ($refundStatus) {
-            // Create a new Cancellation entry
             $this->createCancellation($booking, $refund);
 
-            // Change the order total
             $this->updateOrderTotal($booking, $refund['amount']);
 
-            // Delete the original booking
+            $booking->deleteReviews();
+
             $booking->delete();
 
             return response()->json('Booking canceled', 200);
@@ -183,7 +182,7 @@ class UserBookingService
      *  @param Booking
      *  @return JsonResponse
      */
-    private function cancelBookingAsHost(Booking $booking, Request $request) //: JsonResponse
+    private function cancelBookingAsHost(Booking $booking, Request $request) : JsonResponse
     {
         $refund = [
             'type' => 'Full refund',
@@ -198,6 +197,8 @@ class UserBookingService
             $this->createCancellation($booking, $refund);
 
             $this->updateOrderTotal($booking, $refund['amount']);
+
+            $booking->deleteReviews();
 
             $booking->delete();
 
@@ -257,7 +258,7 @@ class UserBookingService
     }
 
     /**
-     *  Update the order total
+     *  Update the order total minus the cancelled booking
      * 
      *  @param Booking $booking
      *  @param string $refund

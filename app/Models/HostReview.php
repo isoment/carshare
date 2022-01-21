@@ -10,7 +10,7 @@ class HostReview extends Model
     use HasFactory;
 
     protected $keyType = 'string';
-    protected $fillable = ['rating', 'content'];
+    protected $guarded = [];
 
     /**
      *  Relationship to booking

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Classes\PaymentMath;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -94,7 +93,7 @@ class Booking extends Model
      * 
      *  A guest can cancel the day before the booking and get 
      *  a full refund. If the guest cancels outside of the free period they
-     *  are charged as follows which is paid to the host...
+     *  are charged as follows...
      * 
      *  Trip length is 2 days or less 50% refund.
      *  Trip length greater than 2 days, full refund minus one day.
@@ -147,7 +146,7 @@ class Booking extends Model
     }
 
     /**
-     *  Check if the booking has already started.
+     *  Check if the booking has already started
      *  
      *  @return bool
      */
@@ -158,7 +157,38 @@ class Booking extends Model
         return Carbon::now()->greaterThanOrEqualTo($from) ? true : false;
     }
 
-   /**
+    /**
+     *  Delete the reviews associated with the booking
+     */
+    public function deleteReviews() : void
+    {
+        RenterReview::destroy($this->renter_review_key);
+        HostReview::destroy($this->host_review_key);
+    }
+
+    /**
+     *  Create a review of the renter for this booking
+     */
+    public function createRenterReview()
+    {
+        $this->renterReview()->create([
+            'id' => $this->renter_review_key,
+            'user_id' => $this->order->user_id
+        ]);
+    }
+
+    /**
+     *  Create a review of the host for this booking
+     */
+    public function createHostReview()
+    {
+        $this->hostReview()->create([
+            'id' => $this->host_review_key,
+            'user_id' => $this->vehicle->user_id
+        ]);
+    }
+
+    /**
      *  @return string
      */
     private function totalMinusPricePerDay() : string
