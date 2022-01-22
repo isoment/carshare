@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Booking;
 use App\Models\DriversLicense;
 use App\Models\Order;
 use App\Models\User;
+use App\Models\Vehicle;
 use App\Notifications\OrderConfirmation;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -72,6 +74,32 @@ class CheckoutTest extends TestCase
 
     /**
      *  @test
+     *  A 422 error is returned if the vehicle is inactive
+     */
+    public function response_422_is_returned_if_the_vehicle_is_inactive()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::factory()->create();
+
+        DriversLicense::factory()->create(['user_id' => $user->id]);
+
+        $vehicle = Vehicle::find(1);
+
+        $vehicle->update(['active' => 0]);
+
+        $this->actingAs($user);
+
+        $data = $this->validCheckoutData();
+
+        $response = $this->json('POST', '/api/checkout', $data);
+
+        $response->assertStatus(422)
+            ->assertSee("The vehicle is not active.");
+    }
+
+    /**
+     *  @test
      *  A 422 response is returned if the cart is empty.
      */
     public function response_422_is_returned_if_the_cart_is_empty()
@@ -116,6 +144,70 @@ class CheckoutTest extends TestCase
 
         $response->assertStatus(422)
             ->assertSee("The payment method id field is required.");
+    }
+
+    /**
+     *  @test
+     *  A 422 response is returned if the vehicle is unavailable
+     */
+    public function response_422_is_returned_if_the_vehicle_is_unavailable()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::factory()->create();
+
+        DriversLicense::factory()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user);
+
+        $data = $this->validCheckoutData();
+
+        $vehicle = Vehicle::find(1);
+
+        $booking = $vehicle->bookings->first();
+
+        $from = Carbon::parse($booking->from)->format('n/j/Y');
+        $to = Carbon::parse($booking->to)->format('n/j/Y');
+
+        $data['cart'][0]['dates']['start'] = $from;
+        $data['cart'][0]['dates']['end'] = $to;
+
+        $response = $this->json('POST', '/api/checkout', $data);
+
+        $response->assertStatus(422)
+            ->assertSee("is not available between");
+    }
+
+    /**
+     *  @test
+     *  A 422 response is returned if the user already has a booking for the dates
+     */
+    public function response_422_is_returned_if_the_user_has_a_booking()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::first();
+
+        $this->actingAs($user);
+
+        $order = $user->orders->first();
+
+        $booking = Booking::where('order_id', $order->id)->first();
+
+        $from = Carbon::now()->addYears(1);
+        $to = Carbon::parse($from)->addWeek();
+
+        $booking->update([
+            'from' => $from,
+            'to' => $to
+        ]);
+
+        $data = $this->validCheckoutData();
+
+        $response = $this->json('POST', '/api/checkout', $data);
+
+        $response->assertStatus(422)
+            ->assertSee("You already have a booking between");
     }
 
     /**
@@ -223,6 +315,41 @@ class CheckoutTest extends TestCase
 
         $this->assertDatabaseHas('bookings', [
             'order_id' => $order->id
+        ]);
+    }
+
+    /**
+     *  @test
+     *  The database has a host and renter review for the new booking
+     */
+    public function the_database_has_a_host_and_renter_review_for_the_new_booking()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::factory()->create();
+
+        DriversLicense::factory()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user);
+
+        $data = $this->validCheckoutData();
+
+        $response = $this->createStripePaymentMethod();
+
+        $data['payment_method_id'] = $response['id'];
+
+        $response = $this->json('POST', '/api/checkout', $data);
+
+        $order = Order::where('payment_method', $data['payment_method_id'])->first();
+
+        $booking = Booking::where('order_id', $order->id)->first();
+
+        $this->assertDatabaseHas('renter_reviews', [
+            'id' => $booking->renter_review_key
+        ]);
+
+        $this->assertDatabaseHas('host_reviews', [
+            'id' => $booking->host_review_key
         ]);
     }
 

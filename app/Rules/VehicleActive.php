@@ -18,7 +18,7 @@ class VehicleActive implements Rule
     {
         $vehicle = Vehicle::findOrFail($value['vehicle_id']);
 
-        return $vehicle->active === 1;
+        return (int) $vehicle->active === 1;
     }
 
     /**
