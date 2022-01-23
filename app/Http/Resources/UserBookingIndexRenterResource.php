@@ -23,15 +23,13 @@ class UserBookingIndexRenterResource extends JsonResource
                 'price_total' => $this->price_total
             ],
             'vehicle' => [
-                'model' => $this->vehicle->vehicleModel->model,
-                'make' => $this->vehicle->vehicleModel->vehicleMake->make,
-                'year' => $this->vehicle->year,
+                'id' => $this->vehicle->id,
                 'image' => $this->vehicle->featured_image,
+                'make' => $this->vehicle->vehicleModel->vehicleMake->make,
+                'model' => $this->vehicle->vehicleModel->model,
+                'year' => $this->vehicle->year,
                 'active' => $this->vehicle->active
             ],
-            'order' => [
-                'id' => $this->order->id
-            ]
         ];
     }
 }

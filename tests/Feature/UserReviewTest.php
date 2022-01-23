@@ -8,7 +8,6 @@ use App\Models\RenterReview;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 use Tests\Trait\UserReviewTrait;
@@ -20,7 +19,7 @@ class UserReviewTest extends TestCase
 
     /**
      *  @test
-     *  Unauthenticated users cannot access the host-users-reviews-complete api endpoint
+     *  Unauthenticated users cannot access the host users reviews complete api endpoint
      */
     public function unauthenticated_users_cannot_access_the_host_users_reviews_complete_endpoint()
     {
