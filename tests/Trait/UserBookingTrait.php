@@ -4,7 +4,7 @@ namespace Tests\Trait;
 
 trait UserBookingTrait
 {
-    public function bookingIndexStructure() : array
+    private function bookingIndexStructure() : array
     {
         return [
             'data' => [
@@ -37,7 +37,7 @@ trait UserBookingTrait
         ];
     }
 
-    public function validIndexQueryParams(array $params = []) : array
+    private function validIndexQueryParams(array $params = []) : array
     {
         return [
             'type' => $params['type'] ?? 'asRenter',

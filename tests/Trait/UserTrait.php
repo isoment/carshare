@@ -8,13 +8,16 @@ use Database\Seeders\RenterReviewSeeder;
 use Database\Seeders\Testing\TestingVehicleMakeModelSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\VehicleSeeder;
+use App\Models\Booking;
+use App\Models\Order;
+use App\Models\User;
 
 trait UserTrait
 {
     /**
      *  Create a small database set using seeders
      */
-    public function createSmallDatabase()
+    private function createSmallDatabase()
     {
         UserSeeder::run(20, 12, 4);
         TestingVehicleMakeModelSeeder::run();
@@ -25,9 +28,10 @@ trait UserTrait
     }
 
     /**
-     *  Create a small database set using seeders
+     *  Create a database with a single renter and a single host and
+     *  1 to 2 bookings for each.
      */
-    public function createSingleRenterDatabase()
+    private function createSingleRenterDatabase()
     {
         UserSeeder::run(1, 1, 0);
         TestingVehicleMakeModelSeeder::run();
@@ -35,5 +39,16 @@ trait UserTrait
         BookingSeeder::run(1, 1);
         RenterReviewSeeder::run();
         HostReviewSeeder::run();
+    }
+
+    private function deleteAllUsersBookingsAndOrders(User $user)
+    {
+        $usersOrders = $user->orders->pluck('id');
+
+        Booking::whereIn('order_id', $usersOrders)->each(function($booking) {
+            $booking->delete();
+        });
+
+        Order::destroy(collect($usersOrders));
     }
 }

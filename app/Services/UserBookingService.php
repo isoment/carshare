@@ -30,7 +30,7 @@ class UserBookingService
     {
         $user = current_user();
 
-        if ($user->host === 1) {
+        if ((int) $user->host === 1) {
             return $this->bookingsCountForHost($user);
         }
 
@@ -53,7 +53,7 @@ class UserBookingService
             );
         }
 
-        if ($request['type'] === 'asHost' && $user->host === 1) {
+        if ($request['type'] === 'asHost' && (int) $user->host === 1) {
             return UserBookingIndexHostResource::collection(
                 $this->bookingsAsHost($request, $user)
             );
