@@ -243,4 +243,140 @@ class UserBookingTest extends TestCase
                 ],
             ]);
     }
+
+    /**
+     *  @test
+     *  An unauthenticated user cannot access the bookings show api endpoint
+     */
+    public function an_unauthenticated_user_cannot_access_the_booking_show_api_endpoint()
+    {
+        $this->json('GET', '/api/dashboard/show-booking/1')
+            ->assertStatus(401);
+    }
+
+    /**
+     *  @test
+     *  The renter can see the booking for their rental
+     */
+    public function the_renter_can_see_the_booking_for_their_rental()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::where('host', 0)->first();
+
+        $this->actingAs($user);
+
+        $booking = $user->getBookings()->first();
+
+        $this->json('GET', "/api/dashboard/show-booking/{$booking->id}")
+            ->assertStatus(200)
+            ->assertSimilarJson([
+                'data' => [
+                    'userIs' => 'renter',
+                    'hasStarted' => $booking->hasAlreadyStarted(),
+                    'booking' => [
+                        'id' => $booking->id,
+                        'from' => Carbon::parse($booking->from)->toDateTimeString(),
+                        'to' => Carbon::parse($booking->to)->toDateTimeString(),
+                        'price_day' => $booking->price_day,
+                        'price_total' => $booking->price_total,
+                        'created_at' => $booking->created_at
+                    ],
+                    'vehicle' => [
+                        'id' => $booking->vehicle->id,
+                        'image' => $booking->vehicle->featured_image,
+                        'make' => $booking->vehicle->vehicleModel->vehicleMake->make,
+                        'model' => $booking->vehicle->vehicleModel->model,
+                        'year' => $booking->vehicle->year,
+                        'created_at' => $booking->vehicle->created_at
+                    ],
+                    'order' => [
+                        'id' => $booking->order->id,
+                        'total' => $booking->order->total,
+                        'transaction_id' => $booking->order->payment_method,
+                        'created_at' => $booking->order->created_at
+                    ],
+                    'user' => [
+                        'id' => $booking->vehicle->user->id,
+                        'name' => $booking->vehicle->user->name,
+                        'image' => $booking->vehicle->user->profile->image,
+                        'location' => $booking->vehicle->user->profile->location,
+                        'languages' => $booking->vehicle->user->profile->languages,
+                        'work' => $booking->vehicle->user->profile->work,
+                        'school' => $booking->vehicle->user->profile->school,
+                        'about' => $booking->vehicle->user->profile->about,
+                        'created_at' => $booking->vehicle->user->created_at
+                    ]
+                ]
+            ]);
+    }
+
+    /**
+     *  @test
+     *  The host can see the booking for their vehicle
+     */
+    public function the_host_can_see_the_booking_for_their_vehicle()
+    {
+        $this->createSmallDatabase();
+
+        $booking = Booking::inRandomOrder()->first();
+
+        $user = $booking->vehicle->user;
+
+        $this->actingAs($user);
+
+        $this->json('GET', "/api/dashboard/show-booking/{$booking->id}")
+            ->assertStatus(200)
+            ->assertSimilarJson([
+                'data' => [
+                    'userIs' => 'host',
+                    'hasStarted' => $booking->hasAlreadyStarted(),
+                    'booking' => [
+                        'id' => $booking->id,
+                        'from' => $booking->from,
+                        'to' => $booking->to,
+                        'price_day' => $booking->price_day,
+                        'price_total' => $booking->price_total,
+                        'created_at' => $booking->created_at
+                    ],
+                    'vehicle' => [
+                        'id' => $booking->vehicle->id,
+                        'image' => $booking->vehicle->featured_image,
+                        'make' => $booking->vehicle->vehicleModel->vehicleMake->make,
+                        'model' => $booking->vehicle->vehicleModel->model,
+                        'year' => $booking->vehicle->year,
+                    ],
+                    'user' => [
+                        'id' => $booking->order->user->id,
+                        'name' => $booking->order->user->name,
+                        'image' => $booking->order->user->profile->image,
+                        'location' => $booking->order->user->profile->location,
+                        'languages' => $booking->order->user->profile->languages,
+                        'work' => $booking->order->user->profile->work,
+                        'school' => $booking->order->user->profile->school,
+                        'about' => $booking->order->user->profile->about,
+                        'created_at' => $booking->order->user->created_at
+                    ]
+                ],
+            ]);
+    }
+
+    /**
+     *  @test
+     *  A user who is not a host or renter cannot view that booking
+     */
+    public function a_user_who_is_not_a_host_or_renter_cannot_view_that_booking()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $booking = Booking::inRandomOrder()->first();
+
+        $this->json('GET', "/api/dashboard/show-booking/{$booking->id}")
+            ->assertStatus(403)
+            ->assertSee('You cannot access this booking');
+    }
 }
