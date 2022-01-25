@@ -379,4 +379,168 @@ class UserBookingTest extends TestCase
             ->assertStatus(403)
             ->assertSee('You cannot access this booking');
     }
+
+    /**
+     *  @test
+     *  An unauthenticated user cannot access the booking refund amount endpoint
+     */
+    public function an_unauthenticated_user_cannot_access_the_booking_refund_amount_endpoint()
+    {
+        $this->json('GET', '/api/dashboard/booking-refund-amount/1')
+            ->assertStatus(401);
+    }
+
+    /**
+     *  @test
+     *  A 403 response is returned if the booking has already started
+     */
+    public function a_403_response_is_returned_if_the_booking_has_already_started_at_booking_refund_amount_api()
+    {
+        $this->createSmallDatabase();
+
+        $booking = Booking::where('from', '<=', Carbon::now())->first();
+
+        $user = $booking->order->user;
+
+        $this->actingAs($user);
+
+        $this->json('GET', "/api/dashboard/booking-refund-amount/{$booking->id}")
+            ->assertStatus(403)
+            ->assertSee('You cannot cancel a booking that has started');
+    }
+
+    /**
+     *  @test
+     *  A 403 response is returned if the user is not the host or renter
+     */
+    public function a_403_response_is_returned_at_booking_refund_amount_api_if_the_user_is_not_the_host_or_renter()
+    {
+        $this->createSmallDatabase();
+
+        $booking = $booking = Booking::inRandomOrder()
+            ->where('from', '>', Carbon::now())
+            ->first();
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $this->json('GET', "/api/dashboard/booking-refund-amount/{$booking->id}")
+            ->assertStatus(403)
+            ->assertSee('Unauthorized');
+    }
+
+    /**
+     *  @test
+     *  The host can get the refund amount for the booking from the api endpoint
+     */
+    public function the_host_can_get_the_refund_amount_for_the_booking_from_the_api_endpoint()
+    {
+        $this->createSmallDatabase();
+
+        $booking = $booking = Booking::inRandomOrder()
+            ->where('from', '>', Carbon::now())
+            ->first();
+
+        $user = $booking->vehicle->user;
+
+        $this->actingAs($user);
+
+        $this->json('GET', "/api/dashboard/booking-refund-amount/{$booking->id}")
+            ->assertStatus(200)
+            ->assertSimilarJson([
+                'type' => 'Full refund',
+                'amount' => $booking->price_total
+            ]);
+    }
+
+    /**
+     *  @test
+     *  The host can get the refund amount for the booking from the api endpoint
+     */
+    public function the_renter_can_get_the_refund_amount_for_the_booking_from_the_api_endpoint()
+    {
+        $this->createSmallDatabase();
+
+        $booking = $booking = Booking::inRandomOrder()
+            ->where('from', '>', Carbon::now())
+            ->first();
+
+        $user = $booking->order->user;
+
+        $this->actingAs($user);
+
+        $this->json('GET', "/api/dashboard/booking-refund-amount/{$booking->id}")
+            ->assertStatus(200)
+            ->assertSimilarJson($booking->renterInitiatedRefund());
+    }
+
+    /**
+     *  @test
+     *  An unauthenticated user cannot access the booking delete endpoint
+     */
+    public function an_unauthenticated_user_cannot_access_the_booking_delete_endpoint()
+    {
+        $this->json('DELETE', '/api/dashboard/booking-delete/1')
+            ->assertStatus(401);
+    }
+
+    /**
+     *  @test
+     *  A reason must be included when cancelling a booking
+     */
+    public function a_reason_must_be_included_when_cancelling_a_booking()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::inRandomOrder()->first();
+
+        $this->actingAs($user);
+
+        $this->json('DELETE', '/api/dashboard/booking-delete/1')
+            ->assertStatus(422)
+            ->assertSee('The reason field is required');
+    }
+
+    /**
+     *  @test
+     *  A booking that has already started cannot be cancelled
+     */
+    public function a_booking_that_has_already_started_cannot_be_cancelled()
+    {
+        $this->createSmallDatabase();
+
+        $booking = Booking::where('from', '<=', Carbon::now())->first();
+
+        $user = $booking->order->user;
+
+        $this->actingAs($user);
+
+        $data = ['reason' => 'Just feel like it.'];
+
+        $this->json('DELETE', "/api/dashboard/booking-delete/{$booking->id}", $data)
+            ->assertStatus(403)
+            ->assertSee('You cannot cancel a booking that has started');
+    }
+
+    /**
+     *  @test
+     *  A booking cannot be cancelled if the user is not the host or renter
+     */
+    public function a_booking_cannot_be_cancelled_if_the_user_is_not_the_host_or_renter()
+    {
+        $this->createSmallDatabase();
+
+        $booking = Booking::where('from', '>', Carbon::now())->first();
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $data = ['reason' => 'Just feel like it.'];
+
+        $this->json('DELETE', "/api/dashboard/booking-delete/{$booking->id}", $data)
+            ->assertStatus(403)
+            ->assertSee('You cannot cancel this booking');
+    }
 }
