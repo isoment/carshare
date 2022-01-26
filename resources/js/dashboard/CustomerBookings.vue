@@ -50,6 +50,7 @@
                                                 @change="updateSort()">
                                             <option value="dateAsc">Date: Ascending</option>
                                             <option value="dateDesc">Date: Descending</option>
+                                            <option value="createdDesc">Booking: Latest</option>
                                             <option value="priceTotalDesc">Price: Total</option>
                                         </select>
                                     </div>

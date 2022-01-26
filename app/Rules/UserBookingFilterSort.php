@@ -15,7 +15,7 @@ class UserBookingFilterSort implements Rule
      */
     public function passes($attribute, $value)
     {
-        $types = ['dateAsc', 'dateDesc', 'priceTotalDesc'];
+        $types = ['dateAsc', 'dateDesc', 'priceTotalDesc', 'createdDesc'];
 
         return in_array($value, $types);
     }

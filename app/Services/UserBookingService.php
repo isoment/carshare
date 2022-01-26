@@ -338,6 +338,10 @@ class UserBookingService
             return 'to';
         }
 
+        if ($request['sort'] === 'createdDesc') {
+            return 'created_at';
+        }
+
         if ($request['sort'] === 'priceTotalDesc') {
             return 'price_total';
         }
