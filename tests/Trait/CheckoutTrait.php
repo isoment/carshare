@@ -69,10 +69,9 @@ trait CheckoutTrait
     /**
      *  Simulate a successful checkout
      * 
-     *  @param User $user the user that is checking out
      *  @return array with TestResponse object and payment_method_id
      */
-    private function successfulCheckout(User $user) : array
+    private function successfulCheckout() : array
     {
         $data = $this->validCheckoutData();
 

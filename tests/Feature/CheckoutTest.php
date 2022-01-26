@@ -274,7 +274,7 @@ class CheckoutTest extends TestCase
 
         $this->authorizeUserToDrive($user);
 
-        $response = $this->successfulCheckout($user);
+        $response = $this->successfulCheckout();
 
         $response['response']->assertStatus(201)->assertSee('Success');
     }
@@ -295,7 +295,7 @@ class CheckoutTest extends TestCase
 
         $data = $this->validCheckoutData();
 
-        $response = $this->successfulCheckout($user, $data);
+        $response = $this->successfulCheckout();
 
         $this->assertDatabaseHas('orders', [
             'payment_method' => $response['payment_method_id']
@@ -323,7 +323,7 @@ class CheckoutTest extends TestCase
 
         $this->authorizeUserToDrive($user);
 
-        $response = $this->successfulCheckout($user);
+        $response = $this->successfulCheckout();
 
         $order = Order::where('payment_method', $response['payment_method_id'])
             ->first();

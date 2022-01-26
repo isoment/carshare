@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Booking;
+use App\Models\Cancellation;
 use App\Models\DriversLicense;
 use App\Models\Order;
 use App\Models\User;
@@ -560,7 +561,7 @@ class UserBookingTest extends TestCase
 
         $this->authorizeUserToDrive($user);
 
-        $response = $this->successfulCheckout($user);
+        $response = $this->successfulCheckout();
 
         $order = Order::where('payment_method', $response['payment_method_id'])
             ->first();
@@ -576,5 +577,76 @@ class UserBookingTest extends TestCase
         $this->json('DELETE', "/api/dashboard/booking-delete/{$booking->id}", $data)
             ->assertStatus(200)
             ->assertSee('Booking canceled');
+    }
+
+    /**
+     *  @test
+     *  A host can cancel a booking of their vehicle
+     */
+    public function a_host_can_cancel_a_booking_of_their_vehicle()
+    {
+        $this->createSmallDatabase();
+
+        $renter = User::factory()->create();
+
+        $this->actingAs($renter);
+
+        $this->authorizeUserToDrive($renter);
+
+        $response = $this->successfulCheckout();
+
+        $order = Order::where('payment_method', $response['payment_method_id'])
+            ->first();
+
+        $booking = $order->bookings->first();
+
+        $this->assertDatabaseHas('bookings', [
+            'id' => $booking->id
+        ]);
+
+        $host = $booking->vehicle->user;
+
+        $this->actingAs($host);
+
+        $data = ['reason' => 'Just feel like it.'];
+
+        $this->json('DELETE', "/api/dashboard/booking-delete/{$booking->id}", $data)
+            ->assertStatus(200)
+            ->assertSee('Booking canceled');
+    }
+
+    /**
+     *  @test
+     *  The booking is deleted in the database and a cancellation is created
+     */
+    public function the_booking_is_deleted_in_the_database_and_a_cancellation_is_created()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $this->authorizeUserToDrive($user);
+
+        $response = $this->successfulCheckout();
+
+        $order = Order::where('payment_method', $response['payment_method_id'])
+            ->first();
+
+        $booking = $order->bookings->first();
+
+        $data = ['reason' => 'Just feel like it.'];
+
+        $this->json('DELETE', "/api/dashboard/booking-delete/{$booking->id}", $data);
+
+        // The booking has been deleted
+        $oldBooking = Booking::find($booking->id);
+        $this->assertNull($oldBooking);
+
+        // A cancellation with the order id and reason has been created 
+        $cancellation = Cancellation::where('order_id', $order->id)->first();
+        $this->assertNotNull($cancellation);
+        $this->assertEquals('Just feel like it.', $cancellation->reason);
     }
 }

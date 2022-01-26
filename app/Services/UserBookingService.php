@@ -72,11 +72,13 @@ class UserBookingService
     {
         $user = current_user();
 
-        if ($this->userIsHostOfBooking($id, $user)) {
+        $booking = Booking::findOrFail($id);
+
+        if ($booking->userIsHostOfBooking($user)) {
             return new UserBookingShowHostResource($this->showBookingAsHost($id));
         }
 
-        if ($this->userIsRenterOfBooking($id, $user)) {
+        if ($booking->userIsRenterOfBooking($user)) {
             return new UserBookingShowRenterResource($this->showBookingAsRenter($id));
         }
 
@@ -108,15 +110,13 @@ class UserBookingService
             return response()->json('You cannot cancel a booking that has started', 403);
         }
 
-        // Log::info($id);
-
         // User is renter
-        if ($this->userIsRenterOfBooking($id, $user)) {
+        if ($booking->userIsRenterOfBooking($user)) {
             return $this->cancelBookingAsRenter($booking, $request);
         }
 
         // User is host
-        if ($this->userIsHostOfBooking($id, $user)) {
+        if ($booking->userIsHostOfBooking($user)) {
             return $this->cancelBookingAsHost($booking, $request);
         }
 
@@ -137,11 +137,11 @@ class UserBookingService
             return response()->json('You cannot cancel a booking that has started', 403);
         }
 
-        if ($this->userIsRenterOfBooking($id, $user)) {
+        if ($booking->userIsRenterOfBooking($user)) {
             return response()->json($booking->renterInitiatedRefund());
         }
 
-        if ($this->userIsHostOfBooking($id, $user)) {
+        if ($booking->userIsHostOfBooking($user)) {
             return response()->json([
                 'type' => 'Full refund',
                 'amount' => $booking->price_total
@@ -294,32 +294,6 @@ class UserBookingService
         return Booking::with('vehicle.vehicleModel.vehicleMake')
             ->where('id', $id)
             ->first();
-    }
-
-    /**
-     *  @param int $bookingId
-     *  @param User $user
-     */
-    private function userIsHostOfBooking(int $bookingId, User $user) : bool
-    {
-        $usersBookings = $user->getVehicleBookings()->pluck('id');
-
-        return $usersBookings->contains($bookingId);
-    }
-
-    /**
-     *  @param int $bookingId
-     *  @param User $user
-     */
-    private function userIsRenterOfBooking(int $bookingId, User $user) : bool
-    {
-        // $usersBookings = $user->getBookings()->pluck('id');
-
-        // return $usersBookings->contains($bookingId);
-
-        $booking = Booking::find($bookingId);
-
-        return (int) $booking->order->user_id === $user->id;
     }
 
     /**

@@ -46,6 +46,28 @@ class Booking extends Model
         return $this->belongsTo(HostReview::class, 'host_review_key');
     }
 
+    /** 
+     *  Determine if a user the renter of a booking
+     *  
+     *  @param User $user
+     *  @return bool
+     */
+    public function userIsRenterOfBooking(User $user) : bool
+    {
+        return (int) $this->order->user_id === $user->id;
+    }
+
+    /**
+     *  Determine if a user is the host for a booking
+     * 
+     *  @param User $user
+     *  @return bool
+     */
+    public function userIsHostOfBooking(User $user) : bool
+    {
+        return (int) $this->vehicle->user_id === $user->id;
+    }
+
     /**
      *  Calculate vehicle rating
      * 
