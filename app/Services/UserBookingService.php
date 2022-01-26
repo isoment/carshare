@@ -108,6 +108,8 @@ class UserBookingService
             return response()->json('You cannot cancel a booking that has started', 403);
         }
 
+        // Log::info($id);
+
         // User is renter
         if ($this->userIsRenterOfBooking($id, $user)) {
             return $this->cancelBookingAsRenter($booking, $request);
@@ -311,9 +313,13 @@ class UserBookingService
      */
     private function userIsRenterOfBooking(int $bookingId, User $user) : bool
     {
-        $usersBookings = $user->getBookings()->pluck('id');
+        // $usersBookings = $user->getBookings()->pluck('id');
 
-        return $usersBookings->contains($bookingId);
+        // return $usersBookings->contains($bookingId);
+
+        $booking = Booking::find($bookingId);
+
+        return (int) $booking->order->user_id === $user->id;
     }
 
     /**

@@ -2,18 +2,22 @@
 
 namespace Tests\Trait;
 
+use App\Models\DriversLicense;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Testing\TestResponse;
 
 trait CheckoutTrait
 {
+    use UserTrait;
+
     /**
      *  Valid json data for testing the checkout.
      * 
      *  @param int $hostId
-     * 
      *  @return array
      */
-    public function validCheckoutData(int $hostId = null) : array
+    private function validCheckoutData(int $hostId = null) : array
     {
         $start = Carbon::now()->addYears(1)->format('n/j/Y');
         $end = Carbon::parse($start)->addDays(2)->format('n/j/Y');
@@ -43,10 +47,9 @@ trait CheckoutTrait
      *  in the Payment.vue component.
      * 
      *  @param array $params
-     * 
      *  @return \Stripe\PaymentMethod
      */
-    public function createStripePaymentMethod(array $params = []) : \Stripe\PaymentMethod
+    private function createStripePaymentMethod(array $params = []) : \Stripe\PaymentMethod
     {
         $stripe = new \Stripe\StripeClient(
             env('STRIPE_SECRET')
@@ -61,5 +64,27 @@ trait CheckoutTrait
                 'cvc' => 532
             ]
         ]);
+    }
+
+    /**
+     *  Simulate a successful checkout
+     * 
+     *  @param User $user the user that is checking out
+     *  @return array with TestResponse object and payment_method_id
+     */
+    private function successfulCheckout(User $user) : array
+    {
+        $data = $this->validCheckoutData();
+
+        $response = $this->createStripePaymentMethod();
+
+        $data['payment_method_id'] = $response['id'];
+
+        $response = $this->json('POST', '/api/checkout', $data);
+
+        return [
+            'response' => $response,
+            'payment_method_id' => $data['payment_method_id']
+        ];
     }
 }

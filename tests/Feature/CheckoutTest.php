@@ -60,7 +60,7 @@ class CheckoutTest extends TestCase
 
         $user = User::factory()->create();
 
-        DriversLicense::factory()->create(['user_id' => $user->id]);
+        $this->authorizeUserToDrive($user);
 
         $this->actingAs($user);
 
@@ -82,7 +82,7 @@ class CheckoutTest extends TestCase
 
         $user = User::factory()->create();
 
-        DriversLicense::factory()->create(['user_id' => $user->id]);
+        $this->authorizeUserToDrive($user);
 
         $vehicle = Vehicle::find(1);
 
@@ -108,7 +108,7 @@ class CheckoutTest extends TestCase
 
         $user = User::factory()->create();
 
-        DriversLicense::factory()->create(['user_id' => $user->id]);
+        $this->authorizeUserToDrive($user);
 
         $this->actingAs($user);
 
@@ -132,7 +132,7 @@ class CheckoutTest extends TestCase
 
         $user = User::factory()->create();
 
-        DriversLicense::factory()->create(['user_id' => $user->id]);
+        $this->authorizeUserToDrive($user);
 
         $this->actingAs($user);
 
@@ -156,7 +156,7 @@ class CheckoutTest extends TestCase
 
         $user = User::factory()->create();
 
-        DriversLicense::factory()->create(['user_id' => $user->id]);
+        $this->authorizeUserToDrive($user);
 
         $this->actingAs($user);
 
@@ -221,7 +221,7 @@ class CheckoutTest extends TestCase
 
         $user = User::factory()->create();
 
-        DriversLicense::factory()->create(['user_id' => $user->id]);
+        $this->authorizeUserToDrive($user);
 
         $this->actingAs($user);
 
@@ -244,7 +244,7 @@ class CheckoutTest extends TestCase
 
         $user = User::factory()->create();
 
-        DriversLicense::factory()->create(['user_id' => $user->id]);
+        $this->authorizeUserToDrive($user);
 
         $this->actingAs($user);
 
@@ -270,19 +270,13 @@ class CheckoutTest extends TestCase
 
         $user = User::factory()->create();
 
-        DriversLicense::factory()->create(['user_id' => $user->id]);
-
         $this->actingAs($user);
 
-        $data = $this->validCheckoutData();
+        $this->authorizeUserToDrive($user);
 
-        $response = $this->createStripePaymentMethod();
+        $response = $this->successfulCheckout($user);
 
-        $data['payment_method_id'] = $response['id'];
-
-        $response = $this->json('POST', '/api/checkout', $data);
-
-        $response->assertStatus(201)->assertSee('Success');
+        $response['response']->assertStatus(201)->assertSee('Success');
     }
 
     /**
@@ -295,23 +289,20 @@ class CheckoutTest extends TestCase
 
         $user = User::factory()->create();
 
-        DriversLicense::factory()->create(['user_id' => $user->id]);
-
         $this->actingAs($user);
+
+        $this->authorizeUserToDrive($user);
 
         $data = $this->validCheckoutData();
 
-        $response = $this->createStripePaymentMethod();
-
-        $data['payment_method_id'] = $response['id'];
-
-        $response = $this->json('POST', '/api/checkout', $data);
+        $response = $this->successfulCheckout($user, $data);
 
         $this->assertDatabaseHas('orders', [
-            'payment_method' => $data['payment_method_id']
+            'payment_method' => $response['payment_method_id']
         ]);
 
-        $order = Order::where('payment_method', $data['payment_method_id'])->first();
+        $order = Order::where('payment_method', $response['payment_method_id'])
+            ->first();
 
         $this->assertDatabaseHas('bookings', [
             'order_id' => $order->id
@@ -328,19 +319,14 @@ class CheckoutTest extends TestCase
 
         $user = User::factory()->create();
 
-        DriversLicense::factory()->create(['user_id' => $user->id]);
-
         $this->actingAs($user);
 
-        $data = $this->validCheckoutData();
+        $this->authorizeUserToDrive($user);
 
-        $response = $this->createStripePaymentMethod();
+        $response = $this->successfulCheckout($user);
 
-        $data['payment_method_id'] = $response['id'];
-
-        $response = $this->json('POST', '/api/checkout', $data);
-
-        $order = Order::where('payment_method', $data['payment_method_id'])->first();
+        $order = Order::where('payment_method', $response['payment_method_id'])
+            ->first();
 
         $booking = Booking::where('order_id', $order->id)->first();
 
@@ -363,9 +349,9 @@ class CheckoutTest extends TestCase
 
         $user = User::factory()->create();
 
-        DriversLicense::factory()->create(['user_id' => $user->id]);
-
         $this->actingAs($user);
+
+        $this->authorizeUserToDrive($user);
 
         $data = $this->validCheckoutData();
 
@@ -384,9 +370,9 @@ class CheckoutTest extends TestCase
 
         $user = User::factory()->create();
 
-        DriversLicense::factory()->create(['user_id' => $user->id]);
-
         $this->actingAs($user);
+
+        $this->authorizeUserToDrive($user);
 
         $data = $this->validCheckoutData();
 

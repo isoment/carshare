@@ -3,17 +3,19 @@
 namespace Tests\Feature;
 
 use App\Models\Booking;
+use App\Models\DriversLicense;
 use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Tests\Trait\CheckoutTrait;
 use Tests\Trait\UserBookingTrait;
 use Tests\Trait\UserTrait;
 
 class UserBookingTest extends TestCase
 {
-    use RefreshDatabase, UserTrait, UserBookingTrait;
+    use RefreshDatabase, UserTrait, UserBookingTrait, CheckoutTrait;
 
     /**
      *  @test
@@ -542,5 +544,37 @@ class UserBookingTest extends TestCase
         $this->json('DELETE', "/api/dashboard/booking-delete/{$booking->id}", $data)
             ->assertStatus(403)
             ->assertSee('You cannot cancel this booking');
+    }
+    
+    /**
+     *  @test
+     *  A renter can cancel a booking they made
+     */
+    public function a_renter_can_cancel_their_future_booking()
+    {
+        $this->createSmallDatabase();
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $this->authorizeUserToDrive($user);
+
+        $response = $this->successfulCheckout($user);
+
+        $order = Order::where('payment_method', $response['payment_method_id'])
+            ->first();
+
+        $booking = $order->bookings->first();
+
+        $this->assertDatabaseHas('bookings', [
+            'id' => $booking->id
+        ]);
+
+        $data = ['reason' => 'Just feel like it.'];
+
+        $this->json('DELETE', "/api/dashboard/booking-delete/{$booking->id}", $data)
+            ->assertStatus(200)
+            ->assertSee('Booking canceled');
     }
 }

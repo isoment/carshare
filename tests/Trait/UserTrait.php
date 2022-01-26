@@ -9,6 +9,7 @@ use Database\Seeders\Testing\TestingVehicleMakeModelSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\VehicleSeeder;
 use App\Models\Booking;
+use App\Models\DriversLicense;
 use App\Models\Order;
 use App\Models\User;
 
@@ -41,7 +42,7 @@ trait UserTrait
         HostReviewSeeder::run();
     }
 
-    private function deleteAllUsersBookingsAndOrders(User $user)
+    private function deleteAllUsersBookingsAndOrders(User $user) : void
     {
         $usersOrders = $user->orders->pluck('id');
 
@@ -50,5 +51,15 @@ trait UserTrait
         });
 
         Order::destroy(collect($usersOrders));
+    }
+
+    /**
+     *  Authorize user to drive by creating a drivers license entry
+     * 
+     *  @param User $user
+     */
+    private function authorizeUserToDrive(User $user) : void
+    {
+        DriversLicense::factory()->create(['user_id' => $user->id]);
     }
 }
