@@ -126,10 +126,11 @@
                                         Reviews
                                     </router-link>
 
-                                    <a href="#" class="block px-4 py-2 text-sm font-bold text-gray-700 hover:text-purple-500" 
-                                                role="menuitem" tabindex="-1" id="user-menu-item-1">
-                                        Settings
-                                    </a>
+                                    <router-link class="block px-4 py-2 text-sm font-bold text-gray-700 hover:text-purple-500" 
+                                                 role="menuitem" tabindex="-1" id="user-menu-item-0"
+                                                 :to="{ name: 'customer-statistics' }">
+                                        Statistics
+                                    </router-link>
 
                                     <a href="#" class="block px-4 py-2 text-sm font-bold text-gray-700 hover:text-purple-500" 
                                     role="menuitem" tabindex="-1" id="user-menu-item-2"
