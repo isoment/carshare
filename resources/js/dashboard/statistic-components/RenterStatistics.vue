@@ -1,0 +1,225 @@
+<template>
+    <div>
+        <div>
+            <h3 class="text-2xl font-bold font-boldnosans mb-3">Renter Statistics</h3>
+        </div>
+        <!-- Basic stats -->
+        <div class="flex flex-col sm:flex-row md:justify-between text-white">
+            <div class="bg-gradient-to-r from-purple-400 via-purple-400 to-indigo-400 
+                        w-full mr-2 rounded-md py-8 px-4 relative mb-3 sm:mb-0">
+                <h4>Total</h4>
+                <h2 class="text-3xl font-bold font-boldnosans mt-3">$12,653.65</h2>
+                <h5 class="mt-6">The total you have spent on bookings</h5>
+                <img src="/img/circle.svg" alt="circle" class="h-48 w-48 absolute bottom-0 -right-5">
+            </div>
+            <div class="bg-gradient-to-r from-purple-400 via-purple-400 to-indigo-400 
+                        w-full sm:ml-2 sm:mr-2 rounded-md py-8 px-4 relative mb-3 sm:mb-0">
+                <h4>Count</h4>
+                <div class="flex justify-between mt-3">
+                    <div>
+                        <h2 class="text-3xl font-bold font-boldnosans">12</h2>
+                        <h5 class="mt-3">Bookings</h5>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-bold font-boldnosans">1</h2>
+                        <h5 class="mt-3">Cancellations</h5>
+                    </div>
+                </div>
+                <img src="/img/circle.svg" alt="circle" class="h-48 w-48 absolute bottom-0 -right-5">
+            </div>
+            <div class="bg-gradient-to-r from-purple-400 via-purple-400 to-indigo-400 
+                        w-full sm:ml-2 rounded-md py-8 px-4 relative">
+                <h4>14 Orders</h4>
+                <h2 class="text-3xl font-bold font-boldnosans mt-3">$756.65</h2>
+                <h5 class="mt-6">The average amount per order</h5>
+                <img src="/img/circle.svg" alt="circle" class="h-48 w-48 absolute bottom-0 -right-5">
+            </div>
+        </div>
+        <!-- Graphs -->
+        <div class="grid grid-cols-1 md:grid-cols-5 md:gap-6 mt-6">
+            <div class="shadow-md border border-gray-100 col-span-3 p-6 rounded-md mb-6 md:mb-0">
+                <h5 class="font-bold font-boldnosans text-lg text-gray-700">Bookings by month</h5>
+                <canvas id="barChart"></canvas>
+            </div>
+            <div class="shadow-md border border-gray-100 col-span-2 p-6 rounded-md">
+                <h5 class="font-bold font-boldnosans text-lg text-gray-700">Donut chart</h5>
+                <canvas id="donutChart"></canvas>
+            </div>
+        </div>
+        <!-- Recent Orders -->
+        <h5 class="font-bold font-boldnosans text-lg text-gray-700 mt-6">Recent Bookings</h5>
+        <div class="bg-white rounded-md w-full">
+            <div>
+                <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 pt-3 pb-4 overflow-x-auto">
+                    <div class="inline-block min-w-full shadow rounded-lg overflow-hidden">
+                        <table class="min-w-full leading-normal">
+                            <thead>
+                                <tr>
+                                    <th
+                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        Name
+                                    </th>
+                                    <th
+                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        products
+                                    </th>
+                                    <th
+                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        Created at
+                                    </th>
+                                    <th
+                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        QRT
+                                    </th>
+                                    <th
+                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 w-10 h-10">
+                                                <img class="w-full h-full rounded-full"
+                                                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+                                                    alt="" />
+                                            </div>
+                                                <div class="ml-3">
+                                                    <p class="text-gray-900 whitespace-no-wrap">
+                                                        Vera Carpenter
+                                                    </p>
+                                                </div>
+                                            </div>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <p class="text-gray-900 whitespace-no-wrap">Admin</p>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <p class="text-gray-900 whitespace-no-wrap">
+                                            Jan 21, 2020
+                                        </p>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <p class="text-gray-900 whitespace-no-wrap">
+                                            43
+                                        </p>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <span
+                                            class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                                            <span aria-hidden
+                                                class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                                        <span class="relative">Activo</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 w-10 h-10">
+                                                <img class="w-full h-full rounded-full"
+                                                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+                                                    alt="" />
+                                            </div>
+                                                <div class="ml-3">
+                                                    <p class="text-gray-900 whitespace-no-wrap">
+                                                        Blake Bowman
+                                                    </p>
+                                                </div>
+                                            </div>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <p class="text-gray-900 whitespace-no-wrap">Editor</p>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <p class="text-gray-900 whitespace-no-wrap">
+                                            Jan 01, 2020
+                                        </p>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <p class="text-gray-900 whitespace-no-wrap">
+                                            77
+                                        </p>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <span
+                                            class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                                            <span aria-hidden
+                                                class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                                        <span class="relative">Activo</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    import Chart from 'chart.js/auto'
+
+    export default {
+        methods: {
+            createBarChart() {
+                var ctx = document.getElementById('barChart').getContext('2d');
+                var barChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['1', '2', '3', '4', '5', '6', '7', '8'],
+                        datasets: [{
+                            label: '# of Votes',
+                            data: [12, 19, 3, 5, 2, 3, 8, 12],
+                            backgroundColor: [
+                                'rgb(255, 99, 132)',
+                                'rgb(54, 162, 235)',
+                                'rgb(255, 206, 86)',
+                                'rgb(75, 192, 192)',
+                                'rgb(153, 102, 255)',
+                                'rgb(255, 159, 64)',
+                                'rgb(175,156,255)',
+                                'rgb(120,138,255)'
+                            ],
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            },
+
+            createDonutChart() {
+                var ctx = document.getElementById('donutChart').getContext('2d');
+                var donutChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Green', 'Purple', 'Orange'],
+                        datasets: [{
+                            label: '# of Donuts',
+                            data: [300, 50, 100],
+                            backgroundColor: [
+                                'rgb(175,156,255)',
+                                'rgb(120,138,255)',
+                                'rgb(148,255,212)'
+                                ],
+                            hoverOffset: 4
+                        }]
+                    },
+                });
+            }
+        },
+        
+        mounted() {
+            this.createBarChart();
+            this.createDonutChart();
+        }
+    }
+</script>
