@@ -165,6 +165,11 @@
 
     export default {
         methods: {
+            async fetchRenterStats() {
+                let response = await axios.get('/api/dashboard/renter-stats');
+                console.log(response);
+            },
+
             createBarChart() {
                 var ctx = document.getElementById('barChart').getContext('2d');
                 var barChart = new Chart(ctx, {
@@ -218,6 +223,7 @@
         },
         
         mounted() {
+            this.fetchRenterStats();
             this.createBarChart();
             this.createDonutChart();
         }

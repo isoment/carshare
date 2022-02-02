@@ -243,6 +243,20 @@ Route::middleware('auth:sanctum')->group(function() {
         [App\Http\Controllers\Api\Dashboard\UserBookingController::class, 'showBookingRefund']
     )->name('dashboard.booking-refund-amount');
 
+    /**********************
+     *  Stats API Routes  *
+     *********************/
+
+    Route::get(
+        'dashboard/renter-stats',
+        [App\Http\Controllers\Api\Dashboard\StatisticsController::class, 'renterStats']
+    )->name('dashboard.renter-stats');
+
+    Route::get(
+        'dashboard/host-stats',
+        [App\Http\Controllers\Api\Dashboard\StatisticsController::class, 'hostStats']
+    )->name('dashboard.host-stats');
+
     /*************************
      *  Checkout API Routes  *
      ************************/
