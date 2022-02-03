@@ -12,17 +12,22 @@ use Illuminate\Support\Facades\DB;
 
 class StatisticsService
 {
-    public function showRenterStats()
+    public function showRenterStats() : array
     {
         $user = current_user();
         $usersOrders = $user->orders;
         $bookingsByMonth = $this->bookingsByMonth($usersOrders);
+        $totalsByMonth = $this->totalsByMonth($usersOrders);
 
         return [
             'basic' => $this->basicStats($user, $usersOrders),
             'bookingCountByMonth' => [
                 'month' => array_keys($bookingsByMonth),
                 'count' => array_values($bookingsByMonth)
+            ],
+            'totalsByMonth' => [
+                'month' => array_keys($totalsByMonth),
+                'total' => array_values($totalsByMonth)
             ]
         ];
     }
@@ -32,7 +37,7 @@ class StatisticsService
      *  @param Collection $orders
      *  @return array
      */
-    public function basicStats(User $user, Collection $orders) : array
+    private function basicStats(User $user, Collection $orders) : array
     {
         return [
             'totalSpent' => $orders->sum('total'),
@@ -46,38 +51,42 @@ class StatisticsService
     /**
      *  @param Collection $orders
      */
-    public function bookingsByMonth(Collection $orders) : array
+    private function bookingsByMonth(Collection $orders) : array
     {
         $countByMonth = Booking::whereIn('order_id', $orders->pluck('id'))
-            ->whereBetween('from', [Carbon::now()->subMonths(3), Carbon::now()->addMonths(4)])
+            ->whereBetween('from', [Carbon::now()->subMonths(6), Carbon::now()->addMonths(6)])
             ->select(
                 DB::raw("DATE_FORMAT(`from`, '%Y-%m') month"),
                 DB::raw("count('month') as booking_count")
             )
             ->groupBy('month')
             ->orderBy('month')
+            ->limit(8)
             ->get();
 
-        $flatArr = [];
-
         foreach ($countByMonth as $m) {
-            $flatArray[ Carbon::parse($m['month'])->format('M')] = $m['booking_count'];
+            $flatArray[Carbon::parse($m['month'])->format('M Y')] = $m['booking_count'];
         }
 
         return $flatArray;
     }
 
-    /**
-     *  @param Collection $orders
-     */
-    public function bookingsByMonthWithNulls(Collection $orders)
+    private function totalsByMonth(Collection $orders)
     {
-        return DB::select('
-            SELECT `from`,
-                   `to`,
-                   price_total
-            FROM bookings
-            LEFT
-        ');
+        $totals = Booking::whereIn('order_id', $orders->pluck('id'))
+            ->select(
+                DB::raw("DATE_FORMAT(`from`, '%Y-%m') month"),
+                DB::raw("sum(price_total) as total")
+            )
+            ->groupBy('month')
+            ->orderBy('total', 'DESC')
+            ->limit(6)
+            ->get();
+
+        foreach ($totals as $t) {
+            $flatArray[Carbon::parse($t['month'])->format('M y')] = $t['total'];
+        }
+
+        return $flatArray;
     }
 }
