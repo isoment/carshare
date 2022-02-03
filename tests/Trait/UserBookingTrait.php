@@ -10,7 +10,7 @@ trait UserBookingTrait
             'data' => [
                 '*' => [
                     'booking' => [
-                        'id', 'from', 'to', 'price_day', 'price_total'
+                        'id', 'from', 'to', 'price_day', 'price_total', 'created_at'
                     ],
                     'vehicle' => [
                         'id', 'image', 'make', 'model', 'year', 'active'

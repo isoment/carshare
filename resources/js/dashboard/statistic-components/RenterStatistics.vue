@@ -50,7 +50,7 @@
                 </div>
             </div>
             <!-- Recent Orders -->
-            <h5 class="font-bold font-boldnosans text-lg text-gray-700 mt-6">Recent Bookings</h5>
+            <h5 class="font-bold font-boldnosans text-lg text-gray-700 mt-6">Recently Booked</h5>
             <div class="bg-white rounded-md w-full">
                 <div>
                     <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 pt-3 pb-4 overflow-x-auto">
@@ -60,97 +60,71 @@
                                     <tr>
                                         <th
                                             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                            Name
+                                            Vehicle
                                         </th>
                                         <th
                                             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                            products
+                                            From
                                         </th>
                                         <th
                                             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                            Created at
+                                            To
                                         </th>
                                         <th
                                             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                            QRT
+                                            Total Price
                                         </th>
                                         <th
                                             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                            Status
+                                            Booking Date
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 w-10 h-10">
-                                                    <img class="w-full h-full rounded-full"
-                                                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                                                        alt="" />
-                                                </div>
+                                    <tr v-for="booking in stats.recentBookings" :key="booking.id"
+                                        class="border border-b">
+                                        <router-link :to="{ 
+                                            name: 'customer-show-booking', 
+                                            params: { id: booking.booking.id } 
+                                        }">
+                                            <td class="px-5 py-2 bg-white text-sm">
+                                                <div class="flex items-center">
+                                                    <div>
+                                                        <div class="h-16 w-24 rounded-sm"
+                                                            :style="{ 'background-image': 'url(' + booking.vehicle.image + ')' }"
+                                                            style="background-size: cover; background-position: 50% 50%;">
+                                                        </div>
+                                                    </div>
                                                     <div class="ml-3">
-                                                        <p class="text-gray-900 whitespace-no-wrap">
-                                                            Vera Carpenter
-                                                        </p>
+                                                        <h6 class="font-bold font-lg tracking-wider font-boldnosans text-gray-700">
+                                                            {{booking.vehicle.year}} {{booking.vehicle.make}}
+                                                        </h6>
+                                                        <h6 class="text-gray-600">{{booking.vehicle.model}}</h6>
                                                     </div>
                                                 </div>
-                                        </td>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <p class="text-gray-900 whitespace-no-wrap">Admin</p>
-                                        </td>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                            </td>
+                                        </router-link>
+                                        <td class="px-5 py-2 bg-white text-sm">
                                             <p class="text-gray-900 whitespace-no-wrap">
-                                                Jan 21, 2020
+                                                {{dateFormat(booking.booking.from)}}
                                             </p>
                                         </td>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <td class="px-5 py-2 bg-white text-sm">
                                             <p class="text-gray-900 whitespace-no-wrap">
-                                                43
+                                                {{dateFormat(booking.booking.to)}}
                                             </p>
                                         </td>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <td class="px-5 py-2 bg-white text-sm">
+                                            <p class="text-gray-900 whitespace-no-wrap">
+                                                {{moneyFormat(booking.booking.price_total)}}
+                                            </p>
+                                        </td>
+                                        <td class="px-5 py-2 bg-white text-sm">
                                             <span
-                                                class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                                                class="relative inline-block px-3 py-1 font-semibold text-white leading-tight">
                                                 <span aria-hidden
-                                                    class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                                            <span class="relative">Activo</span>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 w-10 h-10">
-                                                    <img class="w-full h-full rounded-full"
-                                                        src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                                                        alt="" />
-                                                </div>
-                                                    <div class="ml-3">
-                                                        <p class="text-gray-900 whitespace-no-wrap">
-                                                            Blake Bowman
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                        </td>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <p class="text-gray-900 whitespace-no-wrap">Editor</p>
-                                        </td>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <p class="text-gray-900 whitespace-no-wrap">
-                                                Jan 01, 2020
-                                            </p>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <p class="text-gray-900 whitespace-no-wrap">
-                                                77
-                                            </p>
-                                        </td>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <span
-                                                class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                                <span aria-hidden
-                                                    class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                                            <span class="relative">Activo</span>
+                                                    class="absolute inset-0 bg-purple-400 opacity-50 rounded-full"></span>
+                                            <span class="relative">{{dateFormat(booking.booking.created_at)}}</span>
                                             </span>
                                         </td>
                                     </tr>
@@ -168,6 +142,7 @@
     import Chart from 'chart.js/auto';
     import ChartDataLabels from 'chartjs-plugin-datalabels';
     import { dollarFormat } from '../../shared/utils/currency';
+    import { monthDayYearNumbericSlash } from '../../shared/utils/dateFormats';
 
     export default {
         props: ['stats'],
@@ -175,6 +150,10 @@
         methods: {
             moneyFormat(value) {
                 return dollarFormat(value);
+            },
+
+            dateFormat(value) {
+                return monthDayYearNumbericSlash(value);
             },
 
             createBarChart() {
@@ -187,12 +166,12 @@
                             label: 'Bookings',
                             data: this.stats.bookingCountByMonth.count,
                             backgroundColor: [
-                                'rgb(255, 99, 132)',
+                                'rgb(179,229,255)',
                                 'rgb(54, 162, 235)',
-                                'rgb(255, 206, 86)',
+                                'rgb(179,255,191)',
                                 'rgb(75, 192, 192)',
                                 'rgb(153, 102, 255)',
-                                'rgb(255, 159, 64)',
+                                'rgb(187,255,153)',
                                 'rgb(175,156,255)',
                                 'rgb(120,138,255)'
                             ],
@@ -238,7 +217,7 @@
                                     return new Intl.NumberFormat('en-US', {
                                         style: 'currency',
                                         currency: 'USD',
-                                        minimumFractionDigits: 2
+                                        minimumFractionDigits: 0
                                     }).format(value);
                                 },
                                 color: '#fff'

@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Http\Resources\UserBookingIndexRenterResource;
 use App\Models\Booking;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class StatisticsService
 {
+    /**
+     *  @param array
+     */
     public function showRenterStats() : array
     {
         $user = current_user();
@@ -28,13 +33,29 @@ class StatisticsService
             'totalsByMonth' => [
                 'month' => array_keys($totalsByMonth),
                 'total' => array_values($totalsByMonth)
-            ]
+            ],
+            'recentBookings' => $this->recentBookings($usersOrders)
         ];
     }
 
     /**
+     *  @param \Illuminate\Database\Eloquent\Collection $usersOrders
+     *  @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    private function recentBookings(Collection $usersOrders) : AnonymousResourceCollection
+    {
+        $query = Booking::with('order', 'vehicle.vehicleModel.vehicleMake')
+            ->whereIn('order_id', $usersOrders->pluck('id'))
+            ->orderBy('created_at', 'DESC')
+            ->limit(4)
+            ->get();
+
+        return UserBookingIndexRenterResource::collection($query);
+    }
+
+    /**
      *  @param User $user
-     *  @param Collection $orders
+     *  @param \Illuminate\Database\Eloquent\Collection $orders
      *  @return array
      */
     private function basicStats(User $user, Collection $orders) : array
@@ -49,7 +70,7 @@ class StatisticsService
     }
 
     /**
-     *  @param Collection $orders
+     *  @param \Illuminate\Database\Eloquent\Collection $orders
      */
     private function bookingsByMonth(Collection $orders) : array
     {
@@ -71,7 +92,11 @@ class StatisticsService
         return $flatArray;
     }
 
-    private function totalsByMonth(Collection $orders)
+    /**
+     *  @param \Illuminate\Database\Eloquent\Collection
+     *  @return array
+     */
+    private function totalsByMonth(Collection $orders) : array
     {
         $totals = Booking::whereIn('order_id', $orders->pluck('id'))
             ->select(
@@ -80,11 +105,12 @@ class StatisticsService
             )
             ->groupBy('month')
             ->orderBy('total', 'DESC')
-            ->limit(6)
+            ->limit(4)
             ->get();
 
         foreach ($totals as $t) {
-            $flatArray[Carbon::parse($t['month'])->format('M y')] = $t['total'];
+            $key = Carbon::parse($t['month'])->format('M y') . ' : $' . number_format((float)$t['total'], 2);
+            $flatArray[$key] = $t['total'];
         }
 
         return $flatArray;
