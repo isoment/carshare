@@ -156,7 +156,7 @@
                 return monthDayYearNumbericSlash(value);
             },
 
-            createBarChart() {
+            bookingsByMonthChart() {
                 var ctx = document.getElementById('barChart').getContext('2d');
                 var barChart = new Chart(ctx, {
                     type: 'bar',
@@ -190,7 +190,7 @@
                 });
             },
 
-            createDonutChart() {
+            totalsByMonthChart() {
                 var ctx = document.getElementById('donutChart').getContext('2d');
                 var donutChart = new Chart(ctx, {
                     type: 'pie',
@@ -232,8 +232,8 @@
         },
 
         mounted() {
-            this.createBarChart();
-            this.createDonutChart();
+            this.bookingsByMonthChart();
+            this.totalsByMonthChart();
         }
     }
 </script>
