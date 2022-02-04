@@ -40,11 +40,11 @@
             </div>
             <!-- Graphs -->
             <div class="grid grid-cols-1 md:grid-cols-5 md:gap-6 mt-6">
-                <div class="shadow-md border border-gray-100 col-span-3 p-6 rounded-md mb-6 md:mb-0">
+                <div class="shadow-md border border-gray-100 col-span-3 p-4 rounded-md mb-6 md:mb-0">
                     <h5 class="font-bold font-boldnosans text-lg text-gray-700">Bookings by month</h5>
                     <canvas id="barChart"></canvas>
                 </div>
-                <div class="shadow-md border border-gray-100 col-span-2 p-6 rounded-md">
+                <div class="shadow-md border border-gray-100 col-span-2 p-4 rounded-md">
                     <h5 class="font-bold font-boldnosans text-lg text-gray-700">Total by month</h5>
                     <canvas id="donutChart"></canvas>
                 </div>
@@ -115,7 +115,7 @@
                                             </p>
                                         </td>
                                         <td class="px-5 py-2 bg-white text-sm">
-                                            <p class="text-gray-900 whitespace-no-wrap">
+                                            <p class="text-gray-900 whitespace-no-wrap font-bold text-xs">
                                                 {{moneyFormat(booking.booking.price_total)}}
                                             </p>
                                         </td>
@@ -202,7 +202,7 @@
                             backgroundColor: [
                                 'rgb(175,156,255)',
                                 'rgb(120,138,255)',
-                                'rgb(148,255,212)',
+                                'rgb(66, 255, 180)',
                                 'rgb(111,59,255)',
                                 'rgb(158,255,168)',
                                 'rgb(75, 192, 192)'

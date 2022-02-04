@@ -14,7 +14,8 @@
                             <input type="checkbox" 
                                 id="booking-stat-toggle" 
                                 class="sr-only"
-                                v-model="hostMode">
+                                v-model="hostMode"
+                                @change="fetchRenterStats()">
                             <div class="booking-stat-toggle-bg block bg-gray-200 w-14 h-7 rounded-full"></div>
                             <div class="booking-stat-toggle-dot absolute left-2 top-1 bg-white w-5 h-5 rounded-full transition"></div>
                         </div>
@@ -24,7 +25,7 @@
                     <i class="fas fa-spinner fa-spin text-purple-500 text-4xl"></i>
                 </div>
                 <div v-else>
-                    <host-statistics v-if="hostMode"></host-statistics>
+                    <host-statistics v-if="hostMode" :stats="stats"></host-statistics>
                     <renter-statistics v-else :stats="stats"></renter-statistics>
                 </div>
             </div>
@@ -53,7 +54,7 @@
 
         data() {
             return {
-                hostMode: false,
+                hostMode: true,
                 stats: null,
                 loading: false
             }
@@ -61,13 +62,16 @@
 
         methods: {
             async fetchRenterStats() {
+                let type = this.hostMode ? 'host' : 'renter';
+
                 try {
                     this.loading = true;
-                    let response = await axios.get('/api/dashboard/renter-stats');
+                    let response = await axios.get(`/api/dashboard/${type}-stats`);
                     this.stats = response.data;
                 } catch (error) {
                     console.log(error);
                 }
+
                 this.loading = false;
             }
         },

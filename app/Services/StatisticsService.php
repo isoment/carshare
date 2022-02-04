@@ -9,13 +9,14 @@ use App\Models\Booking;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class StatisticsService
 {
     /**
-     *  @param array
+     *  @return array
      */
     public function showRenterStats() : array
     {
@@ -25,7 +26,7 @@ class StatisticsService
         $totalsByMonth = $this->totalsByMonth($usersOrders);
 
         return [
-            'basic' => $this->basicStats($user, $usersOrders),
+            'basic' => $this->basicRenterStats($user, $usersOrders),
             'bookingCountByMonth' => [
                 'month' => array_keys($bookingsByMonth),
                 'count' => array_values($bookingsByMonth)
@@ -35,6 +36,80 @@ class StatisticsService
                 'total' => array_values($totalsByMonth)
             ],
             'recentBookings' => $this->recentBookings($usersOrders)
+        ];
+    }
+
+    /**
+     *  @return array|\Illuminate\Http\JsonResponse
+     */
+    public function showHostStats() : array|JsonResponse
+    {
+        $user = current_user();
+
+        if ($user->host === 0) {
+            return response()->json('You cannot access this', 403);
+        }
+
+        return [
+            'basic' => $this->basicHostStats($user),
+        ];
+    }
+
+    /**
+     *  @param User $user
+     *  @param \Illuminate\Database\Eloquent\Collection $bookings
+     *  @return array
+     */
+    private function basicHostStats(User $user) : array
+    {
+        $bookings = $user->getVehicleBookings();
+        $bookingLengths = $this->bookingDurations($bookings);
+
+        return [
+            'totalEarned' => $bookings->sum('price_total'),
+            'bookingCount' => $bookings->count(),
+            'cancelCount' => $user->getCancellationsAsHost()->count(),
+            'longestBooking' => max($bookingLengths),
+            'bookingAverage' => $this->bookingAverage($bookingLengths)
+        ];
+    }
+
+    /**
+     *  @param \Illuminate\Database\Eloquent\Collection $bookings
+     *  @return array
+     */
+    private function bookingDurations(Collection $bookings) : array
+    {
+        foreach ($bookings as $booking) {
+            $arr[] = $booking->bookingTotalDays();
+        }
+
+        return $arr;
+    }
+
+    /**
+     *  @param array $bookingLengths
+     *  @return float
+     */
+    private function bookingAverage(array $bookingLengths) //: float
+    {
+        $avg = array_sum($bookingLengths) / count($bookingLengths);
+        return round($avg, 0, PHP_ROUND_HALF_UP);
+    }
+
+    /**
+     *  @param User $user
+     *  @param \Illuminate\Database\Eloquent\Collection $orders
+     *  @return array
+     */
+    private function basicRenterStats(User $user, Collection $orders) : array
+    {
+        return [
+            'totalSpent' => $orders->sum('total'),
+            'bookingCount' => $user->getBookings()->count(),
+            'cancelCount' => $user->getCancellationsAsRenter()->count(),
+            'orderCount' => $orders->count(),
+            'orderAverage' => $orders->average('total')
         ];
     }
 
@@ -51,22 +126,6 @@ class StatisticsService
             ->get();
 
         return UserBookingIndexRenterResource::collection($query);
-    }
-
-    /**
-     *  @param User $user
-     *  @param \Illuminate\Database\Eloquent\Collection $orders
-     *  @return array
-     */
-    private function basicStats(User $user, Collection $orders) : array
-    {
-        return [
-            'totalSpent' => $orders->sum('total'),
-            'bookingCount' => $user->getBookings()->count(),
-            'cancelCount' => $user->getCancellationsAsRenter()->count(),
-            'orderCount' => $orders->count(),
-            'orderAverage' => $orders->average('total')
-        ];
     }
 
     /**

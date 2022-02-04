@@ -22,6 +22,6 @@ class StatisticsController extends Controller
 
     public function hostStats()
     {
-
+        return $this->statisticsService->showHostStats();
     }
 }
