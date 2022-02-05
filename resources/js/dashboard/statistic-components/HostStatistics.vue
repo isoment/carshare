@@ -64,14 +64,13 @@
                         </label>
                     </div>
                     <div>
-                        <host-bookings-by-month-graph v-if="barToggle">
-
-                        </host-bookings-by-month-graph>
-                        <host-bookings-duration-graph v-else>
+                        <host-bookings-duration-graph v-if="barToggle">
 
                         </host-bookings-duration-graph>
+                        <host-bookings-by-month-graph v-else>
+
+                        </host-bookings-by-month-graph>
                     </div>
-                    <!-- <canvas id="barChart"></canvas> -->
                 </div>
                 <div class="shadow-md border border-gray-100 col-span-2 p-4 rounded-md">
                     <div class="flex items-center justify-between">
@@ -89,14 +88,13 @@
                         </label>
                     </div>
                     <div>
-                        <host-totals-per-month-graph v-if="pieToggle">
+                        <host-popular-vehicles-graph v-if="pieToggle">
+
+                        </host-popular-vehicles-graph>
+                        <host-totals-per-month-graph v-else>
 
                         </host-totals-per-month-graph>
-                        <host-popular-vehicles-graph v-else>
-                            
-                        </host-popular-vehicles-graph>
                     </div>
-                    <!-- <canvas id="donutChart"></canvas> -->
                 </div>
             </div>
         </div>
