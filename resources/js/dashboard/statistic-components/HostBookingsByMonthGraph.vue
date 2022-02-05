@@ -15,10 +15,10 @@
             let chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['A', 'B', 'C', 'D'],
+                    labels: this.stats.month,
                     datasets: [{
                         label: 'Bookings',
-                        data: [21, 54, 8, 34],
+                        data: this.stats.count,
                         backgroundColor: [
                             'rgb(179,229,255)',
                             'rgb(54, 162, 235)',

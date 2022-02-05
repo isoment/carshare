@@ -31,23 +31,23 @@
                         hoverOffset: 4
                     }]
                 },
-                // options: {
-                //     plugins: {
-                //         datalabels: {
-                //             formatter: function(value, context) {
-                //                 return new Intl.NumberFormat('en-US', {
-                //                     style: 'currency',
-                //                     currency: 'USD',
-                //                     minimumFractionDigits: 0
-                //                 }).format(value);
-                //             },
-                //             color: '#fff'
-                //         },
-                //         tooltip: {
-                //             enabled: false
-                //         }
-                //     }
-                // }
+                options: {
+                    plugins: {
+                        datalabels: {
+                            // formatter: function(value, context) {
+                            //     return new Intl.NumberFormat('en-US', {
+                            //         style: 'currency',
+                            //         currency: 'USD',
+                            //         minimumFractionDigits: 0
+                            //     }).format(value);
+                            // },
+                            color: '#fff'
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
+                    }
+                }
             });
         }
     }

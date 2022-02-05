@@ -45,14 +45,45 @@ class StatisticsService
     public function showHostStats() : array|JsonResponse
     {
         $user = current_user();
-
+    
         if ($user->host === 0) {
             return response()->json('You cannot access this', 403);
         }
 
+        $vehicles = $user->vehicles;
+        $highestBookedMonths = $this->hostHighestBookedMonths($vehicles);
+
         return [
             'basic' => $this->basicHostStats($user),
+            'highestBookedMonths' => [
+                'month' => array_keys($highestBookedMonths),
+                'count' => array_values($highestBookedMonths)
+            ]
         ];
+    }
+
+    /**
+     *  @param \Illuminate\Database\Eloquent\Collection $vehicles
+     *  @param array
+     */
+    public function hostHighestBookedMonths(Collection $vehicles) : array
+    {
+        $busiestMonths = Booking::whereIn('vehicle_id', $vehicles->pluck('id'))
+            ->select(
+                DB::raw("DATE_FORMAT(`from`, '%Y-%m') as month"),
+                DB::raw("COUNT('month') as booking_count")
+            )
+            ->groupBy('month')
+            ->orderBy('booking_count', 'DESC')
+            ->limit(8)
+            ->get();
+
+        foreach ($busiestMonths as $m) {
+            $key = Carbon::parse($m['month'])->format('M Y');
+            $flatArray[$key] = $m['booking_count'];
+        }
+
+        return $flatArray;
     }
 
     /**
@@ -136,8 +167,8 @@ class StatisticsService
         $countByMonth = Booking::whereIn('order_id', $orders->pluck('id'))
             ->whereBetween('from', [Carbon::now()->subMonths(6), Carbon::now()->addMonths(6)])
             ->select(
-                DB::raw("DATE_FORMAT(`from`, '%Y-%m') month"),
-                DB::raw("count('month') as booking_count")
+                DB::raw("DATE_FORMAT(`from`, '%Y-%m') as month"),
+                DB::raw("COUNT('month') as booking_count")
             )
             ->groupBy('month')
             ->orderBy('month')
@@ -159,8 +190,8 @@ class StatisticsService
     {
         $totals = Booking::whereIn('order_id', $orders->pluck('id'))
             ->select(
-                DB::raw("DATE_FORMAT(`from`, '%Y-%m') month"),
-                DB::raw("sum(price_total) as total")
+                DB::raw("DATE_FORMAT(`from`, '%Y-%m') as month"),
+                DB::raw("SUM(price_total) as total")
             )
             ->groupBy('month')
             ->orderBy('total', 'DESC')

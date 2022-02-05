@@ -67,8 +67,8 @@
                         <host-bookings-duration-graph v-if="barToggle">
 
                         </host-bookings-duration-graph>
-                        <host-bookings-by-month-graph v-else>
-
+                        <host-bookings-by-month-graph v-else 
+                                                      :stats="stats.highestBookedMonths">
                         </host-bookings-by-month-graph>
                     </div>
                 </div>
