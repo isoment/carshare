@@ -30,7 +30,7 @@ class UserBookingIndexRenterResource extends JsonResource
                 'model' => $this->vehicle->vehicleModel->model,
                 'year' => $this->vehicle->year,
                 'active' => $this->vehicle->active
-            ],
+            ]
         ];
     }
 }

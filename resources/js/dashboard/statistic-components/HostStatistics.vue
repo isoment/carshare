@@ -32,7 +32,7 @@
                 </div>
                 <div class="bg-gradient-to-r from-purple-400 via-purple-400 to-indigo-400 
                             w-full sm:ml-2 rounded-md py-8 px-4 relative mb-3 sm:mb-0">
-                    <h4>Booking durations</h4>
+                    <h4>Booking durations (days)</h4>
                     <div class="flex justify-between mt-3">
                         <div class="text-center">
                             <h2 class="text-3xl font-bold font-boldnosans">{{stats.basic.bookingAverage}}</h2>
@@ -101,17 +101,20 @@
                     </div>
                 </div>
             </div>
+            <!-- Table -->
+            <h5 class="font-bold font-boldnosans text-lg text-gray-700 mt-6">Recently Booked</h5>
+            <recent-bookings-table :bookings="stats.recentBookings"></recent-bookings-table>
         </div>
     </div>
 </template>
 
 <script>
     import { dollarFormat } from '../../shared/utils/currency';
-    import { monthDayYearNumbericSlash } from '../../shared/utils/dateFormats';
     import HostBookingsByMonthGraph from './HostBookingsByMonthGraph';
     import HostBookingsDurationGraph from './HostBookingsDurationGraph';
     import HostEarningsByMonthGraph from './HostEarningsByMonthGraph';
     import HostPopularVehiclesGraph from './HostPopularVehiclesGraph';
+    import RecentBookingsTable from './RecentBookingsTable';
 
     export default {
         props: ['stats'],
@@ -120,7 +123,8 @@
             HostBookingsByMonthGraph,
             HostBookingsDurationGraph,
             HostEarningsByMonthGraph,
-            HostPopularVehiclesGraph
+            HostPopularVehiclesGraph,
+            RecentBookingsTable
         },
 
         data() {
@@ -133,11 +137,7 @@
         methods: {
             moneyFormat(value) {
                 return dollarFormat(value);
-            },
-
-            dateFormat(value) {
-                return monthDayYearNumbericSlash(value);
-            },
+            }
         },
     }
 </script>
@@ -159,7 +159,7 @@
         background-color: rgb(167, 134, 255);
     }
 
-    .graph-row-host-stats {
+    /* .graph-row-host-stats {
         min-height: 29rem;
-    }
+    } */
 </style>

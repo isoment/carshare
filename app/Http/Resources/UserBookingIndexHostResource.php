@@ -20,7 +20,8 @@ class UserBookingIndexHostResource extends JsonResource
                 'from' => $this->from,
                 'to' => $this->to,
                 'price_day' => $this->price_day,
-                'price_total' => $this->price_total
+                'price_total' => $this->price_total,
+                'created_at' => $this->created_at
             ],
             'vehicle' => [
                 'id' => $this->vehicle->id,

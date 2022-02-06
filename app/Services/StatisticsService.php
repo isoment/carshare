@@ -73,7 +73,8 @@ class StatisticsService
             'popularVehicles' => [
                 'vehicle' => array_keys($popularVehicles),
                 'count' => array_values($popularVehicles)
-            ]
+            ],
+            'recentBookings' => $this->recentBookings($vehicles, 'vehicle_id')
         ];
     }
 
@@ -190,18 +191,21 @@ class StatisticsService
     }
 
     /**
-     *  @param \Illuminate\Database\Eloquent\Collection $usersOrders
+     *  @param \Illuminate\Database\Eloquent\Collection $collection
      *  @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    private function recentBookings(Collection $usersOrders) : AnonymousResourceCollection
+    private function recentBookings(
+        Collection $collection, 
+        string $sortColumn = 'order_id'
+    ) : AnonymousResourceCollection
     {
-        $query = Booking::with('order', 'vehicle.vehicleModel.vehicleMake')
-            ->whereIn('order_id', $usersOrders->pluck('id'))
+        $builder = Booking::with('vehicle.vehicleModel.vehicleMake')
+            ->whereIn($sortColumn, $collection->pluck('id'))
             ->orderBy('created_at', 'DESC')
             ->limit(4)
             ->get();
 
-        return UserBookingIndexRenterResource::collection($query);
+        return UserBookingIndexRenterResource::collection($builder);
     }
 
     /**
