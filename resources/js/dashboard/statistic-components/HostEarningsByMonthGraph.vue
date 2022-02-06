@@ -21,12 +21,12 @@
                     datasets: [{
                         data: this.stats.total,
                         backgroundColor: [
+                            'rgb(75, 192, 192)',
+                            'rgb(111,59,255)',
                             'rgb(175,156,255)',
                             'rgb(120,138,255)',
-                            'rgb(66, 255, 180)',
-                            'rgb(111,59,255)',
                             'rgb(158,255,168)',
-                            'rgb(75, 192, 192)'
+                            'rgb(66, 255, 180)'
                             ],
                         hoverOffset: 4
                     }]
@@ -55,6 +55,6 @@
 
 <style scoped>
     #chartTwo {
-        max-height: 25rem;
+        max-height: 352px;
     }
 </style>

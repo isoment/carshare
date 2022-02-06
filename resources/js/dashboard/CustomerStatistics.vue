@@ -7,7 +7,7 @@
         <div>
             <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
             <div class="mt-8">
-                <div class="flex items-center justify-end mb-4">
+                <div class="flex items-center justify-end mb-4" v-if="userIsHost">
                     <span class="mr-2 font-bold font-boldnosans text-gray-700">As Host:</span>
                     <label for="booking-stat-toggle" class="flex items-center cursor-pointer">
                         <div class="relative">
@@ -50,11 +50,15 @@
                 isLoggedIn: "isLoggedIn",
                 user: "user"
             }),
+
+            userIsHost() {
+                return this.user.host === 1;
+            }
         },
 
         data() {
             return {
-                hostMode: true,
+                hostMode: false,
                 stats: null,
                 loading: false
             }
@@ -69,7 +73,13 @@
                     let response = await axios.get(`/api/dashboard/${type}-stats`);
                     this.stats = response.data;
                 } catch (error) {
-                    console.log(error);
+                    if (error.response.status === 403) {
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: 'You are not a host'
+                        });
+                        this.hostMode = false;
+                    }
                 }
 
                 this.loading = false;

@@ -6,7 +6,7 @@
             </div>
             <!-- Basic stats -->
             <div class="flex flex-col sm:flex-row md:justify-between text-white">
-                <div class="bg-gradient-to-r from-purple-400 via-purple-400 to-indigo-400 
+                <div class="bg-gradient-to-r from-indigo-400 via-indigo-400 to-blue-400 
                             w-full mr-2 rounded-md py-8 px-4 relative mb-3 sm:mb-0">
                     <h4>Total</h4>
                     <h2 class="text-3xl font-bold font-boldnosans mt-3">
@@ -30,7 +30,7 @@
                     </div>
                     <img src="/img/circle.svg" alt="circle" class="h-48 w-48 absolute bottom-0 -right-5">
                 </div>
-                <div class="bg-gradient-to-r from-purple-400 via-purple-400 to-indigo-400 
+                <div class="bg-gradient-to-r from-blue-400 via-indigo-400 to-green-400 
                             w-full sm:ml-2 rounded-md py-8 px-4 relative mb-3 sm:mb-0">
                     <h4>Booking durations (days)</h4>
                     <div class="flex justify-between mt-3">

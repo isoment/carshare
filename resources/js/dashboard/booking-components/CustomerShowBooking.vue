@@ -10,6 +10,9 @@
         <div v-else-if="forbidden">
             <error :message="'You cannot access this'"></error>
         </div>
+        <div v-else-if="notFound">
+            <error :message="'Invalid booking'"></error>
+        </div>
         <div v-else>
             <div class="customer-profile-banner h-36 md:h-56 border-b border-gray-200 pb-8">
                 <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
@@ -410,6 +413,7 @@
                 userRating: null,
                 order: null,
                 forbidden: null,
+                notFound: null,
                 showBio: false,
                 showOrderModal: false,
                 showCancelModal: false,
@@ -433,6 +437,10 @@
                 } catch (error) {
                     if (error.response.status === 403) {
                         this.forbidden = true;
+                    }
+
+                    if (error.response.status === 404) {
+                        this.notFound = true;
                     }
                 }
                 this.loading = false;

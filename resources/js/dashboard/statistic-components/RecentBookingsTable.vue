@@ -67,12 +67,12 @@
                                         {{moneyFormat(booking.booking.price_total)}}
                                     </p>
                                 </td>
-                                <td class="px-5 py-2 bg-white text-sm">
+                                <td class="px-5 py-2 bg-white">
                                     <span
-                                        class="relative inline-block px-3 py-1 font-semibold text-white leading-tight">
+                                        class="relative inline-block px-3 py-1 text-white leading-tight">
                                         <span aria-hidden
-                                            class="absolute inset-0 bg-purple-400 opacity-50 rounded-full"></span>
-                                    <span class="relative">{{dateFormat(booking.booking.created_at)}}</span>
+                                            class="absolute inset-0 bg-purple-500 opacity-50 rounded-md"></span>
+                                    <span class="relative text-sm">{{dateFormat(booking.booking.created_at)}}</span>
                                     </span>
                                 </td>
                             </tr>
