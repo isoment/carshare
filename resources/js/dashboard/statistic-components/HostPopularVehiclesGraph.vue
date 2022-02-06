@@ -17,9 +17,9 @@
                 type: 'doughnut',
                 plugins: [ChartDataLabels],
                 data: {
-                    labels: ['A', 'B', 'C', 'D'],
+                    labels: this.stats.vehicle,
                     datasets: [{
-                        data: [2875, 431, 8361, 499],
+                        data: this.stats.count,
                         backgroundColor: [
                             'rgb(175,156,255)',
                             'rgb(120,138,255)',

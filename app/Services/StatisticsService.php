@@ -52,21 +52,66 @@ class StatisticsService
 
         $vehicles = $user->vehicles;
         $highestBookedMonths = $this->hostHighestBookedMonths($vehicles);
+        $bookingDurations = $this->hostDurationOfBookings($user);
+        $earningsByMonth = $this->totalsByMonth($vehicles, 'vehicle_id', 5);
+        $popularVehicles = $this->hostsPopularVehicles($vehicles);
 
         return [
             'basic' => $this->basicHostStats($user),
             'highestBookedMonths' => [
                 'month' => array_keys($highestBookedMonths),
                 'count' => array_values($highestBookedMonths)
+            ],
+            'durationOfBookings' => [
+                'booking' => array_keys($bookingDurations),
+                'duration' => array_values($bookingDurations)
+            ],
+            'earningsByMonth' => [
+                'month' => array_keys($earningsByMonth),
+                'total' => array_values($earningsByMonth)
+            ],
+            'popularVehicles' => [
+                'vehicle' => array_keys($popularVehicles),
+                'count' => array_values($popularVehicles)
             ]
         ];
+    }
+
+    /**
+     *  @param Collection $vehicles
+     *  @return array
+     */
+    private function hostsPopularVehicles(Collection $vehicles) : array
+    {
+        foreach ($vehicles as $vehicle) {
+            $id = $vehicle->id;
+            $year = $vehicle->year;
+            $model = $vehicle->vehicleModel->model;
+
+            $array["{$year} {$model} {$id}"] = $vehicle->bookings->count(); 
+        }
+
+        return array_splice($array, -5, 5);
+    }
+
+    /**
+     *  @param User $user
+     *  @param array
+     */
+    private function hostDurationOfBookings(User $user) : array
+    {
+        $bookings = $user->getVehicleBookings();
+
+        return collect($this->bookingDurations($bookings))
+            ->take(-14)
+            ->toArray();
     }
 
     /**
      *  @param \Illuminate\Database\Eloquent\Collection $vehicles
      *  @param array
      */
-    public function hostHighestBookedMonths(Collection $vehicles) : array
+    private function hostHighestBookedMonths(Collection $vehicles) : array
     {
         $busiestMonths = Booking::whereIn('vehicle_id', $vehicles->pluck('id'))
             ->select(
@@ -112,7 +157,7 @@ class StatisticsService
     private function bookingDurations(Collection $bookings) : array
     {
         foreach ($bookings as $booking) {
-            $arr[] = $booking->bookingTotalDays();
+            $arr[$booking['id']] = $booking->bookingTotalDays();
         }
 
         return $arr;
@@ -183,19 +228,25 @@ class StatisticsService
     }
 
     /**
-     *  @param \Illuminate\Database\Eloquent\Collection
+     *  @param \Illuminate\Database\Eloquent\Collection $collection
+     *  @param string $sortColumn
+     *  @param int $limit
      *  @return array
      */
-    private function totalsByMonth(Collection $orders) : array
+    private function totalsByMonth(
+        Collection $collection, 
+        string $sortColumn = 'order_id', 
+        int $limit = 4
+    ) : array
     {
-        $totals = Booking::whereIn('order_id', $orders->pluck('id'))
+        $totals = Booking::whereIn($sortColumn, $collection->pluck('id'))
             ->select(
                 DB::raw("DATE_FORMAT(`from`, '%Y-%m') as month"),
                 DB::raw("SUM(price_total) as total")
             )
             ->groupBy('month')
             ->orderBy('total', 'DESC')
-            ->limit(4)
+            ->limit($limit)
             ->get();
 
         foreach ($totals as $t) {

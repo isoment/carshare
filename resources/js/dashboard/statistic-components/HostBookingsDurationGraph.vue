@@ -8,35 +8,23 @@
     import Chart from 'chart.js/auto';
 
     export default {
+        props: ['stats'],
+
         mounted() {
             let ctx = document.getElementById('chart').getContext('2d');
             let chart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['A', 'B', 'C', 'D', 'E'],
+                    labels: this.stats.booking,
                     datasets: [
                         {
-                            label: 'Unfilled',
+                            label: 'Duration',
                             fill: false,
+                            borderColor: 'rgb(167, 121, 236)',
                             backgroundColor: 'rgb(179,255,191)',
-                            borderColor: 'rgb(179,255,191)',
-                            data: [3,7,9,2,5],
-                        }, 
-                        {
-                            label: 'Dashed',
-                            fill: false,
-                            backgroundColor: 'rgb(141, 188, 247)',
-                            borderColor: 'rgb(141, 188, 247)',
-                            borderDash: [5, 5],
-                            data: [10,2,3,9,6],
-                        }, 
-                        {
-                            label: 'Filled',
-                            backgroundColor: 'rgb(120,138,255)',
-                            borderColor: 'rgb(120,138,255)',
-                            data: [8,4,6,11,2],
-                            // fill: true,
-                        }
+                            data: this.stats.duration,
+                            fill: true
+                        },
                     ]
                 },
                 options: {
@@ -44,15 +32,15 @@
                         x: {
                             display: true,
                             title: {
-                            display: true,
-                            text: 'Month'
+                                display: true,
+                                text: 'Booking Id'
                             }
                         },
                         y: {
                             display: true,
                             title: {
-                            display: true,
-                            text: 'Value'
+                                display: true,
+                                text: 'Days'
                             }
                         }
                     }

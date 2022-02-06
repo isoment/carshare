@@ -17,9 +17,9 @@
                 type: 'pie',
                 plugins: [ChartDataLabels],
                 data: {
-                    labels: ['A', 'B', 'C', 'D'],
+                    labels: this.stats.month,
                     datasets: [{
-                        data: [2875, 431, 8361, 499],
+                        data: this.stats.total,
                         backgroundColor: [
                             'rgb(175,156,255)',
                             'rgb(120,138,255)',
@@ -55,6 +55,6 @@
 
 <style scoped>
     #chartTwo {
-        max-height: 22rem;
+        max-height: 25rem;
     }
 </style>

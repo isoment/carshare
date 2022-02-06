@@ -47,13 +47,15 @@
                 </div>
             </div>
             <!-- Graph row one -->
-            <div class="grid grid-cols-1 md:grid-cols-5 md:gap-6 mt-6">
+            <div class="grid grid-cols-1 lg:grid-cols-5 lg:gap-6 mt-6 graph-row-host-stats">
                 <div class="shadow-md border border-gray-100 col-span-3 p-4 rounded-md mb-6 md:mb-0">
-                    <div class="flex items-center justify-between">
-                        <h5 class="font-bold font-boldnosans text-lg text-gray-700">Highest earning months</h5>
+                    <div class="flex items-center justify-between mb-4">
+                        <h5 class="font-bold font-boldnosans text-lg text-gray-700">
+                            {{ barToggle ? 'Booking durations' : 'Booking count'}}
+                        </h5>
                         <label for="bar-graph-toggle" class="flex items-center cursor-pointer">
                             <div class="relative">
-                                <input type="checkbox" 
+                                <input type="checkbox"
                                     id="bar-graph-toggle" 
                                     class="sr-only"
                                     v-model="barToggle">
@@ -64,8 +66,8 @@
                         </label>
                     </div>
                     <div>
-                        <host-bookings-duration-graph v-if="barToggle">
-
+                        <host-bookings-duration-graph v-if="barToggle"
+                                                      :stats="stats.durationOfBookings">
                         </host-bookings-duration-graph>
                         <host-bookings-by-month-graph v-else 
                                                       :stats="stats.highestBookedMonths">
@@ -73,8 +75,10 @@
                     </div>
                 </div>
                 <div class="shadow-md border border-gray-100 col-span-2 p-4 rounded-md">
-                    <div class="flex items-center justify-between">
-                        <h5 class="font-bold font-boldnosans text-lg text-gray-700">Total by month</h5>
+                    <div class="flex items-center justify-between mb-4">
+                        <h5 class="font-bold font-boldnosans text-lg text-gray-700">
+                            {{pieToggle ? 'Popular vehicles' : 'Earning by month'}}
+                        </h5>
                         <label for="pie-graph-toggle" class="flex items-center cursor-pointer">
                             <div class="relative">
                                 <input type="checkbox" 
@@ -88,12 +92,12 @@
                         </label>
                     </div>
                     <div>
-                        <host-popular-vehicles-graph v-if="pieToggle">
-
+                        <host-popular-vehicles-graph v-if="pieToggle"
+                                                     :stats="stats.popularVehicles">
                         </host-popular-vehicles-graph>
-                        <host-totals-per-month-graph v-else>
-
-                        </host-totals-per-month-graph>
+                        <host-earnings-by-month-graph v-else
+                                                      :stats="stats.earningsByMonth">
+                        </host-earnings-by-month-graph>
                     </div>
                 </div>
             </div>
@@ -106,7 +110,7 @@
     import { monthDayYearNumbericSlash } from '../../shared/utils/dateFormats';
     import HostBookingsByMonthGraph from './HostBookingsByMonthGraph';
     import HostBookingsDurationGraph from './HostBookingsDurationGraph';
-    import HostTotalsPerMonthGraph from './HostTotalsPerMonthGraph';
+    import HostEarningsByMonthGraph from './HostEarningsByMonthGraph';
     import HostPopularVehiclesGraph from './HostPopularVehiclesGraph';
 
     export default {
@@ -115,7 +119,7 @@
         components: {
             HostBookingsByMonthGraph,
             HostBookingsDurationGraph,
-            HostTotalsPerMonthGraph,
+            HostEarningsByMonthGraph,
             HostPopularVehiclesGraph
         },
 
@@ -153,5 +157,9 @@
 
     input:checked ~ .pie-graph-toggle-bg {
         background-color: rgb(167, 134, 255);
+    }
+
+    .graph-row-host-stats {
+        min-height: 29rem;
     }
 </style>
