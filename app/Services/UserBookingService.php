@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Http\Requests\UserBookingIndexRequest;
-use App\Http\Resources\UserBookingIndexHostResource;
-use App\Http\Resources\UserBookingIndexRenterResource;
+use App\Http\Resources\UserBookingIndexResource;
 use App\Http\Resources\UserBookingShowHostResource;
 use App\Http\Resources\UserBookingShowRenterResource;
 use App\Models\Booking;
@@ -48,13 +47,13 @@ class UserBookingService
         $user = current_user();
 
         if ($request['type'] === 'asRenter') {
-            return UserBookingIndexRenterResource::collection(
+            return UserBookingIndexResource::collection(
                 $this->bookingsAsRenter($request, $user)
             );
         }
 
         if ($request['type'] === 'asHost' && (int) $user->host === 1) {
-            return UserBookingIndexHostResource::collection(
+            return UserBookingIndexResource::collection(
                 $this->bookingsAsHost($request, $user)
             );
         }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Http\Resources\UserBookingIndexRenterResource;
+use App\Http\Resources\UserBookingIndexResource;
 use App\Models\Booking;
 use App\Models\User;
 use Carbon\Carbon;
@@ -205,7 +205,7 @@ class StatisticsService
             ->limit(4)
             ->get();
 
-        return UserBookingIndexRenterResource::collection($builder);
+        return UserBookingIndexResource::collection($builder);
     }
 
     /**
