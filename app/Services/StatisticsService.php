@@ -16,11 +16,16 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class StatisticsService
 {
     /**
-     *  @return array
+     *  @return array|JsonResponse
      */
-    public function showRenterStats() : array
+    public function showRenterStats() : array|JsonResponse
     {
         $user = current_user();
+
+        if ($user->getBookings()->count() === 0) {
+            return response()->json('No bookings', 404);
+        }
+
         $usersOrders = $user->orders;
         $bookingsByMonth = $this->bookingsByMonth($usersOrders);
         $totalsByMonth = $this->totalsByMonth($usersOrders);
@@ -48,6 +53,10 @@ class StatisticsService
     
         if ($user->host === 0) {
             return response()->json('You cannot access this', 403);
+        }
+
+        if ($user->getVehicleBookings()->count() === 0) {
+            return response()->json('No bookings', 404);
         }
 
         $vehicles = $user->vehicles;

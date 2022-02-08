@@ -24,6 +24,9 @@
                 <div v-if="loading" class="text-center mt-8">
                     <i class="fas fa-spinner fa-spin text-purple-500 text-4xl"></i>
                 </div>
+                <div v-else-if="noStats" class="text-center mt-8">
+                    <h6 class="font-bold font-boldnosans text-lg tracking-wider">You don't have any statistics yet</h6>
+                </div>
                 <div v-else>
                     <host-statistics v-if="hostMode" :stats="stats"></host-statistics>
                     <renter-statistics v-else :stats="stats"></renter-statistics>
@@ -60,7 +63,8 @@
             return {
                 hostMode: false,
                 stats: null,
-                loading: false
+                loading: false,
+                noStats: false
             }
         },
 
@@ -79,6 +83,10 @@
                             message: 'You are not a host'
                         });
                         this.hostMode = false;
+                    }
+
+                    if (error.response.status === 404) {
+                        this.noStats = true;
                     }
                 }
 
