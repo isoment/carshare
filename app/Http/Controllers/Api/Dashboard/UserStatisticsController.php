@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\StatisticsService;
 use Illuminate\Http\Request;
 
-class StatisticsController extends Controller
+class UserStatisticsController extends Controller
 {
     public StatisticsService $statisticsService;
 

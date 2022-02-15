@@ -249,12 +249,12 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::get(
         'dashboard/renter-stats',
-        [App\Http\Controllers\Api\Dashboard\StatisticsController::class, 'renterStats']
+        [App\Http\Controllers\Api\Dashboard\UserStatisticsController::class, 'renterStats']
     )->name('dashboard.renter-stats');
 
     Route::get(
         'dashboard/host-stats',
-        [App\Http\Controllers\Api\Dashboard\StatisticsController::class, 'hostStats']
+        [App\Http\Controllers\Api\Dashboard\UserStatisticsController::class, 'hostStats']
     )->name('dashboard.host-stats');
 
     /*************************

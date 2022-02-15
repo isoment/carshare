@@ -125,7 +125,7 @@ class StatisticsService
     {
         $busiestMonths = Booking::whereIn('vehicle_id', $vehicles->pluck('id'))
             ->select(
-                DB::raw("DATE_FORMAT(`from`, '%Y-%m') as month"),
+                DB::raw($this->dateFormatMonthSQL()),
                 DB::raw("COUNT('month') as booking_count")
             )
             ->groupBy('month')
@@ -225,7 +225,7 @@ class StatisticsService
         $countByMonth = Booking::whereIn('order_id', $orders->pluck('id'))
             ->whereBetween('from', [Carbon::now()->subMonths(6), Carbon::now()->addMonths(6)])
             ->select(
-                DB::raw("DATE_FORMAT(`from`, '%Y-%m') as month"),
+                DB::raw($this->dateFormatMonthSQL()),
                 DB::raw("COUNT('month') as booking_count")
             )
             ->groupBy('month')
@@ -254,7 +254,7 @@ class StatisticsService
     {
         $totals = Booking::whereIn($sortColumn, $collection->pluck('id'))
             ->select(
-                DB::raw("DATE_FORMAT(`from`, '%Y-%m') as month"),
+                DB::raw($this->dateFormatMonthSQL()),
                 DB::raw("SUM(price_total) as total")
             )
             ->groupBy('month')
@@ -268,5 +268,19 @@ class StatisticsService
         }
 
         return $flatArray;
+    }
+
+    /**
+     *  This is strictly for sqlite testing. DATE_FORMAT is supported in MySQL
+     *  but not sqlite. So when running tests we substitute the strftime() function
+     *  which formats the date in the same way for the query.
+     * 
+     *  @return string
+     */
+    private function dateFormatMonthSQL() : string
+    {
+        return env('DB_CONNECTION') === 'sqlite' ? 
+            'strftime("%Y-%m", `from`) as month' :
+            "DATE_FORMAT(`from`, '%Y-%m') as month";
     }
 }
