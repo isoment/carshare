@@ -51,7 +51,7 @@ class StatisticsService
     {
         $user = current_user();
     
-        if ($user->host === 0) {
+        if ((int) $user->host === 0) {
             return response()->json('You cannot access this', 403);
         }
 

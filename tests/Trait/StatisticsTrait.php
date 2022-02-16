@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\DB;
 trait StatisticsTrait
 {
     /**
+     *  A count of a renters bookings per month within the last 6 months
+     *  and future 6 months.
+     * 
      *  @param \Illuminate\Database\Eloquent\Collection $orders
      *  @return array
      */
@@ -71,6 +74,35 @@ trait StatisticsTrait
             $jsonResponseKey => [
                 'month' => array_keys($flatArray),
                 'total' => array_values($flatArray)
+            ]
+        ];
+    }
+
+    /**
+     *  @param \Illuminate\Database\Eloquent\Collection $vehicles
+     *  @param array
+     */
+    private function hostHighestBookedMonths(Collection $vehicles) : array
+    {
+        $busiestMonths = Booking::whereIn('vehicle_id', $vehicles->pluck('id'))
+            ->select(
+                DB::raw('strftime("%Y-%m", `from`) as month'),
+                DB::raw("COUNT('month') as booking_count")
+            )
+            ->groupBy('month')
+            ->orderBy('booking_count', 'DESC')
+            ->limit(8)
+            ->get();
+
+        foreach ($busiestMonths as $m) {
+            $key = Carbon::parse($m['month'])->format('M Y');
+            $flatArray[$key] = $m['booking_count'];
+        }
+
+        return [
+            'highestBookedMonths' => [
+                'month' => array_keys($flatArray),
+                'count' => array_values($flatArray)
             ]
         ];
     }
