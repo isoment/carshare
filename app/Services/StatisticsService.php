@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class StatisticsService
 {
@@ -26,22 +28,30 @@ class StatisticsService
             return response()->json('No bookings', 404);
         }
 
-        $usersOrders = $user->orders;
-        $bookingsByMonth = $this->bookingsByMonth($usersOrders);
-        $totalsByMonth = $this->totalsByMonth($usersOrders);
+        $stats = Cache::store('redis')->rememberForever(
+            'renter-stats-user:' . auth()->id(), 
+            function() use($user) 
+            {
+                $usersOrders = $user->orders;
+                $bookingsByMonth = $this->bookingsByMonth($usersOrders);
+                $totalsByMonth = $this->totalsByMonth($usersOrders);
 
-        return [
-            'basic' => $this->basicRenterStats($user, $usersOrders),
-            'bookingCountByMonth' => [
-                'month' => array_keys($bookingsByMonth),
-                'count' => array_values($bookingsByMonth)
-            ],
-            'totalsByMonth' => [
-                'month' => array_keys($totalsByMonth),
-                'total' => array_values($totalsByMonth)
-            ],
-            'recentBookings' => $this->recentBookings($usersOrders)
-        ];
+                return [
+                    'basic' => $this->basicRenterStats($user, $usersOrders),
+                    'bookingCountByMonth' => [
+                        'month' => array_keys($bookingsByMonth),
+                        'count' => array_values($bookingsByMonth)
+                    ],
+                    'totalsByMonth' => [
+                        'month' => array_keys($totalsByMonth),
+                        'total' => array_values($totalsByMonth)
+                    ],
+                    'recentBookings' => $this->recentBookings($usersOrders)
+                ];
+            }
+        );
+
+        return $stats;
     }
 
     /**
@@ -59,32 +69,40 @@ class StatisticsService
             return response()->json('No bookings', 404);
         }
 
-        $vehicles = $user->vehicles;
-        $highestBookedMonths = $this->hostHighestBookedMonths($vehicles);
-        $bookingDurations = $this->hostDurationOfBookings($user);
-        $earningsByMonth = $this->totalsByMonth($vehicles, 'vehicle_id', 5);
-        $popularVehicles = $this->hostsPopularVehicles($vehicles);
+        $stats = Cache::store('redis')->rememberForever(
+            'host-stats-user:' . auth()->id(), 
+            function() use($user) 
+            {
+                $vehicles = $user->vehicles;
+                $highestBookedMonths = $this->hostHighestBookedMonths($vehicles);
+                $bookingDurations = $this->hostDurationOfBookings($user);
+                $earningsByMonth = $this->totalsByMonth($vehicles, 'vehicle_id', 5);
+                $popularVehicles = $this->hostsPopularVehicles($vehicles);
+        
+                return [
+                    'basic' => $this->basicHostStats($user),
+                    'highestBookedMonths' => [
+                        'month' => array_keys($highestBookedMonths),
+                        'count' => array_values($highestBookedMonths)
+                    ],
+                    'durationOfBookings' => [
+                        'booking' => array_keys($bookingDurations),
+                        'duration' => array_values($bookingDurations)
+                    ],
+                    'earningsByMonth' => [
+                        'month' => array_keys($earningsByMonth),
+                        'total' => array_values($earningsByMonth)
+                    ],
+                    'popularVehicles' => [
+                        'vehicle' => array_keys($popularVehicles),
+                        'count' => array_values($popularVehicles)
+                    ],
+                    'recentBookings' => $this->recentBookings($vehicles, 'vehicle_id')
+                ];
+            }
+        );
 
-        return [
-            'basic' => $this->basicHostStats($user),
-            'highestBookedMonths' => [
-                'month' => array_keys($highestBookedMonths),
-                'count' => array_values($highestBookedMonths)
-            ],
-            'durationOfBookings' => [
-                'booking' => array_keys($bookingDurations),
-                'duration' => array_values($bookingDurations)
-            ],
-            'earningsByMonth' => [
-                'month' => array_keys($earningsByMonth),
-                'total' => array_values($earningsByMonth)
-            ],
-            'popularVehicles' => [
-                'vehicle' => array_keys($popularVehicles),
-                'count' => array_values($popularVehicles)
-            ],
-            'recentBookings' => $this->recentBookings($vehicles, 'vehicle_id')
-        ];
+        return $stats;
     }
 
     /**
