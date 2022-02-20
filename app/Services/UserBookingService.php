@@ -15,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Stripe\Exception\ApiErrorException;
 
@@ -165,6 +166,9 @@ class UserBookingService
         $refundStatus = $this->refundRenter($refund['amount'], $booking);
 
         if ($refundStatus) {
+            // Clear the stats cache for the renter
+            Cache::forget('renter-stats-user:' . $booking->order->user_id);
+
             $this->createCancellation($booking, $refund);
 
             $this->updateOrderTotal($booking, $refund['amount']);
@@ -195,6 +199,9 @@ class UserBookingService
         $refundStatus = $this->refundRenter($refund['amount'], $booking);
 
         if ($refundStatus) {
+            // Clear the stats cache for the renter
+            Cache::forget('renter-stats-user:' . $booking->order->user_id);
+
             $this->createCancellation($booking, $refund);
 
             $this->updateOrderTotal($booking, $refund['amount']);

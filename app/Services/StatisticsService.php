@@ -29,7 +29,7 @@ class StatisticsService
         }
 
         $stats = Cache::store('redis')->rememberForever(
-            'renter-stats-user:' . auth()->id(), 
+            'renter-stats-user:' . $user->id, 
             function() use($user) 
             {
                 $usersOrders = $user->orders;
@@ -70,7 +70,7 @@ class StatisticsService
         }
 
         $stats = Cache::store('redis')->rememberForever(
-            'host-stats-user:' . auth()->id(), 
+            'host-stats-user:' . $user->id, 
             function() use($user) 
             {
                 $vehicles = $user->vehicles;

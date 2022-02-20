@@ -11,6 +11,7 @@ use App\Notifications\OrderConfirmation;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class CheckoutService
@@ -51,6 +52,9 @@ class CheckoutService
 
             // Email confirmation
             current_user()->notify(new OrderConfirmation());
+
+            // Clear the stats cache for the renter
+            Cache::forget('renter-stats-user:' . current_user()->id);
 
             return response()->json('Success', 201);
         } catch(Exception $e) {
