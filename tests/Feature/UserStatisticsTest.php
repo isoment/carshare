@@ -6,6 +6,8 @@ use App\Models\Booking;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
 use Tests\Trait\UserTrait;
 use Tests\Trait\StatisticsTrait;
@@ -55,6 +57,8 @@ class UserStatisticsTest extends TestCase
     {
         $this->createSmallDatabase();
 
+        $this->clearCache();
+
         $user = User::has('orders')->where('host', 0)->first();
 
         $this->actingAs($user);
@@ -93,6 +97,8 @@ class UserStatisticsTest extends TestCase
     {
         $this->createSmallDatabase();
 
+        $this->clearCache();
+
         $user = User::has('orders')->where('host', 0)->first();
 
         $this->actingAs($user);
@@ -111,6 +117,8 @@ class UserStatisticsTest extends TestCase
     public function the_correct_renters_booking_count_is_in_the_response()
     {
         $this->createSmallDatabase();
+
+        $this->clearCache();
 
         $user = User::has('orders')->where('host', 0)->first();
 
@@ -131,6 +139,8 @@ class UserStatisticsTest extends TestCase
     {
         $this->createSmallDatabase();
 
+        $this->clearCache();
+
         $user = User::has('orders')->where('host', 0)->first();
 
         $this->actingAs($user);
@@ -149,6 +159,8 @@ class UserStatisticsTest extends TestCase
     public function the_correct_renters_order_count_is_in_the_response()
     {
         $this->createSmallDatabase();
+
+        $this->clearCache();
 
         $user = User::has('orders')->where('host', 0)->first();
 
@@ -169,6 +181,8 @@ class UserStatisticsTest extends TestCase
     {
         $this->createSmallDatabase();
 
+        $this->clearCache();
+
         $user = User::has('orders')->where('host', 0)->first();
 
         $this->actingAs($user);
@@ -188,6 +202,8 @@ class UserStatisticsTest extends TestCase
     {
         $this->createSmallDatabase();
 
+        $this->clearCache();
+
         $user = User::has('orders')->where('host', 0)->first();
 
         $this->actingAs($user);
@@ -206,6 +222,8 @@ class UserStatisticsTest extends TestCase
     {
         $this->createSmallDatabase();
 
+        $this->clearCache();
+
         $user = User::has('orders')->where('host', 0)->first();
 
         $this->actingAs($user);
@@ -223,6 +241,8 @@ class UserStatisticsTest extends TestCase
     public function the_renters_recent_bookings_are_in_the_json_response()
     {
         $this->createSmallDatabase();
+
+        $this->clearCache();
 
         $user = User::has('orders')->where('host', 0)->first();
 
@@ -307,6 +327,8 @@ class UserStatisticsTest extends TestCase
     {
         $this->createSmallDatabase();
 
+        $this->clearCache();
+
         $user = User::has('vehicles')->where('host', 1)->first();
 
         $this->actingAs($user);
@@ -351,6 +373,8 @@ class UserStatisticsTest extends TestCase
     {
         $this->createSmallDatabase();
 
+        $this->clearCache();
+
         $user = User::has('orders')->where('host', 1)->first();
 
         $this->actingAs($user);
@@ -369,6 +393,8 @@ class UserStatisticsTest extends TestCase
     public function the_correct_hosts_booking_count_is_in_the_response()
     {
         $this->createSmallDatabase();
+
+        $this->clearCache();
 
         $user = User::has('orders')->where('host', 1)->first();
 
@@ -389,6 +415,8 @@ class UserStatisticsTest extends TestCase
     {
         $this->createSmallDatabase();
 
+        $this->clearCache();
+
         $user = User::has('orders')->where('host', 1)->first();
 
         $this->actingAs($user);
@@ -407,6 +435,8 @@ class UserStatisticsTest extends TestCase
     public function the_correct_hosts_longest_booking_is_in_the_response()
     {
         $this->createSmallDatabase();
+
+        $this->clearCache();
 
         $user = User::has('orders')->where('host', 1)->first();
 
@@ -431,6 +461,8 @@ class UserStatisticsTest extends TestCase
     public function the_correct_hosts_booking_average_is_in_the_response()
     {
         $this->createSmallDatabase();
+
+        $this->clearCache();
 
         $user = User::has('orders')->where('host', 1)->first();
 
@@ -460,6 +492,8 @@ class UserStatisticsTest extends TestCase
     {
         $this->createSmallDatabase();
 
+        $this->clearCache();
+
         $user = User::has('orders')->where('host', 1)->first();
 
         $this->actingAs($user);
@@ -477,6 +511,8 @@ class UserStatisticsTest extends TestCase
     public function the_hosts_duration_of_bookings_are_correct_and_in_the_response()
     {
         $this->createSmallDatabase();
+
+        $this->clearCache();
 
         $user = User::has('orders')->where('host', 1)->first();
 
@@ -509,6 +545,8 @@ class UserStatisticsTest extends TestCase
     {
         $this->createSmallDatabase();
 
+        $this->clearCache();
+
         $user = User::has('orders')->where('host', 1)->first();
 
         $this->actingAs($user);
@@ -526,6 +564,8 @@ class UserStatisticsTest extends TestCase
     public function the_hosts_popular_vehicles_are_correct_and_in_the_response()
     {
         $this->createSmallDatabase();
+
+        $this->clearCache();
 
         $user = User::has('orders')->where('host', 1)->first();
 
@@ -558,6 +598,8 @@ class UserStatisticsTest extends TestCase
     {
         $this->createSmallDatabase();
 
+        $this->clearCache();
+
         $user = User::has('orders')->where('host', 1)->first();
 
         $this->actingAs($user);
@@ -581,5 +623,50 @@ class UserStatisticsTest extends TestCase
                     ]
                 ]);
         }
+    }
+
+    /**
+     *  @test
+     *  The renter statistics are cached in redis
+     */
+    public function the_renter_statistics_are_cached_in_redis()
+    {
+        $this->createSmallDatabase();
+
+        $this->clearCache();
+
+        $this->assertFalse(Cache::store('redis')->has('test-key'));
+
+        $user = User::has('orders')->where('host', 0)->first();
+
+        $this->actingAs($user);
+
+        $this->json('GET', '/api/dashboard/renter-stats');
+
+        $this->assertTrue(Cache::store('redis')->has('test-key'));
+    }
+
+    /**
+     *  @test
+     *  The host statistics are cached in redis
+     */
+    public function the_host_statistics_are_cached_in_redis()
+    {
+        $this->createSmallDatabase();
+
+        $this->clearCache();
+
+        $this->assertFalse(Cache::store('redis')->has('test-key'));
+
+        $user = User::has('orders')->where('host', 1)->first();
+
+        $this->actingAs($user);
+
+        $this->json('GET', '/api/dashboard/host-stats');
+
+        $this->assertTrue(Cache::store('redis')->has('test-key'));
+
+        // Clear testing keys from redis on final test
+        $this->clearCache();
     }
 }

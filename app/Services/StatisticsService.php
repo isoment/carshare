@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Http\Resources\UserBookingIndexResource;
+use App\Http\Traits\CacheModeTrait;
 use App\Models\Booking;
 use App\Models\User;
 use Carbon\Carbon;
@@ -17,6 +18,8 @@ use Illuminate\Support\Facades\Log;
 
 class StatisticsService
 {
+    use CacheModeTrait;
+
     /**
      *  @return array|JsonResponse
      */
@@ -28,9 +31,10 @@ class StatisticsService
             return response()->json('No bookings', 404);
         }
 
-        $stats = Cache::store('redis')->rememberForever(
-            'renter-stats-user:' . $user->id, 
-            function() use($user) 
+        $cacheKey = $this->setCacheMode('renter-stats-user:' . $user->id);
+
+        $stats = Cache::store('redis')
+            ->rememberForever($cacheKey, function() use($user) 
             {
                 $usersOrders = $user->orders;
                 $bookingsByMonth = $this->bookingsByMonth($usersOrders);
@@ -69,9 +73,10 @@ class StatisticsService
             return response()->json('No bookings', 404);
         }
 
-        $stats = Cache::store('redis')->rememberForever(
-            'host-stats-user:' . $user->id, 
-            function() use($user) 
+        $cacheKey = $this->setCacheMode('host-stats-user:' . $user->id);
+
+        $stats = Cache::store('redis')
+            ->rememberForever($cacheKey, function() use($user) 
             {
                 $vehicles = $user->vehicles;
                 $highestBookedMonths = $this->hostHighestBookedMonths($vehicles);
