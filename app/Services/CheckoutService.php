@@ -136,6 +136,10 @@ class CheckoutService
      */
     private function createBooking(Vehicle $vehicle, Order $order, array $item, int $vehicleTotal) : void
     {
+        // When a new booking is created we clear the hosts stats of
+        // the vehicle owner in the cache
+        Cache::forget('host-stats-user:' . $vehicle->user_id);
+
         $booking = Booking::create([
             'vehicle_id' => $vehicle->id,
             'order_id' => $order->id,

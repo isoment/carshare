@@ -168,6 +168,7 @@ class UserBookingService
         if ($refundStatus) {
             // Clear the stats cache for the renter
             Cache::forget('renter-stats-user:' . $booking->order->user_id);
+            Cache::forget('host-stats-user:' . $booking->vehicle->user_id);
 
             $this->createCancellation($booking, $refund);
 
@@ -199,8 +200,9 @@ class UserBookingService
         $refundStatus = $this->refundRenter($refund['amount'], $booking);
 
         if ($refundStatus) {
-            // Clear the stats cache for the renter
+            // Clear the stats cache for the renter and host
             Cache::forget('renter-stats-user:' . $booking->order->user_id);
+            Cache::forget('host-stats-user:' . $booking->vehicle->user_id);
 
             $this->createCancellation($booking, $refund);
 
