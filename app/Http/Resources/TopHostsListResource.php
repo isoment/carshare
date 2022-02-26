@@ -15,13 +15,13 @@ class TopHostsListResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this['id'],
+            'id' => $this['host_id'],
             'host_name' => $this['host_name'],
             'host_avatar' => $this['host_avatar'],
-            'created_at' => $this['created_at'],
-            'rating' => $this['rating'],
-            'content' => $this['content'],
             'host_review_count' => $this['host_review_count'],
+            'created_at' => $this['host_review']['created_at'],
+            'rating' => $this['host_review']['rating'],
+            'content' => $this['host_review']['content'],
             'renter_name' => $this['renter_name']
         ];
     }
