@@ -9,13 +9,16 @@ trait CacheModeTrait
      *  after each test. If the database is SQLite use the key 'test-key'
      *  otherwise use the key that is passed in.
      * 
-     *  @param $keyName
+     *  @param $productionKey the key to use for production
+     *  @param $tstKey the key for testing
      *  @return string
      */
-    public function setCacheMode(string $keyName) : string
+    public function setCacheMode(string $productionKey, string $testKey = 'test-key') : string
     {
-        return env('DB_CONNECTION') === 'sqlite' ? 
-            'test-key' : 
-            $keyName;
+        if (env('DB_CONNECTION') === 'sqlite') {
+            return $testKey;
+        } else {
+            return $productionKey;
+        }
     }
 }

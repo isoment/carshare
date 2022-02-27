@@ -13,10 +13,14 @@ abstract class TestCase extends BaseTestCase
      *  Clear any test entries in the cache leftover from
      *  previous tests
      * 
+     *  @param array an array of keys to remove from the cache
      *  @return void
      */
-    public function clearCache() : void
+    public function clearCache(array $keys = ['test-key']) : void
     {
-        Cache::store('redis')->forget('test-key');
+        foreach ($keys as $key) {
+            Cache::store('redis')->forget($key);
+        }
+        
     }
 }
