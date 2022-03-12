@@ -14,9 +14,12 @@
                     <div class="bg-white rounded-lg md:rounded-full py-2 px-2 md:pl-5 md:pr-16 md:pt-2 md:pb-1 
                                 flex flex-col md:flex-row w-11/12 sm:w-3/4 md:w-auto shadow-lg">
                         <!-- Make search -->
-                        <div class="flex flex-col md:pr-2 border-b md:border-b-0 md:border-r border-gray-300 my-2 md:my-0">
+                        <div v-if="makes" class="flex flex-col md:pr-2 border-b md:border-b-0 md:border-r border-gray-300 my-2 md:my-0">
                             <label for="make" class="text-xs font-bold text-gray-500">Vehicle Make</label>
-                            <input type="text" name="make" class="focus:outline-none font-semibold text-sm search-input-width">
+                            <v-select :options="makes"
+                                      v-model="makeSelection"
+                                      class="vue-select-make-main-page search-input-width">
+                            </v-select>
                         </div>
                         <div class="relative">
 
@@ -183,14 +186,23 @@
     import vehicleSearchDatesComputed from './../shared/mixins/vehicleSearchDatesComputed';
     import { mapState } from 'vuex';
     import calendarMinMaxDate from './../shared/mixins/calendarMinMaxDate';
-
+    import vSelect from "vue-select";
+    import 'vue-select/dist/vue-select.css';
 
     export default {
         components: {
             VehicleMakeSlider,
             HostsSlider,
             Calendar,
-            DatePicker
+            DatePicker,
+            vSelect
+        },
+
+        data() {
+            return {
+                makes: null,
+                makeSelection: 'All'
+            }
         },
 
         mixins: [vehicleSearchDatesComputed, calendarMinMaxDate],
@@ -202,21 +214,59 @@
         },
 
         methods: {
+            // Redirect to main vehicle page with dates and selected make as query string 
             search() {
-                // Redirect to main vehicle page with dates as query string 
+                const make = this.makeSelection ? this.makeSelection : 'All'
+
                 this.$router.push({
                     name: 'main-vehicle',
                     query: {
                         start: this.$store.state.searchDates.start,
-                        end: this.$store.state.searchDates.end
+                        end: this.$store.state.searchDates.end,
+                        make: make.toLowerCase()
                     }
                 });
             },
+
+            async fetchMakes() {
+                let response = (await axios.get('/api/vehicle-make/list')).data.data;
+
+                let array = ['All'];
+
+                response.forEach(item => {
+                    array.push(item.make);
+                });
+
+                this.makes = array;
+            }
         },
 
         created() {
+            this.fetchMakes();
+
             // Check and set search dates
             this.$store.dispatch('checkSearchDates');
         }
     }
 </script>
+
+<style>
+    .vue-select-make-main-page {
+        margin-top: -6px;
+    }
+
+    .vue-select-make-main-page .vs__search::placeholder,
+    .vue-select-make-main-page .vs__dropdown-toggle,
+    .vue-select-make-main-page .vs__dropdown-menu {
+        /* background: #dfe5fb; */
+        border: none;
+        color: #394066;
+        text-transform: lowercase;
+        font-variant: small-caps;
+    }
+
+    .vue-select-make-main-page .vs__clear,
+    .vue-select-make-main-page .vs__open-indicator {
+        fill: #394066;
+    }
+</style>

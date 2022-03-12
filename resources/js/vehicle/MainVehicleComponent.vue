@@ -170,6 +170,7 @@
                 priceRange: [],
                 maxPrice: 1000,
                 minPrice: 0,
+                vehicleMake: 'all'
             }
         },
 
@@ -208,7 +209,8 @@
                     name: 'main-vehicle',
                     query: {
                         start: this.$store.state.searchDates.start,
-                        end: this.$store.state.searchDates.end
+                        end: this.$store.state.searchDates.end,
+                        make: this.vehicleMake
                     }
                 }).catch(error => {
                     if (
@@ -242,7 +244,8 @@
                             from: this.$store.state.searchDates.start,
                             to: this.$store.state.searchDates.end,
                             min: this.$store.state.priceRange.min,
-                            max: this.$store.state.priceRange.max
+                            max: this.$store.state.priceRange.max,
+                            // make: this.vehicleMake
                         }
                     });
 
@@ -301,14 +304,20 @@
                 this.fetchVehicles();
             },
 
-            // Set the dates based on query strings, we do this so manual changes
-            // to the URL are reflected in the local store.
             handleQueryStrings() {
+                // Set the dates based on query strings, we do this so manual changes
+                // to the URL are reflected in the local store.
                 if (this.$route.query.start && this.$route.query.end) {
                     this.$store.dispatch('setSearchDates', {
                         start: this.$route.query.start,
                         end: this.$route.query.end
                     });
+                }
+
+                if (this.$route.query.make) {
+                    this.vehicleMake = this.$route.query.make;
+                } else {
+                    this.vehicleMake = 'all';
                 }
             },
 

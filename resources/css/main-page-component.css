@@ -17,6 +17,7 @@
 
 .search-input-width {
     max-width: 175px;
+    min-width: 150px;
 }
 
 /* Offset for navigation bar */
