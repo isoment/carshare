@@ -27,7 +27,8 @@ class VehicleIndexRequest extends FormRequest
             'from' => ['required', 'date', 'after_or_equal:yesterday'],
             'to' => ['required', 'date', 'after_or_equal:from'],
             'min' => ['numeric'],
-            'max' => ['numeric', 'gte:min']
+            'max' => ['numeric', 'gte:min'],
+            'make' => ['required']
         ];
     }
 
@@ -43,7 +44,7 @@ class VehicleIndexRequest extends FormRequest
             'date' => 'Must be a date',
             'from.after_or_equal' => 'Date must be after or equal to now',
             'to.after_or_equal' => 'Date must be after or equal to from date',
-            'gte:min' => 'Max must be greater than min'
+            'gte:min' => 'Max must be greater than min',
         ];
     }
 }

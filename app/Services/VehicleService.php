@@ -9,7 +9,9 @@ use App\Models\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use App\Http\Requests\VehicleIndexRequest;
+use App\Models\VehicleMake;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 
 class VehicleService
 {
@@ -30,14 +32,17 @@ class VehicleService
         // Only want to search by price if its selected
         $hasMinMax = isset($request['min']) && isset($request['max']);
 
+        // Make is specified
+        $makeIsSpecified = $this->vehicleMakeIsSpecified($request['make']);
+
         return Vehicle::where('active', 1)->whereDoesntHave('bookings', function($query) use ($from, $to) {
-
             $query->betweenDates($from, $to);
-
         })->when($hasMinMax, function($query) use ($request) {
-
             $query->whereBetween('price_day', [$request['min'], $request['max']]);
-
+        })->whereHas('vehicleModel.vehicleMake', function($query) use ($request, $makeIsSpecified) {
+            $query->when($makeIsSpecified, function($query) use($request) {
+                $query->where('make', $request['make']);
+            });
         })->with('vehicleModel.vehicleMake')
             ->with('vehicleImages')
             ->withCount('bookings')
@@ -61,5 +66,27 @@ class VehicleService
             'vehicle_review_count' => $this->vehiclesReviewCount($vehicle->id),
             'vehicle_trip_count' => $this->vehicleTripCount($vehicle->id),
         ]);
+    }
+
+    /**
+     *  The user is requesting to filter by a vehicle make
+     * 
+     *  @param string $makeFromRequest
+     *  @return bool
+     */
+    private function vehicleMakeIsSpecified(string $makeFromRequest) : bool
+    {
+        // Save a query if user is searching all vehicles
+        if ($makeFromRequest === 'all') {
+            return false;
+        }
+
+        $makesList = VehicleMake::get()->pluck('make');
+
+        if ($makesList->contains(ucwords($makeFromRequest))) {
+            return true;
+        }
+
+        return false;
     }
 }

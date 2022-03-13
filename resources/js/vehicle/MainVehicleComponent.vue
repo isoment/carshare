@@ -245,7 +245,7 @@
                             to: this.$store.state.searchDates.end,
                             min: this.$store.state.priceRange.min,
                             max: this.$store.state.priceRange.max,
-                            // make: this.vehicleMake
+                            make: this.vehicleMake
                         }
                     });
 
