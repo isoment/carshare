@@ -1,90 +1,94 @@
 <template>
     <div>
-
-        <!-- Main Navigation -->
         <main-navigation></main-navigation>
-
         <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
-            
-            <div class="pt-4 pb-2 mb-2 border-b border-gray-100">
-                <div class="flex">
-                    <button class="border rounded-md border-gray-300 flex items-center py-2 px-3 mb-2
-                                text-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-100
-                                transition-all duration-300"
-                            :class="{ active: datesMenu }"
-                            @click="toggleDatesMenu">
-                        <i class="far fa-calendar-alt text-md"></i>
-                        <div class="font-bold font-mono text-sm ml-2">
-                            Dates
-                        </div>
-                    </button>
+            <div class="pt-4 pb-2 mb-2">
+                <div class="relative">
+                    <div>
+                        <button class="border rounded-md border-gray-300 flex items-center py-2 px-3 mb-2
+                                    text-gray-700 hover:bg-gray-100 hover:border-gray-100
+                                    transition-all duration-300 focus:outline-none"
+                                @click="toggleFilterDropdown()">
+                            <i class="fas fa-sliders-h"></i>
+                            <div class="font-bold font-mono text-sm ml-2">
+                                Filter
+                            </div>
+                        </button>
+                    </div>
+                    <transition name="fade">
+                        <div class="absolute bg-white rounded-md shadow-2xl w-96 border border-gray-300 
+                                    top-12 left-4 px-4 py-2"
+                             v-if="filterDropdown"
+                             v-click-outside="closeFilterDropdown">
 
-                    <button class="border rounded-md border-gray-300 flex items-center py-2 px-3 mb-2 ml-2
-                                text-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-100
-                                transition-all duration-300"
-                            :class="{ active: priceMenu }"
-                            @click="togglePriceMenu">
-                        <i class="fas fa-dollar-sign"></i>
-                        <div class="font-bold font-mono text-sm ml-2">
-                            Price
+                            <!-- Make filter -->
+                            <div class="w-full mt-5 mb-10">
+                                <h2 class="text-lg font-bold text-gray-500 mb-3">Vehicle make</h2>
+                                <v-select :options="makes"
+                                          v-model="selectMake"
+                                          class="main-vehicle-make-dropdown"
+                                          @input="updateMake()">
+                                </v-select>
+                            </div>
+
+                            <!-- Dates -->
+                            <div class="w-full mt-5 mb-10">
+                                <h2 class="text-lg font-bold text-gray-500 mb-3">Set Dates</h2>
+                                <date-picker v-model="range" 
+                                            color="purple" 
+                                            is-range
+                                            :min-date="minDate"
+                                            :max-date="maxDate"
+                                            :disabled-dates="bookedDates"
+                                            @input="updateDates()">
+                                    <template v-slot="{ inputValue, inputEvents }">
+                                        <div class="flex items-center w-full">
+                                            <div class="flex items-center border-b border-gray-300 w-1/2">
+                                                <div>
+                                                    <label for="from" class="text-purple-500 font-bold text-sm">
+                                                        From
+                                                    </label>
+                                                </div>
+                                                <input type="text" name="from" 
+                                                    class="ml-4 main-vehicle-date-input focus:outline-none"
+                                                    :value="inputValue.start"
+                                                    v-on="inputEvents.start">
+                                            </div>
+                                            <div class="flex items-center border-b border-gray-300 ml-3 w-1/2">
+                                                <div>
+                                                    <label for="until" class="text-purple-500 font-bold text-sm">
+                                                        Until
+                                                    </label>
+                                                </div>
+                                                <input type="text" name="until" 
+                                                    class="ml-4 main-vehicle-date-input focus:outline-none"
+                                                    :value="inputValue.end"
+                                                    v-on="inputEvents.end">
+                                            </div>
+                                        </div>
+                                    </template>
+                                </date-picker>
+                            </div>
+
+                            <!-- Price filter -->
+                            <div class="w-full mt-5 mb-10">
+                                <h2 class="text-lg font-bold text-gray-500 mb-3">Filter by price</h2>
+                                <h4 class="font-bold text-sm mb-2">
+                                    ${{ priceRange[0] }} - ${{ priceRange[1] }} / Day
+                                </h4>
+                                <vue-slider v-model="priceRange"
+                                            :max="maxPrice"
+                                            :min="minPrice"
+                                            :interval="10"
+                                            :enable-cross="false"
+                                            :tooltip="'none'"
+                                            @drag-end="() => updatePriceRange()"
+                                            class="mx-2">
+                                </vue-slider>
+                            </div>
                         </div>
-                    </button>
+                    </transition>
                 </div>
-
-                <transition name="slide-fade">
-                    <div v-show="datesMenu" class="w-full md:w-1/2 my-2">
-                        <date-picker v-model="range" 
-                                    color="purple" 
-                                    is-range
-                                    :min-date="minDate"
-                                    :max-date="maxDate"
-                                    :disabled-dates="bookedDates">
-                            <template v-slot="{ inputValue, inputEvents }">
-                                <div class="flex items-center">
-                                    <div class="flex items-center border-b border-gray-300">
-                                        <div>
-                                            <label for="from" class="text-purple-500 font-bold text-sm">From</label>
-                                        </div>
-                                        <input type="text" name="from" class="ml-2 main-vehicle-date-input focus:outline-none"
-                                            :value="inputValue.start"
-                                            v-on="inputEvents.start">
-                                    </div>
-                                    <div class="flex items-center border-b border-gray-300 ml-3">
-                                        <div>
-                                            <label for="until" class="text-purple-500 font-bold text-sm">Until</label>
-                                        </div>
-                                        <input type="text" name="until" class="ml-2 main-vehicle-date-input focus:outline-none"
-                                            :value="inputValue.end"
-                                            v-on="inputEvents.end">
-                                    </div>
-                                    <div>
-                                        <button class="bg-purple-500 hover:bg-purple-400 transition-all duration-200 
-                                                        px-2 py-1 focus:outline-none rounded-lg ml-3"
-                                                @click="updateDates">
-                                            <i class="fas fa-search text-white text-sm"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </template>
-                        </date-picker>
-                    </div>
-                </transition>
-
-                <transition name="slide-fade">
-                    <div v-show="priceMenu" class="w-full md:w-1/3 my-2">
-                        <h4 class="font-bold text-sm mb-2">${{ priceRange[0] }} - ${{ priceRange[1] }} / Day</h4>
-                        <vue-slider v-model="priceRange"
-                                    :max="maxPrice"
-                                    :min="minPrice"
-                                    :interval="10"
-                                    :enable-cross="false"
-                                    :tooltip="'none'"
-                                    @drag-end="() => updatePriceRange()"
-                                    class="mx-2">
-                        </vue-slider>
-                    </div>
-                </transition>
-
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -128,26 +132,30 @@
                  v-if="vehicles.length">
             </div>
         </div>
-
     </div>
 </template>
 
 <script>
+    import { mapState } from 'vuex';
+    import moment from 'moment';
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
-    import { wholeDollars } from './../shared/utils/currency';
     import VueSlider from 'vue-slider-component';
     import 'vue-slider-component/theme/material.css';
+    import vSelect from "vue-select";
+    import 'vue-select/dist/vue-select.css';
+
     import vehicleSearchDatesComputed from  './../shared/mixins/vehicleSearchDatesComputed';
     import calendarMinMaxDate from './../shared/mixins/calendarMinMaxDate';
-    import moment from 'moment';
-    import { mapState } from 'vuex';
+    import { wholeDollars } from './../shared/utils/currency';
+
 
     export default {
         components: {
             Calendar,
             DatePicker,
-            VueSlider
+            VueSlider,
+            vSelect
         },
 
         mixins: [vehicleSearchDatesComputed, calendarMinMaxDate],
@@ -165,12 +173,13 @@
                 page: 1,
                 lastPage: 1,
                 endOfResults: false,
-                datesMenu: true,
-                priceMenu: false,
                 priceRange: [],
                 maxPrice: 1000,
                 minPrice: 0,
-                vehicleMake: 'all'
+                vehicleMake: 'all',
+                filterDropdown: false,
+                makes: null,
+                selectMake: null
             }
         },
 
@@ -179,31 +188,8 @@
                 return wholeDollars(value);
             },
 
-            toggleDatesMenu() {
-                if (this.priceMenu) {
-                    this.priceMenu = false;
-                    setTimeout(function() {
-                        this.datesMenu = !this.datesMenu;
-                    }.bind(this), 400);
-                } else {
-                    this.datesMenu = !this.datesMenu;
-                }
-            },
-
-            togglePriceMenu() {
-                if (this.datesMenu) {
-                    this.datesMenu = false;
-                    setTimeout(function() {
-                        this.priceMenu = !this.priceMenu;
-                    }.bind(this), 400);
-                } else {
-                    this.priceMenu = !this.priceMenu;
-                }
-            },
-
-            // Redirect to same page to update query string
-            // Don't log the error router throws when navigating to
-            // same page if the query string isn't updated.
+            // Update the query strings. Don't log the error router throws 
+            // when navigating to same page if the query string isn't updated.
             refreshPage() {
                 this.$router.push({
                     name: 'main-vehicle',
@@ -222,18 +208,6 @@
                 });
             },
 
-            updateDates() {
-                this.refreshPage();
-
-                // Clear the vehicles array.
-                this.vehicles = [];
-
-                // Reset page to first page.
-                this.page = 1;
-
-                this.fetchVehicles();
-            },
-
             async fetchVehicles() {
                 this.loading = true;
 
@@ -249,10 +223,9 @@
                         }
                     });
 
-                    // Each time this method is called we will push the new page to the vehicles array.
+                    // Each time this method is called we will push the new page to the vehicles
+                    // array and update the last page.
                     this.vehicles.push(...vehicles.data.data);
-
-                    // Each time this method is called we update the last page
                     this.lastPage = vehicles.data.meta.last_page;
                 } catch (error) {
                     // If the dates are invalid reset to the defaults. Refresh the url query
@@ -275,6 +248,21 @@
                 this.loading = false;
             },
 
+            async fetchMakes() {
+                this.loading = true;
+
+                let response = (await axios.get('/api/vehicle-make/list')).data.data;
+                let array = ['All'];
+
+                response.forEach(item => {
+                    array.push(item.make);
+                });
+
+                this.makes = array;
+
+                this.loading = false;
+            },
+
             updatePriceRange() {
                 // Call action to set the local storage.
                 this.$store.dispatch('setPriceRange', {
@@ -282,12 +270,35 @@
                     max: this.priceRange[1]
                 });
 
-                // Clear the vehicles array.
+                // Clear the vehicles array, set the page page to 1
+                // and then fetch the vehicles.
                 this.vehicles = [];
-
-                // Reset page to first page.
                 this.page = 1;
+                this.fetchVehicles();
+            },
 
+            updateDates() {
+                this.refreshPage();
+                this.vehicles = [];
+                this.page = 1;
+                this.fetchVehicles();
+            },
+
+            updateMake() {
+                const newMake = this.selectMake.toLowerCase()
+
+                this.$router.push({
+                    query: {
+                        start: this.$store.state.searchDates.start,
+                        end: this.$store.state.searchDates.end,
+                        make: newMake
+                    }
+                });
+
+                this.vehicleMake = newMake;
+
+                this.vehicles = [];
+                this.page = 1;
                 this.fetchVehicles();
             },
 
@@ -321,10 +332,10 @@
                 }
             },
 
+            // Set a base price range based on the most and least expensive vehicles
             async setPriceRange() {
                 try {
-                    // Set a base price range based on the most and least expensive vehicles
-                    let prices = await axios.get('/api/vehicles/price-range');
+                    const prices = await axios.get('/api/vehicles/price-range');
                     this.priceRange = Array(Number(prices.data.max), Number(prices.data.min));
 
                     this.$store.dispatch('setPriceRange', {
@@ -341,29 +352,37 @@
                         message: 'Error setting price range'
                     })
                 }
+            },
+
+            toggleFilterDropdown() {
+                this.filterDropdown = !this.filterDropdown;
+            },
+
+            closeFilterDropdown() {
+                this.filterDropdown = false;
+            },
+
+            setSelectedMake() {
+                const makeFromRoute = this.$route.query.make
+                this.selectMake = makeFromRoute.charAt(0).toUpperCase() + makeFromRoute.slice(1);
             }
         },
 
         created() {
             this.handleQueryStrings();
-
-            // Check and set search dates
+            this.fetchMakes();
             this.$store.dispatch('checkSearchDates');
-
             this.$store.dispatch('setUserBookedDates');
-
-            // We want to update the query strings each time the component is created
             this.refreshPage();
-
+            this.setSelectedMake();
             this.setPriceRange();
-
             this.fetchVehicles();
         },
     }
 </script>
 
-<style scoped>
-    .active {
-        color: rgb(139, 92, 246);
+<style>
+    .main-vehicle-make-dropdown .vs__dropdown-menu {
+        max-height: 250px;
     }
 </style>
