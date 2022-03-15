@@ -2,8 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Booking;
 use App\Models\User;
 use App\Models\Vehicle;
+use App\Models\VehicleMake;
+use App\Models\VehicleModel;
 use Carbon\Carbon;
 use Database\Seeders\Testing\TestingVehicleMakeModelSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -21,8 +24,36 @@ class VehicleTest extends TestCase
      */
     public function api_route_returns_422_when_from_and_to_dates_are_absent()
     {
-        $this->json('GET', '/api/vehicles-index')
-            ->assertStatus(422);
+        $response = $this->json('GET', '/api/vehicles-index', ['make' => 'all']);
+            
+        $response->assertStatus(422)->assertJsonFragment([
+            'from' => [
+                'Field required'
+            ],
+            'to' => [
+                'Field required'
+            ]
+        ]);
+    }
+
+    /**
+     *  @test
+     *  The api route returns error 422 when the make query string is absent
+     */
+    public function api_route_returns_422_error_when_the_make_query_string_is_absent()
+    {
+        $from = Carbon::now()->addWeek()->format('m/d/Y');
+        $to = Carbon::now()->addWeeks(2)->format('m/d/Y');
+
+        $response = $this->json(
+            'GET', '/api/vehicles-index', ['from' => $from, 'to' => $to]
+        );
+            
+        $response->assertStatus(422)->assertJsonFragment([
+            'make' => [
+                'Field required'
+            ]
+        ]);
     }
 
     /**
@@ -67,7 +98,8 @@ class VehicleTest extends TestCase
 
         $response = $this->json('GET', '/api/vehicles-index', [
             'from' => $dates['from'], 
-            'to' => $dates['to']
+            'to' => $dates['to'],
+            'make' => 'all'
         ]);
 
         $response->assertStatus(200)
@@ -117,6 +149,8 @@ class VehicleTest extends TestCase
             'host' => true
         ]);
 
+        $this->assertEmpty(Vehicle::all());
+
         Vehicle::factory()->create([
             'vehicle_model_id' => 1,
             'price_day' => 999,
@@ -131,7 +165,8 @@ class VehicleTest extends TestCase
 
         $this->json('GET', '/api/vehicles-index', [
             'from' => $dates['from'], 
-            'to' => $dates['to']
+            'to' => $dates['to'],
+            'make' => 'all'
         ])
             ->assertJsonFragment([
                 'price_day' => '999'
@@ -143,7 +178,157 @@ class VehicleTest extends TestCase
 
     /**
      *  @test
-     *  The vehicle show api route returns 200 repponse with correct JSON structure
+     *  Vehicles can be filtered by price in the vehicles index
+     */
+    public function vehicles_can_be_filtered_by_price_in_the_vehicles_index()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $dates = $this->setVehicleIndexDateRange();
+
+        User::factory()->create([
+            'host' => true
+        ]);
+
+        $this->assertEmpty(Vehicle::all());
+
+        Vehicle::factory()->create([
+            'vehicle_model_id' => 1,
+            'price_day' => 250,
+            'active' => true
+        ]);
+
+        Vehicle::factory()->create([
+            'vehicle_model_id' => 1,
+            'price_day' => 75,
+            'active' => true
+        ]);
+
+        $response = $this->json('GET', '/api/vehicles-index', [
+            'from' => $dates['from'], 
+            'to' => $dates['to'],
+            'make' => 'all',
+            'min' => 50,
+            'max' => 100
+        ]);
+
+        $response->assertJsonFragment([
+            'price_day' => '75'
+        ]);
+
+        $response->assertJsonMissing([
+            'price_day' => '250'
+        ]);
+    }
+
+    /**
+     *  @test
+     *  Vehicles can be filtered by make in the vehicles index
+     */
+    public function vehicles_can_be_filtered_by_make_in_the_vehicles_index()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $dates = $this->setVehicleIndexDateRange();
+
+        User::factory()->create([
+            'host' => true
+        ]);
+
+        $this->assertEmpty(Vehicle::all());
+
+        $modelOne = VehicleModel::where('vehicle_make_id', VehicleMake::find(1)->id)->first();
+        $modelTwo = VehicleModel::where('vehicle_make_id', VehicleMake::find(2)->id)->first();
+
+        Vehicle::factory()->create([
+            'vehicle_model_id' => $modelOne->id,
+            'price_day' => 250,
+            'active' => true
+        ]);
+
+        Vehicle::factory()->create([
+            'vehicle_model_id' => $modelTwo->id,
+            'price_day' => 75,
+            'active' => true
+        ]);
+
+        $makeToSearch = $modelOne->vehicleMake->make;
+
+        $response = $this->json('GET', '/api/vehicles-index', [
+            'from' => $dates['from'], 
+            'to' => $dates['to'],
+            'make' => $makeToSearch,
+        ]);
+
+        $response->assertJsonFragment([
+            'price_day' => '250'
+        ])->assertJsonFragment([
+            'vehicle_make' => $makeToSearch
+        ]);
+
+        $response->assertJsonMissing([
+            'price_day' => '75'
+        ])->assertJsonMissing([
+            'vehicle_make' => $modelTwo->vehicleMake->make
+        ]);
+    }
+
+    /**
+     *  @test
+     *  Vehicles are filtered by availability 
+     */
+    public function vehicles_are_filtered_by_availability_in_vehicles_index()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $dates = $this->setVehicleIndexDateRange();
+
+        User::factory()->create([
+            'host' => true
+        ]);
+
+        User::factory()->create([
+            'host' => 0
+        ]);
+
+        $this->assertEmpty(Vehicle::all());
+
+        Vehicle::factory()->create([
+            'vehicle_model_id' => 1,
+            'price_day' => 250,
+            'active' => true
+        ]);
+
+        $bookedVehicle = Vehicle::factory()->create([
+            'vehicle_model_id' => 1,
+            'price_day' => 75,
+            'active' => true
+        ]);
+
+        Booking::factory()->create([
+            'vehicle_id' => $bookedVehicle->id,
+            'from' => Carbon::parse($dates['from']),
+            'to' => Carbon::parse($dates['to'])
+        ]);
+
+        $response = $this->json('GET', '/api/vehicles-index', [
+            'from' => $dates['from'], 
+            'to' => $dates['to'],
+            'make' => 'all',
+        ]);
+
+        $response->assertJsonMissing([
+            'price_day' => '75'
+        ])->assertJsonMissing([
+            'bookings_count' => 1
+        ])->assertJsonFragment([
+            'price_day' => '250'
+        ]);
+    }
+
+    /**
+     *  @test
+     *  The vehicle show api route returns 200 response with correct JSON structure
      */
     public function the_vehicle_show_route_returns_the_correct_response_and_json_structure()
     {

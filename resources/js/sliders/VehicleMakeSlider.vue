@@ -20,13 +20,22 @@
 
             <!-- Card -->
             <div v-for="vehicle in vehicleMakes" :key="vehicle.id">
-                <div class="max-w-sm rounded-lg overflow-hidden shadow-md mx-2 my-3 hover:shadow-lg
-                            transition-all transform hover:-translate-y-1 duration-300 hover:text-purple-500">
-                    <img class="w-full" alt="make" :src="vehicle.image">
-                    <div class="px-6 py-3 text-center">
-                        <div class="font-bold mb-2 font-boldnosans">{{ vehicle.make }}</div>
+                <router-link :to="{
+                    name: 'main-vehicle',
+                    query: {
+                        start: $store.state.searchDates.start,
+                        end: $store.state.searchDates.end,
+                        make: vehicle.make.toLowerCase()
+                    }
+                }">
+                    <div class="max-w-sm rounded-lg overflow-hidden shadow-md mx-2 my-3 hover:shadow-lg
+                                transition-all transform hover:-translate-y-1 duration-300 hover:text-purple-500">
+                        <img class="w-full" alt="make" :src="vehicle.image">
+                        <div class="px-6 py-3 text-center">
+                            <div class="font-bold mb-2 font-boldnosans">{{ vehicle.make }}</div>
+                        </div>
                     </div>
-                </div>
+                </router-link>
             </div>    
 
         </vue-slick-carousel>
