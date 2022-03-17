@@ -46,7 +46,7 @@ class VehicleService
         })->with('vehicleModel.vehicleMake')
             ->with('vehicleImages')
             ->withCount('bookings')
-            ->orderBy('id')
+            ->orderBy('bookings_count', 'desc')
             ->paginate(12);
     }
 

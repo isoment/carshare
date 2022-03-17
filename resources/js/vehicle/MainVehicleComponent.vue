@@ -16,14 +16,14 @@
                         </button>
                     </div>
                     <transition name="fade">
-                        <div class="absolute bg-white rounded-md shadow-2xl w-96 border border-gray-300 
+                        <div class="absolute bg-white rounded-md shadow-2xl w-80 md:w-96 border border-gray-300 
                                     top-12 left-4 px-4 py-2"
                              v-if="filterDropdown"
                              v-click-outside="closeFilterDropdown">
 
                             <!-- Make filter -->
                             <div class="w-full mt-5 mb-10">
-                                <h2 class="text-lg font-bold text-gray-500 mb-3">Vehicle make</h2>
+                                <h2 class="text-lg font-bold text-gray-800 mb-3">Vehicle make</h2>
                                 <v-select :options="makes"
                                           v-model="selectMake"
                                           class="main-vehicle-make-dropdown"
@@ -33,7 +33,7 @@
 
                             <!-- Dates -->
                             <div class="w-full mt-5 mb-10">
-                                <h2 class="text-lg font-bold text-gray-500 mb-3">Set Dates</h2>
+                                <h2 class="text-lg font-bold text-gray-800 mb-3">Set Dates</h2>
                                 <date-picker v-model="range" 
                                             color="purple" 
                                             is-range
@@ -72,8 +72,8 @@
 
                             <!-- Price filter -->
                             <div class="w-full mt-5 mb-10">
-                                <h2 class="text-lg font-bold text-gray-500 mb-3">Filter by price</h2>
-                                <h4 class="font-bold text-sm mb-2">
+                                <h2 class="text-lg font-bold text-gray-800 mb-3">Filter by price</h2>
+                                <h4 class="font-bold text-sm mb-2 text-gray-500">
                                     ${{ priceRange[0] }} - ${{ priceRange[1] }} / Day
                                 </h4>
                                 <vue-slider v-model="priceRange"
@@ -85,6 +85,31 @@
                                             @drag-end="() => updatePriceRange()"
                                             class="mx-2">
                                 </vue-slider>
+                            </div>
+
+                            <!-- Order By -->
+                            <div class="w-full mt-5 mb-5">
+                                <h2 class="text-lg font-bold text-gray-800 mb-3">Order By</h2>
+                                <div class="flex">
+                                    <button class="text-xs font-bold rounded-sm text-white px-2 
+                                                   py-1 focus:outline-none"
+                                            @click="updateOrderBy('popularity')"
+                                            :class="orderBy === 'popularity' ? 'bg-purple-600' : 'bg-purple-400'">
+                                        Popularity
+                                    </button>
+                                    <button class="text-xs font-bold rounded-sm text-white bg-purple-400 
+                                                   px-2 py-1 ml-2 focus:outline-none"
+                                            @click="updateOrderBy('priceLow')"
+                                            :class="orderBy === 'priceLow' ? 'bg-purple-600' : 'bg-purple-400'">
+                                        Price - Low
+                                    </button>
+                                    <button class="text-xs font-bold rounded-sm text-white bg-purple-400 
+                                                   px-2 py-1 ml-2 focus:outline-none"
+                                            @click="updateOrderBy('priceHi')"
+                                            :class="orderBy === 'priceHi' ? 'bg-purple-600' : 'bg-purple-400'">
+                                        Price - High
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </transition>
@@ -179,7 +204,8 @@
                 vehicleMake: 'all',
                 filterDropdown: false,
                 makes: null,
-                selectMake: null
+                selectMake: null,
+                orderBy: 'popularity'
             }
         },
 
@@ -196,7 +222,8 @@
                     query: {
                         start: this.$store.state.searchDates.start,
                         end: this.$store.state.searchDates.end,
-                        make: this.vehicleMake
+                        make: this.vehicleMake,
+                        orderBy: this.orderBy
                     }
                 }).catch(error => {
                     if (
@@ -219,7 +246,8 @@
                             to: this.$store.state.searchDates.end,
                             min: this.$store.state.priceRange.min,
                             max: this.$store.state.priceRange.max,
-                            make: this.vehicleMake
+                            make: this.vehicleMake,
+                            orderBy: this.orderBy
                         }
                     });
 
@@ -302,6 +330,20 @@
                 this.fetchVehicles();
             },
 
+            updateOrderBy(order) {
+                const valid = ['popularity', 'priceLow', 'priceHi'];
+
+                if (valid.values(order)) {
+                    this.orderBy = order
+                } else {
+                    this.orderBy = 'popularity';
+                }
+
+                this.vehicles = [];
+                this.page = 1;
+                this.fetchVehicles();
+            },
+
             handleScrolledToBottom(isVisible) {
                 if (!isVisible) { return };
 
@@ -329,6 +371,12 @@
                     this.vehicleMake = this.$route.query.make;
                 } else {
                     this.vehicleMake = 'all';
+                }
+
+                if (this.$route.query.orderBy) {
+                    this.orderBy = this.$route.query.orderBy;
+                } else {
+                    this.orderBy = 'popularity';
                 }
             },
 
@@ -384,5 +432,17 @@
 <style>
     .main-vehicle-make-dropdown .vs__dropdown-menu {
         max-height: 250px;
+    }
+
+    .main-vehicle-make-dropdown .vs__dropdown-toggle  {
+        border: none;
+        border-bottom: 1px solid #d2d1d1;
+        /* padding-bottom: 10px; */
+        padding: 0 0 10px 0;
+    }
+
+    .main-vehicle-make-dropdown .vs__selected  {
+        padding: 0;
+        margin: 0;
     }
 </style>
