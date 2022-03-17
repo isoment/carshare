@@ -269,4 +269,11 @@
     .vue-select-make-main-page .vs__open-indicator {
         fill: #394066;
     }
+
+    @media only screen and (min-width: 768px) {
+        .search-input-width {
+            max-width: 175px;
+            min-width: 150px;
+        }
+    }
 </style>
