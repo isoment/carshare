@@ -97,9 +97,10 @@ class VehicleTest extends TestCase
         $dates = $this->setVehicleIndexDateRange();
 
         $response = $this->json('GET', '/api/vehicles-index', [
-            'from' => $dates['from'], 
+            'from' => $dates['from'],
             'to' => $dates['to'],
-            'make' => 'all'
+            'make' => 'all',
+            'orderBy' => 'popularity'
         ]);
 
         $response->assertStatus(200)
@@ -166,7 +167,8 @@ class VehicleTest extends TestCase
         $this->json('GET', '/api/vehicles-index', [
             'from' => $dates['from'], 
             'to' => $dates['to'],
-            'make' => 'all'
+            'make' => 'all',
+            'orderBy' => 'popularity'
         ])
             ->assertJsonFragment([
                 'price_day' => '999'
@@ -209,7 +211,8 @@ class VehicleTest extends TestCase
             'to' => $dates['to'],
             'make' => 'all',
             'min' => 50,
-            'max' => 100
+            'max' => 100,
+            'orderBy' => 'popularity'
         ]);
 
         $response->assertJsonFragment([
@@ -258,6 +261,7 @@ class VehicleTest extends TestCase
             'from' => $dates['from'], 
             'to' => $dates['to'],
             'make' => $makeToSearch,
+            'orderBy' => 'popularity'
         ]);
 
         $response->assertJsonFragment([
@@ -315,6 +319,7 @@ class VehicleTest extends TestCase
             'from' => $dates['from'], 
             'to' => $dates['to'],
             'make' => 'all',
+            'orderBy' => 'popularity'
         ]);
 
         $response->assertJsonMissing([
@@ -324,6 +329,115 @@ class VehicleTest extends TestCase
         ])->assertJsonFragment([
             'price_day' => '250'
         ]);
+    }
+
+    /**
+     *  @test
+     *  The vehicles can be sorted by popularity
+     */
+    public function vehicles_can_be_sorted_by_popularity()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $dates = $this->setVehicleIndexDateRange();
+
+        User::factory()->create([
+            'host' => true
+        ]);
+
+        User::factory()->create([
+            'host' => 0
+        ]);
+
+        Vehicle::factory()->create([
+            'vehicle_model_id' => 1,
+            'price_day' => 250,
+            'active' => true
+        ]);
+
+        $mostPopularVehicle = Vehicle::factory()->create([
+            'vehicle_model_id' => 1,
+            'price_day' => 75,
+            'active' => true
+        ]);
+
+        Booking::factory()->create([
+            'vehicle_id' => $mostPopularVehicle->id,
+            'from' => Carbon::parse($dates['from']),
+            'to' => Carbon::parse($dates['to'])
+        ]);
+
+        $secondBookingFrom = Carbon::parse($dates['to'])->addDays(2);
+        $secondBookingTo = $secondBookingFrom->addDays(5);
+
+        Booking::factory()->create([
+            'vehicle_id' => $mostPopularVehicle->id,
+            'from' => $secondBookingFrom,
+            'to' => $secondBookingTo
+        ]);
+
+        $response = $this->json('GET', '/api/vehicles-index', [
+            'from' => Carbon::now()->addMonths(4)->format('m/d/Y'), 
+            'to' => Carbon::now()->addMonths(5)->format('m/d/Y'),
+            'make' => 'all',
+            'orderBy' => 'popularity'
+        ]);
+
+        $response->assertJsonFragment(['bookings_count' => '2'])
+            ->assertSeeInOrder(['75', '250']);
+    }
+
+    /**
+     *  @test
+     *  The vehicles can be sorted by price
+     */
+    public function vehicles_can_be_sorted_by_price()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $dates = $this->setVehicleIndexDateRange();
+
+        User::factory()->create([
+            'host' => true
+        ]);
+
+        $this->assertEmpty(Vehicle::all());
+
+        Vehicle::factory()->create([
+            'vehicle_model_id' => 1,
+            'price_day' => 185,
+            'active' => true
+        ]);
+
+        Vehicle::factory()->create([
+            'vehicle_model_id' => 1,
+            'price_day' => 45,
+            'active' => true
+        ]);
+
+        Vehicle::factory()->create([
+            'vehicle_model_id' => 1,
+            'price_day' => 90,
+            'active' => true
+        ]);
+
+        $response = $this->json('GET', '/api/vehicles-index', [
+            'from' => $dates['from'], 
+            'to' => $dates['to'],
+            'make' => 'all',
+            'orderBy' => 'priceLow'
+        ]);
+
+        $response->assertSeeInOrder(['45', '90', '185']);
+
+        $response = $this->json('GET', '/api/vehicles-index', [
+            'from' => $dates['from'], 
+            'to' => $dates['to'],
+            'make' => 'all',
+            'orderBy' => 'priceHigh'
+        ]);
+
+        $response->assertSeeInOrder(['185', '90', '45']);
     }
 
     /**
