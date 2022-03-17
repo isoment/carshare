@@ -117,7 +117,7 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="shadow-lg border border-gray-50 rounded-lg"
+                <div class="shadow-lg border border-gray-50 rounded-md"
                      v-for="vehicle in vehicles" 
                      :key="vehicle.id">
                     <router-link :to="{ name: 'vehicle', params: { id: vehicle.id } }" target="_blank">
@@ -315,13 +315,7 @@
             updateMake() {
                 const newMake = this.selectMake.toLowerCase()
 
-                this.$router.push({
-                    query: {
-                        start: this.$store.state.searchDates.start,
-                        end: this.$store.state.searchDates.end,
-                        make: newMake
-                    }
-                });
+                this.refreshPage();
 
                 this.vehicleMake = newMake;
 
@@ -338,6 +332,8 @@
                 } else {
                     this.orderBy = 'popularity';
                 }
+
+                this.refreshPage();
 
                 this.vehicles = [];
                 this.page = 1;
@@ -437,7 +433,6 @@
     .main-vehicle-make-dropdown .vs__dropdown-toggle  {
         border: none;
         border-bottom: 1px solid #d2d1d1;
-        /* padding-bottom: 10px; */
         padding: 0 0 10px 0;
     }
 
@@ -445,4 +440,10 @@
         padding: 0;
         margin: 0;
     }
+
+    .main-vehicle-make-dropdown .vs__search  {
+        padding: 0;
+        margin: 0;
+    }
+
 </style>

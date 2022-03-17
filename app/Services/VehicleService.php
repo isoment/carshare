@@ -46,8 +46,10 @@ class VehicleService
         })->with('vehicleModel.vehicleMake')
             ->with('vehicleImages')
             ->withCount('bookings')
-            ->orderBy('bookings_count', 'desc')
-            ->paginate(12);
+            ->orderBy(
+                $this->sortColumn($request['orderBy']), 
+                $this->sortDirection($request['orderBy'])
+            )->paginate(12);
     }
 
     /**
@@ -89,5 +91,43 @@ class VehicleService
         }
 
         return false;
+    }
+
+    /**
+     *  Determine the sort column for the Eloquent orderBy
+     * 
+     *  @param string $orderBy
+     *  @return string
+     */
+    private function sortColumn(string $orderBy) : string
+    {
+        if ($orderBy === 'popularity') {
+            return 'bookings_count';
+        }
+
+        if (str_contains($orderBy, 'price')) {
+            return 'price_day';
+        }
+
+        return 'popularity';
+    }
+
+    /**
+     *  Determine the sort direction for the Eloquent orderBy
+     * 
+     *  @param string $orderBy
+     *  @return string
+     */
+    private function sortDirection(string $orderBy) : string
+    {
+        // if ($orderBy === 'popularity') {
+        //     return 'desc';
+        // }
+
+        if ($orderBy === 'priceLow') {
+            return 'asc';
+        }
+
+        return 'desc';
     }
 }

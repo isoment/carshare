@@ -28,7 +28,8 @@ class VehicleIndexRequest extends FormRequest
             'to' => ['required', 'date', 'after_or_equal:from'],
             'min' => ['numeric'],
             'max' => ['numeric', 'gte:min'],
-            'make' => ['required']
+            'make' => ['required'],
+            'orderBy' => ['required']
         ];
     }
 
