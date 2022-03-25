@@ -22,7 +22,9 @@ class VehicleIndexResource extends JsonResource
             'model' => $this->vehicleModel->model,
             'vehicle_make' => $this->vehicleModel->vehicleMake->make,
             'bookings_count' => $this->bookings_count,
-            'image' => $this->vehicleImages->first()->image
+            'image' => $this->vehicleImages->first()->image,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude
         ];
     }
 }

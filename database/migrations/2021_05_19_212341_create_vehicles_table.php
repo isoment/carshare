@@ -26,7 +26,8 @@ class CreateVehiclesTable extends Migration
             $table->integer('seats');
             $table->boolean('active')->default(true);
             $table->timestamps();
-
+            $table->decimal('latitude', 8, 6);
+            $table->decimal('longitude', 9, 6);
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

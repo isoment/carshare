@@ -188,7 +188,9 @@ class VehicleFactory extends Factory
             'price_day' => $this->faker->randomFloat(0, 35, 500),
             'description' => $this->faker->paragraph(4),
             'doors' => $this->faker->numberBetween(2, 4),
-            'seats' => $this->faker->numberBetween(2, 4)
+            'seats' => $this->faker->numberBetween(2, 4),
+            'latitude' => $this->faker->latitude(41.820453, 41.976400),
+            'longitude' => $this->faker->longitude(-87.665717, -87.786197)
         ];
     }
 
