@@ -120,10 +120,6 @@ class VehicleService
      */
     private function sortDirection(string $orderBy) : string
     {
-        // if ($orderBy === 'popularity') {
-        //     return 'desc';
-        // }
-
         if ($orderBy === 'priceLow') {
             return 'asc';
         }

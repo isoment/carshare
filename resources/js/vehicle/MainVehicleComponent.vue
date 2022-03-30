@@ -1,8 +1,9 @@
 <template>
     <div>
         <main-navigation></main-navigation>
-        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
-            <div class="pt-4 pb-2 mb-2">
+        <div class="mx-auto mb-6">
+            <div class="pt-3 pb-1 px-2 border-b text-gray-100 shadow-md sticky top-0 bg-white 
+                        main-vehicle-filter-bar">
                 <div class="relative">
                     <div>
                         <button class="border rounded-md border-gray-300 flex items-center py-2 px-3 mb-2
@@ -116,37 +117,49 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="shadow-lg border border-gray-50 rounded-md"
-                     v-for="vehicle in vehicles" 
-                     :key="vehicle.id">
-                    <router-link :to="{ name: 'vehicle', params: { id: vehicle.id } }" target="_blank">
-                        <div>
-                            <div class="h-56 rounded-t-lg"
-                                :style="{ 'background-image': 'url(' + vehicle.featured_image + ')' }"
-                                style="background-size: cover; background-position: 50% 50%;">
-                            </div>
+            <div>
+                <!-- Vehicle Index -->
+                <div class="main-vehicle-index">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mx-2 mt-2">
+                        <div class="shadow-lg border border-gray-50 rounded-md"
+                            v-for="vehicle in vehicles" 
+                            :key="vehicle.id">
+                            <router-link :to="{ name: 'vehicle', params: { id: vehicle.id } }" target="_blank">
+                                <div>
+                                    <div class="h-56 rounded-t-lg"
+                                        :style="{ 'background-image': 'url(' + vehicle.featured_image + ')' }"
+                                        style="background-size: cover; background-position: 50% 50%;">
+                                    </div>
+                                </div>
+                                <div class="px-6 pt-3 pb-2">
+                                    <div>
+                                        <h3 class="font-bold font-boldnosans text-xl">
+                                            {{ vehicle.vehicle_make }} {{ vehicle.model }} {{ vehicle.year }}
+                                        </h3>
+                                        <h6 class="font-light text-sm">
+                                            Vehicle ID {{ vehicle.id }}, Trips: {{ vehicle.bookings_count }}
+                                        </h6>
+                                    </div>
+                                    <div class="text-right font-bold text-sm text-purple-500 mt-6">
+                                        ${{ priceFormat(vehicle.price_day) }} / Day
+                                    </div>
+                                </div>
+                            </router-link>
                         </div>
-                        <div class="px-6 pt-3 pb-2">
-                            <div>
-                                <h3 class="font-bold font-boldnosans text-xl">
-                                    {{ vehicle.vehicle_make }} {{ vehicle.model }} {{ vehicle.year }}
-                                </h3>
-                                <h6 class="font-light text-sm">
-                                    Vehicle ID {{ vehicle.id }}, Trips: {{ vehicle.bookings_count }}
-                                </h6>
-                            </div>
-                            <div class="text-right font-bold text-sm text-purple-500 mt-6">
-                                ${{ priceFormat(vehicle.price_day) }} / Day
-                            </div>
-                        </div>
-                    </router-link>
-                </div>
-            </div>
+                    </div>
 
-            <div class="text-center mt-8"
-                 v-if="loading">
-                  <i class="fas fa-spinner fa-spin text-purple-500 text-4xl"></i>
+                    <div class="text-center mt-8"
+                        v-if="loading">
+                        <i class="fas fa-spinner fa-spin text-purple-500 text-4xl"></i>
+                    </div>
+                </div>
+
+                <!-- Map -->
+                <div class="main-vehicle-map fixed">
+                    <div class="bg-green-200 main-vehicle-map-container">
+                        MAP
+                    </div>
+                </div>
             </div>
 
             <div v-if="endOfResults" class="my-4">
@@ -446,4 +459,24 @@
         margin: 0;
     }
 
+    .main-vehicle-filter-bar {
+        
+    }
+
+    .main-vehicle-index {
+        width: 65%;
+        z-index: 10;
+    }
+
+    .main-vehicle-map {
+        height: 100%;
+        width: 35%;
+        z-index: 50;
+        right: 0;
+        top: 4rem;
+    }
+
+    .main-vehicle-map-container {
+        height: 100%;
+    }
 </style>
