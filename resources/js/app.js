@@ -26,14 +26,23 @@ import VueObserveVisibility from 'vue-observe-visibility';
 // Import click outside
 import vClickOutside from 'v-click-outside';
 
+// Import vue2-google-maps
+import * as VueGoogleMaps from 'vue2-google-maps';
+
 // This gives us access to a special Route object inside every component
 Vue.use(VueRouter);
 // Need to use vuex as a vue plugin
 Vue.use(Vuex);
 // For infinite scroll
 Vue.use(VueObserveVisibility);
-// For click ootside
+// For click outside
 Vue.use(vClickOutside);
+// Use VueGoogleMaps plugin
+Vue.use(VueGoogleMaps, {
+    load: {
+        key: ''
+    }
+});
 
 // Setup a new state
 const store = new Vuex.Store(storeDefinition);

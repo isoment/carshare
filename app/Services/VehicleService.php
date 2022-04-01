@@ -101,15 +101,15 @@ class VehicleService
      */
     private function sortColumn(string $orderBy) : string
     {
-        if ($orderBy === 'popularity') {
-            return 'bookings_count';
-        }
+        // if ($orderBy === 'popularity') {
+        //     return 'bookings_count';
+        // }
 
-        if (str_contains($orderBy, 'price')) {
-            return 'price_day';
-        }
+        // if (str_contains($orderBy, 'price')) {
+        //     return 'price_day';
+        // }
 
-        return 'popularity';
+        return 'price_day';
     }
 
     /**

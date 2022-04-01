@@ -2,7 +2,7 @@
     <div>
         <main-navigation></main-navigation>
         <div class="mx-auto mb-6">
-            <div class="pt-3 pb-1 px-2 border-b text-gray-100 shadow-md sticky top-0 bg-white 
+            <div class="pt-3 px-2 text-gray-100 shadow-md sticky top-0 bg-white 
                         main-vehicle-filter-bar">
                 <div class="relative">
                     <div>
@@ -120,13 +120,13 @@
             <div>
                 <!-- Vehicle Index -->
                 <div class="main-vehicle-index">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mx-2 mt-2">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mx-4 mt-4">
                         <div class="shadow-lg border border-gray-50 rounded-md"
                             v-for="vehicle in vehicles" 
                             :key="vehicle.id">
                             <router-link :to="{ name: 'vehicle', params: { id: vehicle.id } }" target="_blank">
                                 <div>
-                                    <div class="h-56 rounded-t-lg"
+                                    <div class="h-80 lg:h-56 2xl:h-80 rounded-t-lg"
                                         :style="{ 'background-image': 'url(' + vehicle.featured_image + ')' }"
                                         style="background-size: cover; background-position: 50% 50%;">
                                     </div>
@@ -156,8 +156,12 @@
 
                 <!-- Map -->
                 <div class="main-vehicle-map fixed">
-                    <div class="bg-green-200 main-vehicle-map-container">
-                        MAP
+                    <div class="main-vehicle-map-container">
+                        <gmap-map :center="{lat:10, lng:10}"
+                                  :zoom="7"
+                                  style="width: 100%; height: 100%">
+
+                        </gmap-map>
                     </div>
                 </div>
             </div>
@@ -460,7 +464,7 @@
     }
 
     .main-vehicle-filter-bar {
-        
+        padding-bottom: 6px;
     }
 
     .main-vehicle-index {
@@ -469,7 +473,7 @@
     }
 
     .main-vehicle-map {
-        height: 100%;
+        height: 95%;
         width: 35%;
         z-index: 50;
         right: 0;
