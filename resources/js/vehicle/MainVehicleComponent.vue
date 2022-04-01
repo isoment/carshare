@@ -157,10 +157,27 @@
                 <!-- Map -->
                 <div class="main-vehicle-map fixed">
                     <div class="main-vehicle-map-container">
-                        <gmap-map :center="{lat:10, lng:10}"
-                                  :zoom="7"
-                                  style="width: 100%; height: 100%">
-
+                        <gmap-map :center="{lat:41.877600, lng:-87.673700}"
+                                  :zoom="12"
+                                  style="width: 100%; height: 100%"
+                                  :options="{
+                                      fullscreenControl: false,
+                                      streetViewControl: false,
+                                      zoomControl: true,
+                                      zoomControlOptions: {
+                                        position: google && google.maps.ControlPosition.RIGHT_TOP,
+                                      },
+                                      scrollwheel: true
+                                  }">
+                            <gmap-marker v-for="vehicle in vehicles"
+                                         :key="vehicle.id"
+                                         :position="{
+                                             lat:formatCoord(vehicle.latitude), 
+                                             lng:formatCoord(vehicle.longitude)
+                                         }"
+                                         :clickable="true"
+                                         :draggable="false">
+                            </gmap-marker>
                         </gmap-map>
                     </div>
                 </div>
@@ -186,6 +203,7 @@
     import 'vue-slider-component/theme/material.css';
     import vSelect from "vue-select";
     import 'vue-select/dist/vue-select.css';
+    import {gmapApi} from 'vue2-google-maps';
 
     import vehicleSearchDatesComputed from  './../shared/mixins/vehicleSearchDatesComputed';
     import calendarMinMaxDate from './../shared/mixins/calendarMinMaxDate';
@@ -203,9 +221,10 @@
         mixins: [vehicleSearchDatesComputed, calendarMinMaxDate],
 
         computed: {
+            google: gmapApi,
             ...mapState({
                 bookedDates: state => state.bookedDates
-            }),
+            })
         },
 
         data() {
@@ -426,6 +445,10 @@
             setSelectedMake() {
                 const makeFromRoute = this.$route.query.make
                 this.selectMake = makeFromRoute.charAt(0).toUpperCase() + makeFromRoute.slice(1);
+            },
+
+            formatCoord(coordinate) {
+                return parseFloat(coordinate);
             }
         },
 
@@ -461,6 +484,10 @@
     .main-vehicle-make-dropdown .vs__search  {
         padding: 0;
         margin: 0;
+    }
+
+    .main-vehicle-date-input {
+        color: black;
     }
 
     .main-vehicle-filter-bar {
