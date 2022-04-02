@@ -157,7 +157,7 @@
                 <!-- Map -->
                 <div class="main-vehicle-map fixed">
                     <div class="main-vehicle-map-container">
-                        <gmap-map :center="{lat:41.877600, lng:-87.673700}"
+                        <gmap-map :center="mapCenter"
                                   :zoom="12"
                                   style="width: 100%; height: 100%"
                                   :options="{
@@ -169,6 +169,34 @@
                                       },
                                       scrollwheel: true
                                   }">
+                            <gmap-info-window :options="infoWindowOptions"
+                                              :position="infoWindowPosition"
+                                              :opened="infoWindowOpened"
+                                              @closeclick="handleInfoWindowClose()">
+                                <div>
+                                    <router-link v-if="typeof activeVehicle.id !== 'undefined'"
+                                                 :to="{ name: 'vehicle', params: { id: activeVehicle.id } }" 
+                                                 target="_blank">
+                                        <div class="mt-2">
+                                            <h3 class="font-bold font-boldnosans text-lg">
+                                                {{ activeVehicle.year }} {{ activeVehicle.vehicle_make }}
+                                            </h3>
+                                            <h3 class="font-bold font-boldnosans text-sm">
+                                                 {{ activeVehicle.model }} 
+                                            </h3>
+                                        </div>
+                                        <div class="mt-2">
+                                            <div class="h-28 w-48"
+                                                :style="{ 'background-image': 'url(' + activeVehicle.featured_image + ')' }"
+                                                style="background-size: cover; background-position: 50% 50%;">
+                                            </div>
+                                        </div>
+                                        <div class="text-right font-bold text-sm text-purple-500 mt-3">
+                                            ${{ priceFormat(activeVehicle.price_day) }} / Day
+                                        </div>
+                                    </router-link>
+                                </div>
+                            </gmap-info-window>
                             <gmap-marker v-for="vehicle in vehicles"
                                          :key="vehicle.id"
                                          :position="{
@@ -176,7 +204,8 @@
                                              lng:formatCoord(vehicle.longitude)
                                          }"
                                          :clickable="true"
-                                         :draggable="false">
+                                         :draggable="false"
+                                         @click="handleMarkerClicked(vehicle)">
                             </gmap-marker>
                         </gmap-map>
                     </div>
@@ -222,6 +251,30 @@
 
         computed: {
             google: gmapApi,
+
+            // Can also calculate the center point for all coordinates
+            // or form a bounding box based on the largest or smallest.
+            mapCenter() {
+                if (!this.vehicles.length) {
+                    return {
+                        lat: 41.877600,
+                        lng: -87.673700
+                    }
+                }
+
+                return {
+                    lat: parseFloat(this.vehicles[0].latitude),
+                    lng: parseFloat(this.vehicles[0].longitude)
+                }
+            },
+
+            infoWindowPosition() {
+                return {
+                    lat: parseFloat(this.activeVehicle.latitude),
+                    lng: parseFloat(this.activeVehicle.longitude)
+                }
+            },
+
             ...mapState({
                 bookedDates: state => state.bookedDates
             })
@@ -241,7 +294,15 @@
                 filterDropdown: false,
                 makes: null,
                 selectMake: null,
-                orderBy: 'popularity'
+                orderBy: 'popularity',
+                infoWindowOptions: {
+                    pixelOffset: {
+                        width: 0,
+                        height: -35
+                    }
+                },
+                activeVehicle: {},
+                infoWindowOpened: false
             }
         },
 
@@ -449,6 +510,16 @@
 
             formatCoord(coordinate) {
                 return parseFloat(coordinate);
+            },
+
+            handleMarkerClicked(vehicle) {
+                this.activeVehicle = vehicle;
+                this.infoWindowOpened = true;
+            },
+
+            handleInfoWindowClose() {
+                this.activeVehicle = {};
+                this.infoWindowOpened = false;
             }
         },
 
