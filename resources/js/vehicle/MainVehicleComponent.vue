@@ -197,7 +197,7 @@
                                          }"
                                          :clickable="true"
                                          :draggable="false"
-                                         :icon="{url : 'img/purple-dot.png'}"
+                                         :icon="mapDotType(vehicle.id)"
                                          @click="handleMarkerClicked(vehicle)">
                             </gmap-marker>
                         </gmap-map>
@@ -243,6 +243,10 @@
         mixins: [vehicleSearchDatesComputed, calendarMinMaxDate],
 
         computed: {
+            ...mapState({
+                bookedDates: state => state.bookedDates
+            }),
+
             google: gmapApi,
 
             // Can also calculate the center point for all coordinates
@@ -266,11 +270,7 @@
                     lat: parseFloat(this.activeVehicle.latitude),
                     lng: parseFloat(this.activeVehicle.longitude)
                 }
-            },
-
-            ...mapState({
-                bookedDates: state => state.bookedDates
-            })
+            }
         },
 
         data() {
@@ -295,7 +295,8 @@
                     }
                 },
                 activeVehicle: {},
-                infoWindowOpened: false
+                infoWindowOpened: false,
+                clickedMarkers: []
             }
         },
 
@@ -528,11 +529,21 @@
             handleMarkerClicked(vehicle) {
                 this.activeVehicle = vehicle;
                 this.infoWindowOpened = true;
+
+                if (!this.clickedMarkers.includes(vehicle.id)) {
+                    this.clickedMarkers.push(vehicle.id);
+                }
             },
 
             handleInfoWindowClose() {
                 this.activeVehicle = {};
                 this.infoWindowOpened = false;
+            },
+
+            mapDotType(id) {
+                return this.clickedMarkers.includes(id) ? 
+                    {url : 'img/dot-light.png'} :
+                    {url : 'img/dot-dark.png'};
             }
         },
 
