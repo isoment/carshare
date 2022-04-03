@@ -160,15 +160,7 @@
                         <gmap-map :center="mapCenter"
                                   :zoom="12"
                                   style="width: 100%; height: 100%"
-                                  :options="{
-                                      fullscreenControl: false,
-                                      streetViewControl: false,
-                                      zoomControl: true,
-                                      zoomControlOptions: {
-                                        position: google && google.maps.ControlPosition.RIGHT_TOP,
-                                      },
-                                      scrollwheel: true
-                                  }">
+                                  :options="googleMapOptions()">
                             <gmap-info-window :options="infoWindowOptions"
                                               :position="infoWindowPosition"
                                               :opened="infoWindowOpened"
@@ -205,6 +197,7 @@
                                          }"
                                          :clickable="true"
                                          :draggable="false"
+                                         :icon="{url : 'img/purple-dot.png'}"
                                          @click="handleMarkerClicked(vehicle)">
                             </gmap-marker>
                         </gmap-map>
@@ -506,6 +499,26 @@
             setSelectedMake() {
                 const makeFromRoute = this.$route.query.make
                 this.selectMake = makeFromRoute.charAt(0).toUpperCase() + makeFromRoute.slice(1);
+            },
+
+            googleMapOptions() {
+                return {
+                    fullscreenControl: false,
+                    streetViewControl: false,
+                    zoomControl: true,
+                    zoomControlOptions: {
+                        position: this.google && this.google.maps.ControlPosition.RIGHT_TOP,
+                    },
+                    styles: [
+                        {
+                            featureType: 'poi',
+                            stylers: [
+                                {visibility: 'off'}
+                            ]   
+                        }
+                    ],
+                    scrollwheel: true
+                }
             },
 
             formatCoord(coordinate) {
