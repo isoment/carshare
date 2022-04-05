@@ -1,119 +1,127 @@
 <template>
     <div>
-        <main-navigation></main-navigation>
+        <!-- <main-navigation></main-navigation> -->
         <div class="mx-auto mb-6">
-            <div class="pt-3 px-2 text-gray-100 shadow-md sticky top-0 bg-white 
+            <div class="pt-2 px-2 text-gray-100 shadow-md sticky top-0 bg-white 
                         main-vehicle-filter-bar">
-                <div class="relative">
-                    <div>
-                        <button class="border rounded-md border-gray-300 flex items-center py-2 px-3 mb-2
-                                    text-gray-700 hover:bg-gray-100 hover:border-gray-100
-                                    transition-all duration-300 focus:outline-none"
-                                @click="toggleFilterDropdown()">
-                            <i class="fas fa-sliders-h"></i>
-                            <div class="font-bold font-mono text-sm ml-2">
-                                Filter
-                            </div>
-                        </button>
-                    </div>
-                    <transition name="fade">
-                        <div class="absolute bg-white rounded-md shadow-2xl w-80 md:w-96 border border-gray-300 
-                                    top-12 left-4 px-4 py-2"
-                             v-if="filterDropdown"
-                             v-click-outside="closeFilterDropdown">
+                <div class="flex items-center">
+                    <div class="relative">
+                        <div>
+                            <button class="border rounded-md border-gray-300 flex items-center py-2 px-3
+                                        text-gray-700 hover:bg-gray-100 hover:border-gray-100
+                                        transition-all duration-300 focus:outline-none"
+                                    @click="toggleFilterDropdown()">
+                                <i class="fas fa-sliders-h"></i>
+                                <div class="font-bold font-mono text-sm ml-2">
+                                    Filter
+                                </div>
+                            </button>
+                        </div>
+                        <transition name="fade">
+                            <div class="absolute bg-white rounded-md shadow-2xl w-80 md:w-96 border border-gray-300 
+                                        top-12 left-4 px-4 py-2"
+                                v-if="filterDropdown"
+                                v-click-outside="closeFilterDropdown">
 
-                            <!-- Make filter -->
-                            <div class="w-full mt-5 mb-10">
-                                <h2 class="text-lg font-bold text-gray-800 mb-3">Vehicle make</h2>
-                                <v-select :options="makes"
-                                          v-model="selectMake"
-                                          class="main-vehicle-make-dropdown"
-                                          @input="updateMake()">
-                                </v-select>
-                            </div>
+                                <!-- Make filter -->
+                                <div class="w-full mt-5 mb-10">
+                                    <h2 class="text-lg font-bold text-gray-800 mb-3">Vehicle make</h2>
+                                    <v-select :options="makes"
+                                            v-model="selectMake"
+                                            class="main-vehicle-make-dropdown"
+                                            @input="updateMake()">
+                                    </v-select>
+                                </div>
 
-                            <!-- Dates -->
-                            <div class="w-full mt-5 mb-10">
-                                <h2 class="text-lg font-bold text-gray-800 mb-3">Set Dates</h2>
-                                <date-picker v-model="range" 
-                                            color="purple" 
-                                            is-range
-                                            :min-date="minDate"
-                                            :max-date="maxDate"
-                                            :disabled-dates="bookedDates"
-                                            @input="updateDates()">
-                                    <template v-slot="{ inputValue, inputEvents }">
-                                        <div class="flex items-center w-full">
-                                            <div class="flex items-center border-b border-gray-300 w-1/2">
-                                                <div>
-                                                    <label for="from" class="text-purple-500 font-bold text-sm">
-                                                        From
-                                                    </label>
+                                <!-- Dates -->
+                                <div class="w-full mt-5 mb-10">
+                                    <h2 class="text-lg font-bold text-gray-800 mb-3">Set Dates</h2>
+                                    <date-picker v-model="range" 
+                                                color="purple" 
+                                                is-range
+                                                :min-date="minDate"
+                                                :max-date="maxDate"
+                                                :disabled-dates="bookedDates"
+                                                @input="updateDates()">
+                                        <template v-slot="{ inputValue, inputEvents }">
+                                            <div class="flex items-center w-full">
+                                                <div class="flex items-center border-b border-gray-300 w-1/2">
+                                                    <div>
+                                                        <label for="from" class="text-purple-500 font-bold text-sm">
+                                                            From
+                                                        </label>
+                                                    </div>
+                                                    <input type="text" name="from" 
+                                                        class="ml-4 main-vehicle-date-input focus:outline-none"
+                                                        :value="inputValue.start"
+                                                        v-on="inputEvents.start">
                                                 </div>
-                                                <input type="text" name="from" 
-                                                    class="ml-4 main-vehicle-date-input focus:outline-none"
-                                                    :value="inputValue.start"
-                                                    v-on="inputEvents.start">
-                                            </div>
-                                            <div class="flex items-center border-b border-gray-300 ml-3 w-1/2">
-                                                <div>
-                                                    <label for="until" class="text-purple-500 font-bold text-sm">
-                                                        Until
-                                                    </label>
+                                                <div class="flex items-center border-b border-gray-300 ml-3 w-1/2">
+                                                    <div>
+                                                        <label for="until" class="text-purple-500 font-bold text-sm">
+                                                            Until
+                                                        </label>
+                                                    </div>
+                                                    <input type="text" name="until" 
+                                                        class="ml-4 main-vehicle-date-input focus:outline-none"
+                                                        :value="inputValue.end"
+                                                        v-on="inputEvents.end">
                                                 </div>
-                                                <input type="text" name="until" 
-                                                    class="ml-4 main-vehicle-date-input focus:outline-none"
-                                                    :value="inputValue.end"
-                                                    v-on="inputEvents.end">
                                             </div>
-                                        </div>
-                                    </template>
-                                </date-picker>
-                            </div>
+                                        </template>
+                                    </date-picker>
+                                </div>
 
-                            <!-- Price filter -->
-                            <div class="w-full mt-5 mb-10">
-                                <h2 class="text-lg font-bold text-gray-800 mb-3">Filter by price</h2>
-                                <h4 class="font-bold text-sm mb-2 text-gray-500">
-                                    ${{ priceRange[0] }} - ${{ priceRange[1] }} / Day
-                                </h4>
-                                <vue-slider v-model="priceRange"
-                                            :max="maxPrice"
-                                            :min="minPrice"
-                                            :interval="10"
-                                            :enable-cross="false"
-                                            :tooltip="'none'"
-                                            @drag-end="() => updatePriceRange()"
-                                            class="mx-2">
-                                </vue-slider>
-                            </div>
+                                <!-- Price filter -->
+                                <div class="w-full mt-5 mb-10">
+                                    <h2 class="text-lg font-bold text-gray-800 mb-3">Filter by price</h2>
+                                    <h4 class="font-bold text-sm mb-2 text-gray-500">
+                                        ${{ priceRange[0] }} - ${{ priceRange[1] }} / Day
+                                    </h4>
+                                    <vue-slider v-model="priceRange"
+                                                :max="maxPrice"
+                                                :min="minPrice"
+                                                :interval="10"
+                                                :enable-cross="false"
+                                                :tooltip="'none'"
+                                                @drag-end="() => updatePriceRange()"
+                                                class="mx-2">
+                                    </vue-slider>
+                                </div>
 
-                            <!-- Order By -->
-                            <div class="w-full mt-5 mb-5">
-                                <h2 class="text-lg font-bold text-gray-800 mb-3">Order By</h2>
-                                <div class="flex">
-                                    <button class="text-xs font-bold rounded-sm text-white px-2 
-                                                   py-1 focus:outline-none"
-                                            @click="updateOrderBy('popularity')"
-                                            :class="orderBy === 'popularity' ? 'bg-purple-600' : 'bg-purple-400'">
-                                        Popularity
-                                    </button>
-                                    <button class="text-xs font-bold rounded-sm text-white bg-purple-400 
-                                                   px-2 py-1 ml-2 focus:outline-none"
-                                            @click="updateOrderBy('priceLow')"
-                                            :class="orderBy === 'priceLow' ? 'bg-purple-600' : 'bg-purple-400'">
-                                        Price - Low
-                                    </button>
-                                    <button class="text-xs font-bold rounded-sm text-white bg-purple-400 
-                                                   px-2 py-1 ml-2 focus:outline-none"
-                                            @click="updateOrderBy('priceHi')"
-                                            :class="orderBy === 'priceHi' ? 'bg-purple-600' : 'bg-purple-400'">
-                                        Price - High
-                                    </button>
+                                <!-- Order By -->
+                                <div class="w-full mt-5 mb-5">
+                                    <h2 class="text-lg font-bold text-gray-800 mb-3">Order By</h2>
+                                    <div class="flex">
+                                        <button class="text-xs font-bold rounded-sm text-white px-2 
+                                                    py-1 focus:outline-none"
+                                                @click="updateOrderBy('popularity')"
+                                                :class="orderBy === 'popularity' ? 'bg-purple-600' : 'bg-purple-400'">
+                                            Popularity
+                                        </button>
+                                        <button class="text-xs font-bold rounded-sm text-white bg-purple-400 
+                                                    px-2 py-1 ml-2 focus:outline-none"
+                                                @click="updateOrderBy('priceLow')"
+                                                :class="orderBy === 'priceLow' ? 'bg-purple-600' : 'bg-purple-400'">
+                                            Price - Low
+                                        </button>
+                                        <button class="text-xs font-bold rounded-sm text-white bg-purple-400 
+                                                    px-2 py-1 ml-2 focus:outline-none"
+                                                @click="updateOrderBy('priceHi')"
+                                                :class="orderBy === 'priceHi' ? 'bg-purple-600' : 'bg-purple-400'">
+                                            Price - High
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </transition>
+                        </transition>
+                    </div>
+                    <div class="ml-4">
+                        <router-link class="px-3 py-2 rounded-md text-sm font-bold text-gray-700"
+                                     :to="{ name: 'main-page' }">
+                            Home
+                        </router-link>
+                    </div>
                 </div>
             </div>
 
