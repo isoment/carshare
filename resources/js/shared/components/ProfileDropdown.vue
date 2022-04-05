@@ -2,7 +2,8 @@
     <div class="ml-3 relative" v-if="user.profile">
         <div>
             <button type="button" 
-                    class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-purple-400" 
+                    class="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-400" 
+                    :class="setFocusRingColor"
                     id="user-menu-button"
                     @click="toggleProfileMenu">
                 <span class="sr-only">Open user menu</span>
@@ -13,8 +14,8 @@
         </div>
 
         <transition name="fade">
-            <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md py-1 bg-white profile-dropdown-boxshadow
-                        ring-1 ring-black ring-opacity-5 focus:outline-none profile-dropdown" 
+            <div class="origin-top-right absolute right-0 top-8 mt-2 w-48 rounded-sm py-1 bg-white profile-dropdown-boxshadow
+                        ring-1 ring-black ring-opacity-5 focus:outline-none profile-dropdown border border-gray-200" 
                     v-if="profileMenu"
                     v-click-outside="profileMenuAway">
 
@@ -63,6 +64,10 @@
     import avatarHelper from './../mixins/avatarHelper';
 
     export default {
+        props: {
+            focusRingColor: String
+        },
+
         mixins: [ avatarHelper ],
 
         data() {
@@ -76,6 +81,14 @@
                 isLoggedIn: "isLoggedIn",
                 user: "user"
             }),
+
+            setFocusRingColor() {
+                if (!this.focusRingColor) {
+                    return 'bg-gray-800 focus:ring-offset-gray-800';
+                }
+
+                return `bg-${this.focusRingColor} focus:ring-offset-${this.focusRingColor}`;
+            }
         },
 
         methods: {

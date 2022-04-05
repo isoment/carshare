@@ -1,10 +1,8 @@
 <template>
     <div>
-        <router-link class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white 
-                            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 
-                            focus:ring-purple-400"
+        <router-link class="focus:outline-none"
+                     :class="[iconColorStyle, hoverColorStyle]"
                         :to="{ name: 'shopping-cart'}">
-            <span class="sr-only">Cart</span>
             <svg class="w-6 h-6" fill="none" stroke="currentColor" 
                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" 
@@ -17,6 +15,19 @@
 
 <script>
     export default {
-        
+        props: {
+            color: String,
+            hoverColor: String
+        },
+
+        computed: {
+            iconColorStyle() {
+                return this.color ? `text-${this.color}` : 'text-gray-400';
+            },
+
+            hoverColorStyle() {
+                return this.hoverColor ? `hover:text-${this.hoverColor}` : 'hover:text-white'
+            }
+        }
     }
 </script>

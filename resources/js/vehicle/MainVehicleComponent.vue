@@ -3,7 +3,7 @@
         <!-- <main-navigation></main-navigation> -->
         <div class="mx-auto mb-6">
             <div class="pt-2 px-2 text-gray-100 shadow-md sticky top-0 bg-white 
-                        main-vehicle-filter-bar">
+                        main-vehicle-filter-bar flex items-center justify-between">
                 <div class="flex items-center">
                     <div class="relative">
                         <div>
@@ -23,7 +23,7 @@
                                 v-if="filterDropdown"
                                 v-click-outside="closeFilterDropdown">
 
-                                <!-- Make filter -->
+
                                 <div class="w-full mt-5 mb-10">
                                     <h2 class="text-lg font-bold text-gray-800 mb-3">Vehicle make</h2>
                                     <v-select :options="makes"
@@ -33,7 +33,7 @@
                                     </v-select>
                                 </div>
 
-                                <!-- Dates -->
+
                                 <div class="w-full mt-5 mb-10">
                                     <h2 class="text-lg font-bold text-gray-800 mb-3">Set Dates</h2>
                                     <date-picker v-model="range" 
@@ -72,7 +72,6 @@
                                     </date-picker>
                                 </div>
 
-                                <!-- Price filter -->
                                 <div class="w-full mt-5 mb-10">
                                     <h2 class="text-lg font-bold text-gray-800 mb-3">Filter by price</h2>
                                     <h4 class="font-bold text-sm mb-2 text-gray-500">
@@ -89,7 +88,6 @@
                                     </vue-slider>
                                 </div>
 
-                                <!-- Order By -->
                                 <div class="w-full mt-5 mb-5">
                                     <h2 class="text-lg font-bold text-gray-800 mb-3">Order By</h2>
                                     <div class="flex">
@@ -122,6 +120,10 @@
                             Home
                         </router-link>
                     </div>
+                </div>
+                <div class="flex items-center">
+                    <shopping-cart-link :hoverColor="'purple-400'"></shopping-cart-link>
+                    <profile-dropdown :focusRingColor="'white'"></profile-dropdown>
                 </div>
             </div>
 
@@ -234,6 +236,8 @@
     import vSelect from "vue-select";
     import 'vue-select/dist/vue-select.css';
     import {gmapApi} from 'vue2-google-maps';
+    import ProfileDropdown from '../shared/components/ProfileDropdown.vue';
+    import ShoppingCartLink from '../shared/components/ShoppingCartLink.vue';
 
     import vehicleSearchDatesComputed from  './../shared/mixins/vehicleSearchDatesComputed';
     import calendarMinMaxDate from './../shared/mixins/calendarMinMaxDate';
@@ -242,6 +246,8 @@
 
     export default {
         components: {
+            ProfileDropdown,
+            ShoppingCartLink,
             Calendar,
             DatePicker,
             VueSlider,
@@ -593,8 +599,10 @@
         color: black;
     }
 
+    /* Apply a z-index so the dropdown appears over map */
     .main-vehicle-filter-bar {
-        padding-bottom: 6px;
+        padding-bottom: 8px;
+        z-index: 100;
     }
 
     .main-vehicle-index {
@@ -603,11 +611,11 @@
     }
 
     .main-vehicle-map {
-        height: 95%;
+        height: 95.5%;
         width: 35%;
         z-index: 50;
         right: 0;
-        top: 4rem;
+        top: 3.4rem;
     }
 
     .main-vehicle-map-container {
