@@ -129,7 +129,8 @@
 
             <div>
                 <!-- Vehicle Index -->
-                <div class="main-vehicle-index">
+                <div class="main-vehicle-index"
+                     v-if="!mobileMapOpen">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mx-4 mt-4">
                         <div class="shadow-lg border border-gray-50 rounded-sm"
                             v-for="vehicle in vehicles" 
@@ -165,7 +166,8 @@
                 </div>
 
                 <!-- Map -->
-                <div class="main-vehicle-map fixed hidden lg:block">
+                <div class="main-vehicle-map"
+                     v-if="mobileMapOpen || openDesktopMap">
                     <div class="main-vehicle-map-container">
                         <gmap-map :center="mapCenter"
                                   :zoom="12"
@@ -217,9 +219,16 @@
 
             <div class="mobile-toggle block lg:hidden">
                 <div class="bg-purple-600 rounded-full text-white">
-                    <button class="uppercase font-semibold focus:outline-none flex items-center px-6 py-3">
-                        <i class="fas fa-map-marked-alt mr-2"></i>
-                        <span>Map</span>
+                    <button class="uppercase font-semibold focus:outline-none px-6 py-3"
+                            @click="toggleMobileMap()">
+                        <div v-if="mobileMapOpen">
+                            <i class="fas fa-list mr-2"></i>
+                            <span>List</span>
+                        </div>
+                        <div v-else class="flex items-center">
+                            <i class="fas fa-map-marked-alt mr-2"></i>
+                            <span>Map</span>
+                        </div>
                     </button>
                 </div>
             </div>
@@ -293,6 +302,18 @@
                     lat: parseFloat(this.activeVehicle.latitude),
                     lng: parseFloat(this.activeVehicle.longitude)
                 }
+            },
+
+            openDesktopMap() {
+                return this.windowWidth > 1024 ? true : false;
+            }
+        },
+
+        watch: {
+            windowWidth: function(newWindowWidth) {
+                if (newWindowWidth > 1024) {
+                    this.mobileMapOpen = false;
+                }
             }
         },
 
@@ -319,7 +340,9 @@
                 },
                 activeVehicle: {},
                 infoWindowOpened: false,
-                clickedMarkers: []
+                clickedMarkers: [],
+                mobileMapOpen: false,
+                windowWidth: window.innerWidth
             }
         },
 
@@ -567,6 +590,16 @@
                 return this.clickedMarkers.includes(id) ? 
                     {url : 'img/dot-light.png'} :
                     {url : 'img/dot-dark.png'};
+            },
+
+            addResizeEvent() {
+                window.addEventListener('resize', () => {
+                    this.windowWidth = window.innerWidth;
+                });
+            },
+
+            toggleMobileMap() {
+                this.mobileMapOpen = !this.mobileMapOpen;
             }
         },
 
@@ -579,6 +612,7 @@
             this.setSelectedMake();
             this.setPriceRange();
             this.fetchVehicles();
+            this.addResizeEvent();
         },
     }
 </script>
@@ -626,6 +660,19 @@
         transform: translateX(-50%);
     }
 
+    .main-vehicle-map-container {
+        height: 100%;
+    }
+
+    .main-vehicle-map {
+        position: fixed;
+        height: 95.5%;
+        width: 100%;
+        z-index: 50;
+        right: 0;
+        top: 3.4rem;
+    }
+
     @media screen and (max-width: 1024px) {
         .main-vehicle-index .index-card-img {
             height: 30rem;
@@ -650,15 +697,7 @@
         }
 
         .main-vehicle-map {
-            height: 95.5%;
             width: 35%;
-            z-index: 50;
-            right: 0;
-            top: 3.4rem;
-        }
-
-        .main-vehicle-map-container {
-            height: 100%;
         }
     }
 </style>
