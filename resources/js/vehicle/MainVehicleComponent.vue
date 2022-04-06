@@ -2,7 +2,7 @@
     <div>
         <!-- <main-navigation></main-navigation> -->
         <div class="mx-auto mb-6">
-            <div class="pt-2 px-2 text-gray-100 shadow-md sticky top-0 bg-white 
+            <div class="pt-2 px-2 text-gray-100 shadow-sm sticky top-0 bg-white 
                         main-vehicle-filter-bar flex items-center justify-between">
                 <div class="flex items-center">
                     <div class="relative">
@@ -131,12 +131,12 @@
                 <!-- Vehicle Index -->
                 <div class="main-vehicle-index">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mx-4 mt-4">
-                        <div class="shadow-lg border border-gray-50 rounded-md"
+                        <div class="shadow-lg border border-gray-50 rounded-sm"
                             v-for="vehicle in vehicles" 
                             :key="vehicle.id">
                             <router-link :to="{ name: 'vehicle', params: { id: vehicle.id } }" target="_blank">
                                 <div>
-                                    <div class="h-80 lg:h-56 2xl:h-80 rounded-t-lg"
+                                    <div class="lg:h-56 2xl:h-80 rounded-t-lg index-card-img"
                                         :style="{ 'background-image': 'url(' + vehicle.featured_image + ')' }"
                                         style="background-size: cover; background-position: 50% 50%;">
                                     </div>
@@ -165,7 +165,7 @@
                 </div>
 
                 <!-- Map -->
-                <div class="main-vehicle-map fixed">
+                <div class="main-vehicle-map fixed hidden lg:block">
                     <div class="main-vehicle-map-container">
                         <gmap-map :center="mapCenter"
                                   :zoom="12"
@@ -212,6 +212,15 @@
                             </gmap-marker>
                         </gmap-map>
                     </div>
+                </div>
+            </div>
+
+            <div class="mobile-toggle block lg:hidden">
+                <div class="bg-purple-600 rounded-full text-white">
+                    <button class="uppercase font-semibold focus:outline-none flex items-center px-6 py-3">
+                        <i class="fas fa-map-marked-alt mr-2"></i>
+                        <span>Map</span>
+                    </button>
                 </div>
             </div>
 
@@ -606,19 +615,50 @@
     }
 
     .main-vehicle-index {
-        width: 65%;
         z-index: 10;
     }
 
-    .main-vehicle-map {
-        height: 95.5%;
-        width: 35%;
-        z-index: 50;
-        right: 0;
-        top: 3.4rem;
+    .mobile-toggle {
+        position: fixed;
+        z-index: 110;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
-    .main-vehicle-map-container {
-        height: 100%;
+    @media screen and (max-width: 1024px) {
+        .main-vehicle-index .index-card-img {
+            height: 30rem;
+        }
+    }
+
+    @media screen and (max-width: 650px) {
+        .main-vehicle-index .index-card-img {
+            height: 24rem;
+        }
+    }
+
+    @media screen and (max-width: 500px) {
+        .main-vehicle-index .index-card-img {
+            height: 16rem;
+        }
+    }
+
+    @media screen and (min-width: 1024px) {
+        .main-vehicle-index {
+            width: 65%;
+        }
+
+        .main-vehicle-map {
+            height: 95.5%;
+            width: 35%;
+            z-index: 50;
+            right: 0;
+            top: 3.4rem;
+        }
+
+        .main-vehicle-map-container {
+            height: 100%;
+        }
     }
 </style>
