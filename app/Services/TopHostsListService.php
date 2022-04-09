@@ -53,6 +53,7 @@ class TopHostsListService
         $randomTopHosts = User::inRandomOrder()
             ->with('profile')
             ->where('top_host', 1)
+            ->whereHas('hostReviews', fn($query) => $query->whereNotNull('rating'))
             ->limit(8)
             ->get();
 

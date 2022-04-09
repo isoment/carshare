@@ -218,7 +218,7 @@
             </div>
 
             <div class="mobile-toggle block lg:hidden">
-                <div class="bg-purple-600 rounded-full text-white">
+                <div class="bg-purple-700 rounded-full text-white shadow-md">
                     <button class="uppercase font-semibold focus:outline-none px-6 py-3"
                             @click="toggleMobileMap()">
                         <div v-if="mobileMapOpen">
@@ -655,7 +655,7 @@
     .mobile-toggle {
         position: fixed;
         z-index: 110;
-        bottom: 1rem;
+        bottom: 0.8rem;
         left: 50%;
         transform: translateX(-50%);
     }
