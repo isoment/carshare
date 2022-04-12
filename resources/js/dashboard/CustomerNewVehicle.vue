@@ -108,6 +108,15 @@
                     </div>
                     <!-- Right col -->
                     <div class="w-full md:ml-12 mt-8 md:mt-0">
+                        <!-- Vehicle Location -->
+                        <div class="mb-8">
+                            <div class="flex flex-col">
+                                <label for="location"
+                                        class="text-gray-400 text-xs font-bold uppercase 
+                                                tracking-wider mb-2">Location</label>
+                                <map-location-select class="vehicle-location-select"></map-location-select>
+                            </div>
+                        </div>
                         <!-- Header and upload button -->
                         <div class="flex items-center justify-between">
                             <div class="mb-2">
@@ -181,10 +190,12 @@
     import 'vue-select/dist/vue-select.css';
     import imageSelecting from './../shared/mixins/imageSelecting';
     import validationErrors from './../shared/mixins/validationErrors';
+    import MapLocationSelect from "./vehicle-components/MapLocationSelect.vue";
 
     export default {
         components: {
-            vSelect
+            vSelect,
+            MapLocationSelect
         },
 
         mixins: [validationErrors, imageSelecting],
@@ -313,3 +324,10 @@
         }
     }
 </script>
+
+<style>
+    .vehicle-location-select {
+        height: 400px;
+        width: 100%;
+    }
+</style>
