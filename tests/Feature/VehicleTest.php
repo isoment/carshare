@@ -463,6 +463,8 @@ class VehicleTest extends TestCase
                     'description',
                     'doors',
                     'seats',
+                    'latitude',
+                    'longitude',
                     'vehicle_images',
                     'host_name',
                     'top_host',

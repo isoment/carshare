@@ -164,6 +164,13 @@
                     </div>
                 </div>
             </div>
+            <!-- Vehicle location map -->
+            <vehicle-location class="vehicle-location-map mt-12"
+                              :coordinates="{
+                                  lat:this.vehicleData.latitude, 
+                                  lng:this.vehicleData.longitude
+                                }">
+            </vehicle-location>
         </div>
     </div>
 </template>
@@ -174,6 +181,7 @@
     import VehicleReviewList from './../review/VehicleReviewList';
     import Availability from './Availability';
     import Pricing from './Pricing';
+    import VehicleLocation from './VehicleLocation.vue';
     import { dateFormatMonthYear } from './../shared/utils/dateFormats';
     import { mapState } from 'vuex'
     import moment from 'moment';
@@ -183,7 +191,8 @@
             VehicleImagesSlider,
             VehicleReviewList,
             Availability,
-            Pricing
+            Pricing,
+            VehicleLocation
         },
 
         mixins: [avatarHelper],
@@ -322,3 +331,10 @@
         }
     }
 </script>
+
+<style>
+    .vehicle-location-map {
+        width: 100%;
+        height: 700px;
+    }
+</style>
