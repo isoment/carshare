@@ -165,7 +165,7 @@
                 </div>
             </div>
             <!-- Vehicle location map -->
-            <vehicle-location class="vehicle-location-map mt-12"
+            <vehicle-location class="vehicle-location-map mt-12 mb-6"
                               :coordinates="{
                                   lat:this.vehicleData.latitude, 
                                   lng:this.vehicleData.longitude
@@ -335,6 +335,22 @@
 <style>
     .vehicle-location-map {
         width: 100%;
-        height: 700px;
+        height: 400px;
+        padding: 0 10px 0 10px;
+    }
+
+    @media screen and (min-width: 800px) {
+        .vehicle-location-map {
+            width: 100%;
+            height: 700px;
+            padding: 0 0 0 0;
+        }
+    }
+
+    @media screen and (min-width: 2000px) {
+        .vehicle-location-map {
+            padding: 0 5rem 0 5rem;
+            background-color: #e9e9e9;
+        }
     }
 </style>
