@@ -114,9 +114,12 @@
                                 <label for="location"
                                         class="text-gray-400 text-xs font-bold uppercase 
                                                 tracking-wider mb-2">Location</label>
-                                <map-location-select class="vehicle-location-select"></map-location-select>
+                                <map-location-select class="vehicle-location-select"
+                                                     @changedCoordinates="setVehicleLocation">
+                                </map-location-select>
                             </div>
                         </div>
+                        <validation-errors :errors="errorFor('location')"></validation-errors>
                         <!-- Header and upload button -->
                         <div class="flex items-center justify-between">
                             <div class="mb-2">
@@ -211,7 +214,8 @@
                     seats: '',
                     doors: '',
                     price: '',
-                    description: ''
+                    description: '',
+                    location: ''
                 },
                 featuredImage: '',
                 featuredId: '',
@@ -261,6 +265,10 @@
                 formData.append('doors', this.newVehicle.doors);
                 formData.append('price', this.newVehicle.price);
                 formData.append('description', this.newVehicle.description);
+
+                if (this.newVehicle.location) {
+                    formData.append('location', JSON.stringify(this.newVehicle.location));
+                }
 
                 try {
                     await axios.post('/api/dashboard/create-users-vehicles', formData);
@@ -316,6 +324,10 @@
 
             priceRound(event) {
                 this.newVehicle.price = Math.round(event.target.value);
+            },
+
+            setVehicleLocation(coordinates) {
+                this.newVehicle.location = coordinates;
             }
         },
 

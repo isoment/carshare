@@ -48,6 +48,12 @@
                     if (status === 'OK') {
                         this.location.lat = results[0].geometry.location.lat();
                         this.location.lng = results[0].geometry.location.lng();
+                        this.$emit('changedCoordinates', this.location);
+                    } else {
+                        this.$store.dispatch('addNotification', {
+                            type: 'error',
+                            message: 'This address is not valid'
+                        });
                     }
                 });
             }

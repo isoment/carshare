@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\FeatureId;
+use App\Rules\ValidCoordinates;
 use App\Rules\VehicleMake;
 use App\Rules\VehicleModel;
 use Carbon\Carbon;
@@ -39,7 +40,8 @@ class UserVehicleCreateRequest extends FormRequest
             'seats' => 'required',
             'doors' => 'required',
             'price' => 'required|integer|min:20|max:9999',
-            'description' => 'required|min:10'
+            'description' => 'required|min:10',
+            'location' => ['required', new ValidCoordinates]
         ];
     }
 
@@ -52,7 +54,8 @@ class UserVehicleCreateRequest extends FormRequest
     {
         return [
             'featured_id.required' => 'Please select a featured image',
-            'images.*.mimetypes' => 'File must be an image'
+            'images.*.mimetypes' => 'File must be an image',
+            'location.required' => 'Please enter an address above'
         ];
     }
 
