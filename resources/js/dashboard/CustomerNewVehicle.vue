@@ -111,9 +111,14 @@
                         <!-- Vehicle Location -->
                         <div class="mb-8">
                             <div class="flex flex-col">
-                                <label for="location"
-                                        class="text-gray-400 text-xs font-bold uppercase 
-                                                tracking-wider mb-2">Location</label>
+                                <div class="mb-3">
+                                    <h4 class="text-gray-600 text-lg font-boldnosans font-bold">
+                                        Choose location...
+                                    </h4>
+                                    <h6 class="text-gray-500 text-xs mt-1">
+                                        Enter address where the vehicle is located
+                                    </h6>
+                                </div>
                                 <map-location-select class="vehicle-location-select"
                                                      @changedCoordinates="setVehicleLocation">
                                 </map-location-select>

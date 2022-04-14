@@ -32,6 +32,7 @@ trait UserVehicleTrait
             'doors' => $params['doors'] ?? '4',
             'price' => $params['price'] ?? mt_rand(25, 400),
             'description' => $params['description'] ?? 'This is just a generic description for a vehicle',
+            'location' => $params['location'] ?? '{"lat":41.894027,"lng":-87.632548}'
         ];
     }
 

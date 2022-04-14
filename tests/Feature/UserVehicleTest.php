@@ -81,7 +81,7 @@ class UserVehicleTest extends TestCase
      *  @test
      *  Setting active to true in the request shows active vehicles
      */
-    public function settting_active_to_true_shows_active_vehicles_in_the_user_vehicle_index_json_response()
+    public function setting_active_to_true_shows_active_vehicles_in_the_user_vehicle_index_json_response()
     {
         $this->createSmallDatabase();
 
@@ -282,6 +282,29 @@ class UserVehicleTest extends TestCase
         $this->json('POST', '/api/dashboard/create-users-vehicles', $data)
             ->assertStatus(422)
             ->assertSee('Invalid featured image');
+    }
+
+    /**
+     *  @test
+     *  Invalid location coordinates result in a 422 error when creating a vehicle
+     */
+    public function invalid_coordinates_result_in_a_422_error_when_creating_a_vehicle()
+    {
+        TestingVehicleMakeModelSeeder::run();
+
+        $user = User::factory()->create([
+            'host' => true
+        ]);
+
+        $this->actingAs($user);
+
+        $data = $this->validNewVehicleData([
+            'location' => '{"lat":120.3231,"lng":-250.377}'
+        ]);
+
+        $this->json('POST', '/api/dashboard/create-users-vehicles', $data)
+            ->assertStatus(422)
+            ->assertSee('The coordinates are invalid');
     }
 
     /**

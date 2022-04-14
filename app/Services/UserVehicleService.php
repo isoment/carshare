@@ -54,6 +54,8 @@ class UserVehicleService
             return response()->json('You must be a host to create a vehicle', 403);
         }
 
+        $coordinates = json_decode($request['location'], true);
+
         $vehicle = Vehicle::create([
             'user_id' => current_user()->id,
             'vehicle_model_id' => VehicleModel::where('model', $request['model'])->first()->id,
@@ -64,6 +66,8 @@ class UserVehicleService
             'description' => $request['description'],
             'doors' => $request['doors'],
             'seats' => $request['seats'],
+            'latitude' => $coordinates['lat'],
+            'longitude' => $coordinates['lng'],
             'active' => 0
         ]);
 
