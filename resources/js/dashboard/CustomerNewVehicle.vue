@@ -109,7 +109,7 @@
                     <!-- Right col -->
                     <div class="w-full md:ml-12 mt-8 md:mt-0">
                         <!-- Vehicle Location -->
-                        <div class="mb-8">
+                        <div>
                             <div class="flex flex-col">
                                 <div class="mb-3">
                                     <h4 class="text-gray-600 text-lg font-boldnosans font-bold">
@@ -125,8 +125,9 @@
                             </div>
                         </div>
                         <validation-errors :errors="errorFor('location')"></validation-errors>
+
                         <!-- Header and upload button -->
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between mt-8">
                             <div class="mb-2">
                                 <h4 class="text-gray-600 text-lg font-boldnosans font-bold">
                                     Choose some photos...

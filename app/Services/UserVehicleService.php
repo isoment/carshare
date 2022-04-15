@@ -151,7 +151,7 @@ class UserVehicleService
             return response()->json('Please provide images for your vehicle', 404);
         }
 
-        // Store the vehicle images, and set featured image if it is one the new
+        // Store the vehicle images, and set featured image if it is one of the new
         // ones passed in the request.
         if (!empty($request['images'])) {
             $this->storeImages($request, $vehicle);
@@ -164,11 +164,15 @@ class UserVehicleService
             }
         }
 
+        $coordinates = json_decode($request['location'], true);
+
         // Update the vehicle attributes
         $vehicle->update([
             'price_day' => $request['price'],
             'description' => $request['description'],
-            'active' => $this->isActive($request['active'])
+            'active' => $this->isActive($request['active']),
+            'latitude' => $coordinates['lat'],
+            'longitude' => $coordinates['lng']
         ]);
 
         return response()->json('Vehicle updated', 201);

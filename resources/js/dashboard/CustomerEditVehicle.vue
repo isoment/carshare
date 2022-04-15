@@ -26,10 +26,10 @@
 
             <div v-else>
                 <!-- Loading spinner -->
-                <!-- <div class="text-center mt-8"
+                <div class="text-center mt-8"
                     v-if="loading">
                     <i class="fas fa-spinner fa-spin text-purple-500 text-4xl"></i>
-                </div> -->
+                </div>
 
                 <!-- Banner -->
                 <div class="customer-profile-banner h-36 md:h-40 border-b border-gray-200 pb-8">
@@ -61,12 +61,30 @@
                         <!-- Left Columm -->
                         <div>
                             <!-- Header info -->
-                            <div>
+                            <div class="mb-4">
                                 <h3 class="text-2xl md:text-3xl font-extrabold">
                                     {{vehicle.year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}}
                                 </h3>
-                                <h6 class="text-gray-500 text-xs mt-1">Modify your vehicle details below...</h6>
                             </div>
+
+                            <!-- Vehicle Location -->
+                            <div>
+                                <div class="flex flex-col">
+                                    <div class="mb-3">
+                                        <h4 class="text-gray-600 text-lg font-boldnosans font-bold">
+                                            Choose location...
+                                        </h4>
+                                        <h6 class="text-gray-500 text-xs mt-1">
+                                            Enter address where the vehicle is located
+                                        </h6>
+                                    </div>
+                                    <map-location-select class="vehicle-location-select"
+                                                         :existingLocation="{lat:this.vehicle.latitude, lng:this.vehicle.longitude}"
+                                                         @changedCoordinates="setVehicleLocation">
+                                    </map-location-select>
+                                </div>
+                            </div>
+                            <validation-errors :errors="errorFor('location')"></validation-errors>
 
                             <!-- Status and Price -->
                             <div class="flex mt-8">
@@ -137,6 +155,7 @@
                                         <button class="text-xs font-semibold border border-purple-400 text-purple-400 
                                                        px-2 hover:text-purple-500 hover:border-purple-500 
                                                        duration-200 transition-all"
+                                                v-if="featuredImage"
                                                 @click="resetFeaturedImage">
                                             Reset
                                         </button>
@@ -235,8 +254,15 @@
     import validationErrors from '../shared/mixins/validationErrors';
     import imageSelecting from './../shared/mixins/imageSelecting';
     import { wholeDollars } from './../shared/utils/currency';
+    import MapLocationSelect from './vehicle-components/MapLocationSelect.vue';
 
     export default {
+        components: {
+            MapLocationSelect
+        },
+
+        mixins: [validationErrors, imageSelecting],
+
         computed: {
             ...mapState({
                 isLoggedIn: "isLoggedIn",
@@ -252,8 +278,6 @@
             }
         },
 
-        mixins: [validationErrors, imageSelecting],
-
         data() {
             return {
                 submittingForm: false,
@@ -266,6 +290,7 @@
                 existingFeaturedImage: null,
                 featuredImage: '',
                 featuredId: '',
+                location: null
             }
         },
 
@@ -376,6 +401,11 @@
                 formData.append('price', this.price);
                 formData.append('active', this.active);
 
+                if (this.location) {
+                    // formData.append('location', JSON.stringify(this.location));
+                    formData.append('location', JSON.stringify({lat:208.4334,lng:372.321378}));
+                }
+
                 try {
                     await axios.post(`/api/dashboard/update-users-vehicles/${this.vehicle.id}`, formData);
 
@@ -407,6 +437,10 @@
                 }
 
                 this.submittingForm = false;
+            },
+
+            setVehicleLocation(coordinates) {
+                this.location = coordinates;
             }
         },
 

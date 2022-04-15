@@ -26,6 +26,10 @@
     import { gmapApi } from 'vue2-google-maps';
 
     export default {
+        props: {
+            existingLocation: Object
+        },
+
         computed: {
             google: gmapApi,
         },
@@ -68,6 +72,16 @@
                 });
             }
         },
+
+        mounted() {
+            if (this.existingLocation) {
+                this.location = {
+                    lat: parseFloat(this.existingLocation.lat),
+                    lng: parseFloat(this.existingLocation.lng)
+                };
+                this.$emit('changedCoordinates', this.location);
+            }
+        }
     }
 </script>
 
