@@ -50,7 +50,8 @@ trait UserVehicleTrait
             'featured_id' => $params['featured_id'] ?? '',
             'price' => $params['price'] ?? 120,
             'active' => $params['active'] ?? 'true',
-            'description' => $params['description'] ?? 'This is just a sample description for the vehicle.'
+            'description' => $params['description'] ?? 'This is just a sample description for the vehicle.',
+            'location' => $params['location'] ?? '{"lat":41.894027,"lng":-87.632548}'
         ];
     }
 

@@ -22,7 +22,7 @@
                 <div class="customer-profile-banner h-36 md:h-40 border-b border-gray-200 pb-8">
                     <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
                         <div class="relative">
-                            <div class="absolute right-2 lg:right-8 top-16 md:top-20">
+                            <div class="absolute right-2 lg:right-8 top-12 md:top-20">
                                 <div v-if="!addNewCar">
                                     <a href="#" 
                                        class="bg-white px-4 py-2 text-gray-800 border-2 border-gray-800 
@@ -87,7 +87,7 @@
 
         data() {
             return {
-                addNewCar: true
+                addNewCar: false
             }
         }
     }

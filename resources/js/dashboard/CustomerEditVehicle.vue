@@ -35,7 +35,7 @@
                 <div class="customer-profile-banner h-36 md:h-40 border-b border-gray-200 pb-8">
                     <div class="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 mb-6">
                         <div class="relative">
-                            <div class="absolute right-2 lg:right-8 top-16 md:top-20">
+                            <div class="absolute right-2 lg:right-8 top-12 md:top-20">
                                 <div>
                                     <router-link class="bg-white px-4 py-2 text-gray-800 border-2 
                                                        border-gray-800 font-bold mr-2"
@@ -402,8 +402,7 @@
                 formData.append('active', this.active);
 
                 if (this.location) {
-                    // formData.append('location', JSON.stringify(this.location));
-                    formData.append('location', JSON.stringify({lat:208.4334,lng:372.321378}));
+                    formData.append('location', JSON.stringify(this.location));
                 }
 
                 try {

@@ -18,7 +18,7 @@
                             </button>
                         </div>
                         <transition name="fade">
-                            <div class="absolute bg-white rounded-md shadow-2xl w-80 md:w-96 border border-gray-300 
+                            <div class="absolute bg-white rounded-sm shadow-2xl w-80 md:w-96 border border-gray-300 
                                         top-12 left-4 px-4 py-2"
                                 v-if="filterDropdown"
                                 v-click-outside="closeFilterDropdown">
