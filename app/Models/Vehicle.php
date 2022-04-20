@@ -12,6 +12,7 @@ class Vehicle extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+    // protected $appends = ['rating'];
 
     /**
      *  Relationship to user
@@ -141,4 +142,8 @@ class Vehicle extends Model
 
         return $dates;
     }
+
+    // function getRatingAttribute() {
+    //     return
+    // }
 }

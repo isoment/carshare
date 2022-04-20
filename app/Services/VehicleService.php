@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
 use App\Http\Requests\VehicleIndexRequest;
 use App\Models\VehicleMake;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class VehicleService
@@ -35,21 +36,29 @@ class VehicleService
         // Make is specified
         $makeIsSpecified = $this->vehicleMakeIsSpecified($request['make']);
 
-        return Vehicle::where('active', 1)->whereDoesntHave('bookings', function($query) use ($from, $to) {
-            $query->betweenDates($from, $to);
-        })->when($hasMinMax, function($query) use ($request) {
-            $query->whereBetween('price_day', [$request['min'], $request['max']]);
-        })->whereHas('vehicleModel.vehicleMake', function($query) use ($request, $makeIsSpecified) {
-            $query->when($makeIsSpecified, function($query) use($request) {
-                $query->where('make', $request['make']);
-            });
-        })->with('vehicleModel.vehicleMake')
+        $orderingByPopularity = $request['orderBy'] === 'popularity';
+
+        return Vehicle::select([
+                '*',
+                DB::raw('(SELECT count(*) FROM bookings WHERE vehicle_id = vehicles.id) as bookings_count')
+            ])->where('active', 1)->whereDoesntHave('bookings', function($query) use ($from, $to) {
+                $query->betweenDates($from, $to);
+            })->when($hasMinMax, function($query) use ($request) {
+                $query->whereBetween('price_day', [$request['min'], $request['max']]);
+            })->whereHas('vehicleModel.vehicleMake', function($query) use ($request, $makeIsSpecified) {
+                $query->when($makeIsSpecified, function($query) use($request) {
+                    $query->where('make', $request['make']);
+                });
+            })->with('vehicleModel.vehicleMake')
             ->with('vehicleImages')
-            ->withCount('bookings')
-            ->orderBy(
-                $this->sortColumn($request['orderBy']), 
-                $this->sortDirection($request['orderBy'])
-            )->paginate(12);
+            ->when($orderingByPopularity, function($query) {
+                $query->orderByRaw('(SELECT count(*) FROM bookings WHERE vehicle_id = vehicles.id) DESC');
+            })->when(!$orderingByPopularity, function($query) use ($request) {
+                $query->orderBy(
+                    $this->sortColumn($request['orderBy']), 
+                    $this->sortDirection($request['orderBy'])
+                );
+            })->paginate(12);
     }
 
     /**
@@ -101,13 +110,13 @@ class VehicleService
      */
     private function sortColumn(string $orderBy) : string
     {
-        // if ($orderBy === 'popularity') {
-        //     return 'bookings_count';
-        // }
+        if ($orderBy === 'popularity') {
+            return 'bookings_count';
+        }
 
-        // if (str_contains($orderBy, 'price')) {
-        //     return 'price_day';
-        // }
+        if (str_contains($orderBy, 'price')) {
+            return 'price_day';
+        }
 
         return 'price_day';
     }
