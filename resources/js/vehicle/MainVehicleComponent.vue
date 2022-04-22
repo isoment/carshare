@@ -450,11 +450,11 @@
             },
 
             updateMake() {
-                const newMake = this.selectMake.toLowerCase()
-
-                this.refreshPage();
+                const newMake = this.selectMake.toLowerCase();
 
                 this.vehicleMake = newMake;
+
+                this.refreshPage();
 
                 this.vehicles = [];
                 this.page = 1;
@@ -552,6 +552,7 @@
                 return {
                     fullscreenControl: false,
                     streetViewControl: false,
+                    mapTypeControl: false,
                     zoomControl: true,
                     zoomControlOptions: {
                         position: this.google && this.google.maps.ControlPosition.RIGHT_TOP,
@@ -636,6 +637,14 @@
     .main-vehicle-make-dropdown .vs__search  {
         padding: 0;
         margin: 0;
+    }
+
+    .main-vehicle-make-dropdown .vs__clear {
+        display: none;
+    }
+
+    .main-vehicle-make-dropdown .vs__selected {
+        font-weight: bold;
     }
 
     .main-vehicle-date-input {

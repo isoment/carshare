@@ -45,14 +45,15 @@ class VehicleService
                 $query->betweenDates($from, $to);
             })->when($hasMinMax, function($query) use ($request) {
                 $query->whereBetween('price_day', [$request['min'], $request['max']]);
-            })->whereHas('vehicleModel.vehicleMake', function($query) use ($request, $makeIsSpecified) {
-                $query->when($makeIsSpecified, function($query) use($request) {
+            })->when($makeIsSpecified, function($query) use($request) {
+                $query->whereHas('vehicleModel.vehicleMake', function($query) use ($request) {
                     $query->where('make', $request['make']);
                 });
-            })->with('vehicleModel.vehicleMake')
+            })
+            ->with('vehicleModel.vehicleMake')
             ->with('vehicleImages')
             ->when($orderingByPopularity, function($query) {
-                $query->orderByRaw('(SELECT count(*) FROM bookings WHERE vehicle_id = vehicles.id) DESC');
+                $query->orderByRaw('(SELECT count(*) FROM bookings WHERE vehicle_id = vehicles.id) DESC, 1 ASC');
             })->when(!$orderingByPopularity, function($query) use ($request) {
                 $query->orderBy(
                     $this->sortColumn($request['orderBy']), 
