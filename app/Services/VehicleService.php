@@ -30,10 +30,8 @@ class VehicleService
         $from = Carbon::parse($request['from'])->toDateString();
         $to = Carbon::parse($request['to'])->toDateString();
 
-        // Only want to search by price if its selected
         $hasMinMax = isset($request['min']) && isset($request['max']);
 
-        // Make is specified
         $makeIsSpecified = $this->vehicleMakeIsSpecified($request['make']);
 
         $orderingByPopularity = $request['orderBy'] === 'popularity';

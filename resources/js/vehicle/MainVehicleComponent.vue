@@ -17,12 +17,14 @@
                                 </div>
                             </button>
                         </div>
-                        <transition name="fade">
+                        <div>
+                            <div v-if="filterDropdown"
+                                 class="main-vehicle-filter-menu-bkgr">
+                            </div>
                             <div class="absolute bg-white rounded-sm shadow-2xl w-80 md:w-96 border border-gray-300 
-                                        top-12 left-4 px-4 py-2"
+                                        top-12 left-4 px-4 py-2 main-vehicle-filter-dropdown"
                                 v-if="filterDropdown"
                                 v-click-outside="closeFilterDropdown">
-
 
                                 <div class="w-full mt-5 mb-10">
                                     <h2 class="text-lg font-bold text-gray-800 mb-3">Vehicle make</h2>
@@ -32,7 +34,6 @@
                                             @input="updateMake()">
                                     </v-select>
                                 </div>
-
 
                                 <div class="w-full mt-5 mb-10">
                                     <h2 class="text-lg font-bold text-gray-800 mb-3">Set Dates</h2>
@@ -73,22 +74,6 @@
                                 </div>
 
                                 <div class="w-full mt-5 mb-10">
-                                    <h2 class="text-lg font-bold text-gray-800 mb-3">Filter by price</h2>
-                                    <h4 class="font-bold text-sm mb-2 text-gray-500">
-                                        ${{ priceRange[0] }} - ${{ priceRange[1] }} / Day
-                                    </h4>
-                                    <vue-slider v-model="priceRange"
-                                                :max="maxPrice"
-                                                :min="minPrice"
-                                                :interval="10"
-                                                :enable-cross="false"
-                                                :tooltip="'none'"
-                                                @drag-end="() => updatePriceRange()"
-                                                class="mx-2">
-                                    </vue-slider>
-                                </div>
-
-                                <div class="w-full mt-5 mb-5">
                                     <h2 class="text-lg font-bold text-gray-800 mb-3">Order By</h2>
                                     <div class="flex">
                                         <button class="text-xs font-bold rounded-sm text-white px-2 
@@ -111,8 +96,31 @@
                                         </button>
                                     </div>
                                 </div>
+
+                                <div class="w-full mt-5 mb-10">
+                                    <h2 class="text-lg font-bold text-gray-800 mb-3">Filter by price</h2>
+                                    <h4 class="font-bold text-sm mb-2 text-gray-500">
+                                        ${{ priceRange[0] }} - ${{ priceRange[1] }} / Day
+                                    </h4>
+                                    <vue-slider v-model="priceRange"
+                                                :max="maxPrice"
+                                                :min="minPrice"
+                                                :interval="10"
+                                                :enable-cross="false"
+                                                :tooltip="'none'"
+                                                @drag-end="() => updatePriceRange()"
+                                                class="mx-2">
+                                    </vue-slider>
+                                </div>
+
+                                <div class="mt-10 mb-5">
+                                    <button class="px-3 py-2 text-white bg-purple-500 font-bold focus:outline-none"
+                                            @click="filterDropdown = false">
+                                        View results
+                                    </button>
+                                </div>
                             </div>
-                        </transition>
+                        </div>
                     </div>
                     <div class="ml-4">
                         <router-link class="px-3 py-2 rounded-md text-sm font-bold text-gray-700"
@@ -680,6 +688,22 @@
         z-index: 50;
         right: 0;
         top: 3.4rem;
+    }
+
+    .main-vehicle-filter-menu-bkgr {
+        position: fixed;
+        background: white;
+        opacity: 0.68;
+        height: 95.5%;
+        width: 100%;
+        z-index: 119;
+        right: 0;
+        top: 3.4rem;
+    }
+
+    .main-vehicle-filter-dropdown {
+        z-index: 120;
+        background-color: white;
     }
 
     @media screen and (max-width: 1024px) {
