@@ -322,6 +322,16 @@
                 if (newWindowWidth > 1024) {
                     this.mobileMapOpen = false;
                 }
+            },
+
+            // Disable scroll when the filterDropdown is open
+            filterDropdown: function() {
+                if (this.filterDropdown) {
+                    document.documentElement.style.overflow = 'hidden';
+                    return;
+                }
+
+                document.documentElement.style.overflow = 'auto';
             }
         },
 
