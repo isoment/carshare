@@ -26,8 +26,8 @@ class TopHostsListTest extends TestCase
             ->assertJsonStructure([
                 'data' => [
                     '*' => [
-                        'id', 'host_name', 'host_avatar', 'created_at', 'rating', 'content', 
-                        'host_review_count', 'renter_name'
+                        'id', 'host_name', 'host_avatar', 'member_since', 'rating', 'content', 
+                        'host_review_count', 'review_date', 'renter_name'
                     ]
                 ]
             ]);

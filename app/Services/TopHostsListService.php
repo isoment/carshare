@@ -5,8 +5,11 @@ namespace App\Services;
 use App\Http\Traits\CacheModeTrait;
 use App\Models\User;
 use App\Models\HostReview;
+use App\Models\RenterReview;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Database\Eloquent\Collection;
 
 class TopHostsListService
 {
@@ -50,28 +53,18 @@ class TopHostsListService
 
     private function topHostsListQuery() : array
     {
-        $randomTopHosts = User::inRandomOrder()
+        return User::query()
+            ->addSelect([
+                '*',
+                DB::raw('(SELECT COUNT(*) FROM host_reviews WHERE user_id = users.id) as host_review_count')
+            ])
+            ->whereHas('hostReviews', fn($query) => $query->whereNotNull('rating'))
+            ->withLatestHostReview()
+            ->inRandomOrder()
             ->with('profile')
             ->where('top_host', 1)
-            ->whereHas('hostReviews', fn($query) => $query->whereNotNull('rating'))
             ->limit(8)
-            ->get();
-
-        $resultsArray = [];
-
-        foreach ($randomTopHosts as $user) {
-            $hostReview = HostReview::where('user_id', $user->id)->where('rating', '>=', 3)->first();
-
-            $resultsArray[] = [
-                'host_id' => $user->id,
-                'host_name' => $user->name,
-                'host_avatar' => $user->profile->image,
-                'host_review_count' => HostReview::where('user_id', $user->id)->count(),
-                'host_review' => $hostReview,
-                'renter_name' => $hostReview->booking->order->user->name
-            ];
-        }
-
-        return $resultsArray;
+            ->get()
+            ->toArray();
     }
 }

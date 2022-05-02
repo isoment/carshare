@@ -4,6 +4,10 @@ export function dateFormatMonthYear(date) {
     return moment(date).format('MMMM YYYY');
 }
 
+export function dateFormatMonthYearShort(date) {
+    return moment(date).format('MMM YYYY');
+}
+
 export function dateFormatMonthDayYear(date) {
     return moment(date).format('MMMM Do YYYY');
 }

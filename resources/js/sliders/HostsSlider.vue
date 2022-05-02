@@ -22,7 +22,7 @@
             <div v-for="host in topHosts" :key="host.id">
                 <div class="rounded-lg shadow-md mx-2 my-5 hover:shadow-lg transition-all transform border 
                             border-gray-100 duration-300 p-3 top-host-card-height">
-                    <div class="flex">
+                    <!-- <div class="flex">
                         <div>
                             <img :src="host.host_avatar" alt="profile" 
                                 class="rounded-full h-20 w-20">
@@ -35,7 +35,7 @@
                                 <div class="text-xs">
                                     <span>{{ host.host_review_count }} trips</span>
                                     <span>•</span>
-                                    <span>{{ dateFormat(host.created_at) }}</span>
+                                    <span>Joined {{ dateFormat(host.member_since) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -44,8 +44,39 @@
                         <star-rating :rating="host.rating" :size="'text-sm'"></star-rating>
                     </div>
                     <div class="mt-2">{{ truncateString(host.content, 85) }}</div>
-                    <div class="italic font-bold text-sm mt-3">
+                    <div class="text-xs font-semibold mt-3">
                         {{ host.renter_name }}
+                        <span>- {{ dateFormat(host.review_date) }}</span>
+                    </div> -->
+                    <div class="flex flex-col justify-between h-full">
+                        <div>
+                            <div class="flex">
+                                <div>
+                                    <img :src="host.host_avatar" alt="profile" 
+                                        class="rounded-full h-20 w-20">
+                                </div>
+                                <div class="flex flex-col ml-4">
+                                    <div class="font-bold -mb-1">{{ host.host_name }}</div>
+                                    <div>
+                                        <i class="fas fa-award text-xs text-purple-500"></i>
+                                        <span class="text-xs">Top Host</span>
+                                        <div class="text-xs">
+                                            <span>{{ host.host_review_count }} trips</span>
+                                            <span>•</span>
+                                            <span>Joined {{ dateFormat(host.member_since) }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <star-rating :rating="host.rating" :size="'text-sm'"></star-rating>
+                            </div>
+                            <div class="mt-2">{{ truncateString(host.content, 85) }}</div>
+                        </div>
+                        <div class="text-xs font-semibold mt-3 mb-3">
+                            {{ host.renter_name }}
+                            <span>- {{ dateFormat(host.review_date) }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -58,7 +89,7 @@
     import VueSlickCarousel from 'vue-slick-carousel';
     import 'vue-slick-carousel/dist/vue-slick-carousel.css';
     import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css';
-    import { dateFormatMonthDayYear } from './../shared/utils/dateFormats';
+    import { dateFormatMonthYearShort } from './../shared/utils/dateFormats';
 
     export default {
         components: {
@@ -126,7 +157,7 @@
 
         methods: {
             dateFormat(date) {
-                return dateFormatMonthDayYear(date);
+                return dateFormatMonthYearShort(date);
             },
 
             truncateString(string, length) {

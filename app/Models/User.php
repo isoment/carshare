@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -258,5 +259,27 @@ class User extends Authenticatable
             })->whereIn('vehicle_id', $usersVehicles)
                 ->where('to', '<=', Carbon::now())
                 ->paginate(4);
+    }
+
+    /**
+     *  Create a new relationship to get a single recent host review
+     */
+    public function latestHostReview()
+    {
+        return $this->belongsTo(HostReview::class);
+    }
+
+    /**
+     *  Dynamically load the latest host review based on the above relationship
+     *  as well as the user who left it.
+     */
+    public function scopeWithLatestHostReview(Builder $query) : void
+    {
+        $query->addSelect(['latest_host_review_id' => HostReview::select('id')
+            ->whereColumn('user_id', 'users.id')
+            ->where('rating', '>=', 3)
+            ->latest()
+            ->take(1)
+        ])->with('latestHostReview.booking.order.user');
     }
 }
