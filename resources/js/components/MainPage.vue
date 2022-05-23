@@ -126,9 +126,9 @@
         <section class="my-12 md:my-24">
             <div class="text-center mt-12 md:mt-28 mb-8 flex flex-col justify-center items-center overflow-hidden">
                 <div class="mx-2 sm:mx-6 md:mx-10">
-                    <div class="relative">
+                    <div class="text-center relative">
                         <div>
-                            <h2 class="font-boldnosans text-3xl sm:text-5xl font-bold max-w-2xl z-40">Find your adventure</h2>
+                            <h2 class="font-boldnosans text-3xl sm:text-5xl font-bold max-w-2xl z-40">Your adventure</h2>
                         </div>
                         <div class="absolute bg-purple-100 travelogue-purple-bar"></div>
                     </div>
