@@ -40,7 +40,6 @@ Vue.use(vClickOutside);
 // Use VueGoogleMaps plugin
 Vue.use(VueGoogleMaps, {
     load: {
-        // key: 'AIzaSyD7CQv__OEWhHFVrRAFE60FIohLDPBvtNw'
         key: process.env.MIX_GOOGLE_API_KEY
     }
 });
