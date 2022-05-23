@@ -115,7 +115,7 @@
 
                                 <div class="mt-10 mb-5">
                                     <button class="px-3 py-2 text-white bg-purple-500 font-bold focus:outline-none"
-                                            @click="filterDropdown = false">
+                                            @click="closeFilterDropdown()">
                                         View results
                                     </button>
                                 </div>
@@ -225,7 +225,7 @@
                 </div>
             </div>
 
-            <div class="mobile-toggle block lg:hidden">
+            <div class="mobile-toggle block lg:hidden" v-if="displayMapListToggle">
                 <div class="bg-purple-700 rounded-full text-white shadow-md">
                     <button class="uppercase font-semibold focus:outline-none px-6 py-3"
                             @click="toggleMobileMap()">
@@ -360,6 +360,7 @@
                 infoWindowOpened: false,
                 clickedMarkers: [],
                 mobileMapOpen: false,
+                displayMapListToggle: true,
                 windowWidth: window.innerWidth
             }
         },
@@ -555,10 +556,16 @@
 
             toggleFilterDropdown() {
                 this.filterDropdown = !this.filterDropdown;
+
+                if (this.filterDropdown) {
+                    this.displayMapListToggle = false;
+                }
             },
 
             closeFilterDropdown() {
                 this.filterDropdown = false;
+
+                this.displayMapListToggle = true;
             },
 
             setSelectedMake() {
