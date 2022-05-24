@@ -130,8 +130,17 @@
                     </div>
                 </div>
                 <div class="flex items-center">
-                    <shopping-cart-link :hoverColor="'purple-400'"></shopping-cart-link>
-                    <profile-dropdown :focusRingColor="'white'"></profile-dropdown>
+                    <div v-if="isLoggedIn">
+                        <shopping-cart-link :hoverColor="'purple-400'"></shopping-cart-link>
+                        <profile-dropdown :focusRingColor="'white'"></profile-dropdown>
+                    </div>
+                    <div class="text-purple-500 border border-purple-500 rounded-sm font-bold text-sm 
+                                px-3 py-1 hover:text-purple-600 hover:border-purple-600 hover:shadow-md
+                                transition-all duration-200" v-else>
+                        <router-link :to="{ name: 'login' }">
+                            Login
+                        </router-link>
+                    </div>
                 </div>
             </div>
 
@@ -284,7 +293,8 @@
 
         computed: {
             ...mapState({
-                bookedDates: state => state.bookedDates
+                bookedDates: state => state.bookedDates,
+                isLoggedIn: "isLoggedIn"
             }),
 
             google: gmapApi,
