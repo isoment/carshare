@@ -15,7 +15,7 @@
 
             <div v-else>
                 <!-- Vehicle Images -->
-                <vehicle-images-slider :vehicle-images="vehicleData.vehicle_images"></vehicle-images-slider>
+                <vehicle-images-carousel :vehicleImages="vehicleData.vehicle_images"></vehicle-images-carousel>
 
                 <div class="my-10 max-w-5xl mx-auto px-2 sm:px-6 lg:px-8">
                     <div class="grid grid-cols-1 md:grid-cols-3">
@@ -177,7 +177,7 @@
 
 <script>
     import avatarHelper from './../shared/mixins/avatarHelper';
-    import VehicleImagesSlider from './../sliders/VehicleImagesSlider';
+    import VehicleImagesCarousel from '../sliders/VehicleImagesCarousel.vue';
     import VehicleReviewList from './../review/VehicleReviewList';
     import Availability from './Availability';
     import Pricing from './Pricing';
@@ -188,12 +188,12 @@
 
     export default {   
         components: {
-            VehicleImagesSlider,
-            VehicleReviewList,
-            Availability,
-            Pricing,
-            VehicleLocation
-        },
+        VehicleReviewList,
+        Availability,
+        Pricing,
+        VehicleLocation,
+        VehicleImagesCarousel
+    },
 
         mixins: [avatarHelper],
 
