@@ -336,7 +336,6 @@
     .vehicle-location-map {
         width: 100%;
         height: 400px;
-        padding: 0 10px 0 10px;
     }
 
     @media screen and (min-width: 800px) {
@@ -344,13 +343,6 @@
             width: 100%;
             height: 700px;
             padding: 0 0 0 0;
-        }
-    }
-
-    @media screen and (min-width: 2000px) {
-        .vehicle-location-map {
-            padding: 0 5rem 0 5rem;
-            background-color: #e9e9e9;
         }
     }
 </style>

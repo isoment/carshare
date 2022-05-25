@@ -51,7 +51,7 @@ class VehicleService
             ->with('vehicleModel.vehicleMake')
             ->with('vehicleImages')
             ->when($orderingByPopularity, function($query) {
-                $query->orderByRaw('(SELECT count(*) FROM bookings WHERE vehicle_id = vehicles.id) DESC, 1 ASC');
+                $query->orderByRaw('bookings_count DESC, 1 ASC');
             })->when(!$orderingByPopularity, function($query) use ($request) {
                 $query->orderBy(
                     $this->sortColumn($request['orderBy']), 

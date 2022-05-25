@@ -55,7 +55,8 @@
                                                     <input type="text" name="from" 
                                                         class="ml-4 main-vehicle-date-input focus:outline-none"
                                                         :value="inputValue.start"
-                                                        v-on="inputEvents.start">
+                                                        v-on="inputEvents.start"
+                                                        readonly>
                                                 </div>
                                                 <div class="flex items-center border-b border-gray-300 ml-3 w-1/2">
                                                     <div>
@@ -66,7 +67,8 @@
                                                     <input type="text" name="until" 
                                                         class="ml-4 main-vehicle-date-input focus:outline-none"
                                                         :value="inputValue.end"
-                                                        v-on="inputEvents.end">
+                                                        v-on="inputEvents.end"
+                                                        readonly>
                                                 </div>
                                             </div>
                                         </template>
@@ -164,8 +166,8 @@
                                         <h3 class="font-bold font-boldnosans text-xl">
                                             {{ vehicle.vehicle_make }} {{ vehicle.model }} {{ vehicle.year }}
                                         </h3>
-                                        <h6 class="font-light text-sm">
-                                            Vehicle ID {{ vehicle.id }}, Trips: {{ vehicle.bookings_count }}
+                                        <h6 class="text-xs font-semibold text-gray-600">
+                                            ({{ vehicle.bookings_count }} Trips)
                                         </h6>
                                     </div>
                                     <div class="text-right font-bold text-sm text-purple-500 mt-6">
