@@ -12,7 +12,25 @@
 
         <simple-modal v-model="showDemoInfoModal" @close="closeDemoInfoModal">
             <div class="text-gray-800 text-sm">
-                <h4>Hello There</h4>
+                <div class="relative mb-6 z-30">
+                    <h4 class="font-bold text-2xl z-40">Demo Mode</h4>
+                    <div class="absolute bg-purple-200 demo-header-bar"></div>
+                </div>
+                <p>Welcome to Carshare! The application is currently in demo mode which means that the database
+                    has been seeded with data for demonstration purposes. You will notice some Lorem Ipsum text
+                    and images that don't match the vehicle type. Thats normal. There are also some
+                    dummy links to enhance the UI of the site and fill it out a bit.
+                </p>
+                <p class="my-4">
+                    For the stripe checkout process you can use the testing card number below. It works
+                    with any CCV and expiration date in the future...
+                </p>
+                <p class="font-bold text-lg">4242 4242 4242 4242</p>
+                <p class="my-4">Click the info icon in the top right navigation bar to bring up this dialogue at any time.</p>
+                <div class="text-center">
+                    <button class="bg-purple-400 text-white font-bold px-3 py-1 focus:outline-none"
+                            @click="closeDemoInfoModal()">Got It!</button>
+                </div>
             </div>
         </simple-modal>
     </div>
@@ -51,6 +69,14 @@
             closeDemoInfoModal() {
                 this.showDemoInfoModal = false;
             }
+        },
+
+        created() {
+            if (!localStorage.appPreviouslyLoaded) {
+                this.showDemoInfoModal = true;
+
+                localStorage.setItem('appPreviouslyLoaded', 1);
+            }
         }
     }
 </script>
@@ -58,5 +84,13 @@
 <style>
     .demo-info-button {
         margin-top: 5px;
+    }
+
+    .demo-header-bar {
+        height: 1rem;
+        width: 6.7rem;
+        z-index: -1;
+        top: 13px;
+        left: 8px;
     }
 </style>

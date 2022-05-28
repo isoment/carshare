@@ -4,6 +4,7 @@
                      classes="flex justify-center items-center"
                      content-class="relative flex flex-col simple-modal-dimensions mx-4 p-4 border dark:border-gray-800 
                                     rounded bg-white dark:bg-gray-900"
+                     :lock-scroll="false"
                      v-on="$listeners">
         <div class="text-right">
             <button class="text-purple-900 focus:outline-none" 
