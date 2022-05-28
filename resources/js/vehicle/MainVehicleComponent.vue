@@ -43,6 +43,7 @@
                                                 :min-date="minDate"
                                                 :max-date="maxDate"
                                                 :disabled-dates="bookedDates"
+                                                :popover="{ visibility: 'focus' }"
                                                 @input="updateDates()">
                                         <template v-slot="{ inputValue, inputEvents }">
                                             <div class="flex items-center w-full">

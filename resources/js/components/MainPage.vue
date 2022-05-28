@@ -28,7 +28,8 @@
                                          is-range
                                          :min-date="minDate"
                                          :max-date="maxDate"
-                                         :disabled-dates="bookedDates">
+                                         :disabled-dates="bookedDates"
+                                         :popover="{ visibility: 'focus' }">
                                 <template v-slot="{ inputValue, inputEvents }">
                                     <div class="flex flex-col md:flex-row justify-around">
                                         <div class="flex flex-col md:border-r border-gray-300 md:px-3 border-b 
