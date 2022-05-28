@@ -11,7 +11,9 @@
         </button>
 
         <simple-modal v-model="showDemoInfoModal" @close="closeDemoInfoModal">
-            <div>Hello :)</div>
+            <div class="text-gray-800 text-sm">
+                <h4>Hello There</h4>
+            </div>
         </simple-modal>
     </div>
 </template>

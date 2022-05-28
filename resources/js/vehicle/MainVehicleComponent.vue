@@ -132,13 +132,13 @@
                     </div>
                 </div>
                 <div class="flex items-center">
-                    <div v-if="isLoggedIn">
-                        <shopping-cart-link :hoverColor="'purple-400'"></shopping-cart-link>
-                        <profile-dropdown :focusRingColor="'white'"></profile-dropdown>
-                    </div>
+                    <demo-info :hoverColor="'purple-400'"></demo-info>
+                    <shopping-cart-link :hoverColor="'purple-400'" v-if="isLoggedIn"></shopping-cart-link>
+                    <profile-dropdown :focusRingColor="'white'" v-if="isLoggedIn"></profile-dropdown>
                     <div class="text-purple-500 border border-purple-500 rounded-sm font-bold text-sm 
                                 px-3 py-1 hover:text-purple-600 hover:border-purple-600 hover:shadow-md
-                                transition-all duration-200" v-else>
+                                transition-all duration-200"
+                         v-if="!isLoggedIn">
                         <router-link :to="{ name: 'login' }">
                             Login
                         </router-link>
@@ -275,6 +275,7 @@
     import {gmapApi} from 'vue2-google-maps';
     import ProfileDropdown from '../shared/components/ProfileDropdown.vue';
     import ShoppingCartLink from '../shared/components/ShoppingCartLink.vue';
+    import DemoInfo from '../shared/components/DemoInfo.vue';
 
     import vehicleSearchDatesComputed from  './../shared/mixins/vehicleSearchDatesComputed';
     import calendarMinMaxDate from './../shared/mixins/calendarMinMaxDate';
@@ -285,6 +286,7 @@
         components: {
             ProfileDropdown,
             ShoppingCartLink,
+            DemoInfo,
             Calendar,
             DatePicker,
             VueSlider,
