@@ -105,7 +105,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get(
         'users-booking-dates',
         [App\Http\Controllers\Api\AvailabilityController::class, 'userBookedDates']
-    )->name('');
+    )->name('users.booking.dates');
 
     /**************************
      *  Dashboard API Routes  *

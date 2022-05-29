@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -170,6 +171,26 @@ class User extends Authenticatable
                 'start' => Carbon::parse($booking->from)->format('m/d/Y'),
                 'end' => Carbon::parse($booking->to)->format('m/d/Y')
             ]);
+        }
+
+        return $dates;
+    }
+
+    /**
+     *  An array of each individual date the user has a booking
+     */
+    public function individualBookingDates() : array
+    {
+        $dates = [];
+
+        $bookings = $this->getBookings()->where('to', '>=', Carbon::now());
+
+        foreach ($bookings as $booking) {
+            $period = CarbonPeriod::create($booking->from, $booking->to);
+
+            foreach ($period as $date) {
+                array_push($dates, $date);
+            }
         }
 
         return $dates;
