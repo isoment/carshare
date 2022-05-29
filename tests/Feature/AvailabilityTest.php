@@ -378,11 +378,7 @@ class AvailabilityTest extends TestCase
 
         $this->json('GET', '/api/users-booking-dates')
             ->assertJsonStructure([
-                'unavailableDates' => [
-                    '*' => [
-                        'start', 'end'
-                    ]
-                ]
+                'unavailableDates' => []
             ]);
     }
 
@@ -399,9 +395,9 @@ class AvailabilityTest extends TestCase
         $this->actingAs($user);
 
         $booking = $user->getBookings()->first();
-
-        $from = Carbon::now()->addWeeks(20);
-        $to = Carbon::now()->addWeeks(21);
+        
+        $from = Carbon::now()->addDays(120);
+        $to = Carbon::now()->addDays(122);
 
         Booking::where('id', $booking->id)->update([
             'from' => $from,
@@ -411,8 +407,9 @@ class AvailabilityTest extends TestCase
         $response = $this->json('GET', '/api/users-booking-dates');
 
         $response->assertJsonFragment([
-            'start' => $from->format('m/d/Y'),
-            'end' => $to->format('m/d/Y')
+            $from->format('m/d/Y')
+        ])->assertJsonFragment([
+            $to->format('m/d/Y')
         ]);
     }
 }

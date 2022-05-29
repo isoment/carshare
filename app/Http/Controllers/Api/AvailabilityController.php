@@ -51,7 +51,6 @@ class AvailabilityController extends Controller
     public function userBookedDates()
     {
         return response()->json([
-            // 'unavailableDates' => current_user()->bookingDates()
             'unavailableDates' => current_user()->individualBookingDates()
         ]);
     }

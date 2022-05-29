@@ -29,7 +29,7 @@
                                          :min-date="minDate"
                                          :max-date="maxDate"
                                          :popover="{ visibility: 'focus' }"
-                                         :attributes="attributes">
+                                         :attributes="bookedDatesAttributes">
                                 <template v-slot="{ inputValue, inputEvents }">
                                     <div class="flex flex-col md:flex-row justify-around">
                                         <div class="flex flex-col md:border-r border-gray-300 md:px-3 border-b 
@@ -180,13 +180,14 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex';
     import VehicleMakeSlider from './../sliders/VehicleMakeSlider';
     import HostsSlider from './../sliders/HostsSlider';
     import Calendar from 'v-calendar/lib/components/calendar.umd';
     import DatePicker from 'v-calendar/lib/components/date-picker.umd';
     import vehicleSearchDatesComputed from './../shared/mixins/vehicleSearchDatesComputed';
-    import { mapState } from 'vuex';
     import calendarMinMaxDate from './../shared/mixins/calendarMinMaxDate';
+    import vehicleBookedDates from '../shared/mixins/vehicleBookedDates';
     import vSelect from "vue-select";
     import 'vue-select/dist/vue-select.css';
 
@@ -206,25 +207,25 @@
             }
         },
 
-        mixins: [vehicleSearchDatesComputed, calendarMinMaxDate],
+        mixins: [vehicleSearchDatesComputed, calendarMinMaxDate, vehicleBookedDates],
 
-        computed: {
-            attributes() {
-                let bookedDates = this.$store.state.bookedDates;
+        // computed: {
+        //     bookedDatesAttributes() {
+        //         let bookedDates = this.$store.state.bookedDates;
 
-                let labelAttributes = [
-                    {
-                        dates: bookedDates,
-                        dot: {color: 'red'},
-                        popover: {
-                            label: 'Date already booked',
-                        },
-                    }
-                ]
+        //         let labelAttributes = [
+        //             {
+        //                 dates: bookedDates,
+        //                 dot: {color: 'red'},
+        //                 popover: {
+        //                     label: 'Date already booked',
+        //                 },
+        //             }
+        //         ]
 
-                return bookedDates ? labelAttributes : [];
-            }
-        },
+        //         return bookedDates ? labelAttributes : [];
+        //     }
+        // },
 
         methods: {
             // Redirect to main vehicle page with dates and selected make as query string 

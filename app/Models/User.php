@@ -191,7 +191,7 @@ class User extends Authenticatable
             $period = CarbonPeriod::create($booking->from, $booking->to);
 
             foreach ($period as $date) {
-                array_push($dates, $date);
+                array_push($dates, $date->format('m/d/Y'));
             }
         }
 

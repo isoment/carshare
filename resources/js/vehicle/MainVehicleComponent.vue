@@ -42,9 +42,9 @@
                                                 is-range
                                                 :min-date="minDate"
                                                 :max-date="maxDate"
-                                                :disabled-dates="bookedDates"
                                                 :popover="{ visibility: 'focus' }"
-                                                @input="updateDates()">
+                                                @input="updateDates()"
+                                                :attributes="bookedDatesAttributes">
                                         <template v-slot="{ inputValue, inputEvents }">
                                             <div class="flex items-center w-full">
                                                 <div class="flex items-center border-b border-gray-300 w-1/2">
@@ -280,6 +280,7 @@
 
     import vehicleSearchDatesComputed from  './../shared/mixins/vehicleSearchDatesComputed';
     import calendarMinMaxDate from './../shared/mixins/calendarMinMaxDate';
+    import vehicleBookedDates from '../shared/mixins/vehicleBookedDates';
     import { wholeDollars } from './../shared/utils/currency';
 
 
@@ -294,13 +295,28 @@
             vSelect
         },
 
-        mixins: [vehicleSearchDatesComputed, calendarMinMaxDate],
+        mixins: [vehicleSearchDatesComputed, calendarMinMaxDate, vehicleBookedDates],
 
         computed: {
             ...mapState({
-                bookedDates: state => state.bookedDates,
                 isLoggedIn: "isLoggedIn"
             }),
+
+            // bookedDatesAttributes() {
+            //     let bookedDates = this.$store.state.bookedDates;
+
+            //     let labelAttributes = [
+            //         {
+            //             dates: bookedDates,
+            //             dot: {color: 'red'},
+            //             popover: {
+            //                 label: 'Date already booked',
+            //             },
+            //         }
+            //     ]
+
+            //     return bookedDates ? labelAttributes : [];
+            // },
 
             google: gmapApi,
 

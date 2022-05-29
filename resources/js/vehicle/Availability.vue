@@ -7,7 +7,7 @@
                         is-range
                         :min-date="minDate"
                         :max-date="maxDate"
-                        :disabled-dates='unavailableDates'>
+                        :attributes="bookedDatesAttributes">
                 <template v-slot="{ inputValue, inputEvents }">
                     <div class="flex flex-col">
                         <label for="start" class="font-bold text-xs tracking-wider">Trip start</label>
@@ -57,6 +57,7 @@
     import vehicleSearchDatesComputed from './../shared/mixins/vehicleSearchDatesComputed';
     import { prepareUnavailableDatesForCalendar } from './../shared/utils/bookedDatesHelpers';
     import calendarMinMaxDate from './../shared/mixins/calendarMinMaxDate';
+    import vehicleBookedDates from '../shared/mixins/vehicleBookedDates';
 
     export default {
         components: {
@@ -64,7 +65,7 @@
             DatePicker
         },
 
-        mixins: [vehicleSearchDatesComputed, calendarMinMaxDate],
+        mixins: [vehicleSearchDatesComputed, calendarMinMaxDate, vehicleBookedDates],
 
         watch: {
             // Set a watcher to trigger the changedDate method when 
@@ -98,6 +99,22 @@
             available() {
                 return this.status === 200;
             },
+
+            // bookedDatesAttributes() {
+            //     let bookedDates = this.$store.state.bookedDates;
+
+            //     let labelAttributes = [
+            //         {
+            //             dates: bookedDates,
+            //             dot: {color: 'red'},
+            //             popover: {
+            //                 label: 'Date already booked',
+            //             },
+            //         }
+            //     ]
+
+            //     return bookedDates ? labelAttributes : [];
+            // }
         },
 
         methods: {
