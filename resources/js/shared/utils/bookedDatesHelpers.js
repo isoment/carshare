@@ -2,8 +2,7 @@
 // so it is displayable in v-calendar.
 export function prepareUnavailableDatesForCalendar(datesArray) {
     datesArray.forEach(element => {
-        element.start = new Date(element.start);
-        element.end = new Date(element.end);
+        element = new Date(element);
     });
 
     return datesArray;

@@ -28,8 +28,8 @@
                                          is-range
                                          :min-date="minDate"
                                          :max-date="maxDate"
-                                         :disabled-dates="bookedDates"
-                                         :popover="{ visibility: 'focus' }">
+                                         :popover="{ visibility: 'focus' }"
+                                         :attributes="attributes">
                                 <template v-slot="{ inputValue, inputEvents }">
                                     <div class="flex flex-col md:flex-row justify-around">
                                         <div class="flex flex-col md:border-r border-gray-300 md:px-3 border-b 
@@ -209,9 +209,21 @@
         mixins: [vehicleSearchDatesComputed, calendarMinMaxDate],
 
         computed: {
-            ...mapState({
-                bookedDates: state => state.bookedDates
-            }),
+            attributes() {
+                let bookedDates = this.$store.state.bookedDates;
+
+                let labelAttributes = [
+                    {
+                        dates: bookedDates,
+                        dot: {color: 'red'},
+                        popover: {
+                            label: 'Date already booked',
+                        },
+                    }
+                ]
+
+                return bookedDates ? labelAttributes : [];
+            }
         },
 
         methods: {

@@ -178,6 +178,8 @@ class User extends Authenticatable
 
     /**
      *  An array of each individual date the user has a booking
+     * 
+     *  @return array
      */
     public function individualBookingDates() : array
     {
