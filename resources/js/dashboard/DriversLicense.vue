@@ -56,6 +56,7 @@
                                     class="text-gray-400 text-xs font-bold uppercase 
                                             tracking-wider mb-2">Date Issued</label>
                                 <date-picker v-model="driversLicense.dateIssued"
+                                             :popover="{ visibility: 'focus' }"
                                              color="purple">
                                     <template v-slot="{ inputValue, inputEvents }">
                                         <input
@@ -74,6 +75,7 @@
                                     class="text-gray-400 text-xs font-bold uppercase 
                                             tracking-wider mb-2">Expiration Date</label>
                                 <date-picker v-model="driversLicense.expirationDate"
+                                             :popover="{ visibility: 'focus' }"
                                              color="purple">
                                     <template v-slot="{ inputValue, inputEvents }">
                                         <input
@@ -92,6 +94,7 @@
                                     class="text-gray-400 text-xs font-bold uppercase 
                                             tracking-wider mb-2">Birthdate</label>
                                 <date-picker v-model="driversLicense.birthdate"
+                                             :popover="{ visibility: 'focus' }"
                                              color="purple">
                                     <template v-slot="{ inputValue, inputEvents }">
                                         <input

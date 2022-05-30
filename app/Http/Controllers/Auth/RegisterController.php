@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\DriversLicense;
 use App\Models\Profile;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
@@ -74,6 +75,15 @@ class RegisterController extends Controller
         $profile = new Profile;
         $profile->user_id = $user->id;
         $profile->save();
+
+        // For demo purposes create a verified license.
+        DriversLicense::factory()->create([
+            'user_id' => $user->id
+        ]);
+
+        // Set the user to host for demo purposes.
+        $user->host = 1;
+        $user->save();
 
         return $user;
     }

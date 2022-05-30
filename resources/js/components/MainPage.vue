@@ -209,24 +209,6 @@
 
         mixins: [vehicleSearchDatesComputed, calendarMinMaxDate, vehicleBookedDates],
 
-        // computed: {
-        //     bookedDatesAttributes() {
-        //         let bookedDates = this.$store.state.bookedDates;
-
-        //         let labelAttributes = [
-        //             {
-        //                 dates: bookedDates,
-        //                 dot: {color: 'red'},
-        //                 popover: {
-        //                     label: 'Date already booked',
-        //                 },
-        //             }
-        //         ]
-
-        //         return bookedDates ? labelAttributes : [];
-        //     }
-        // },
-
         methods: {
             // Redirect to main vehicle page with dates and selected make as query string 
             search() {
