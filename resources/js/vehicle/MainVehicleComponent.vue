@@ -593,6 +593,7 @@
                     fullscreenControl: false,
                     streetViewControl: false,
                     mapTypeControl: false,
+                    clickableIcons: false,
                     zoomControl: true,
                     zoomControlOptions: {
                         position: this.google && this.google.maps.ControlPosition.RIGHT_TOP,
