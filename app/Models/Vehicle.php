@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -143,7 +144,25 @@ class Vehicle extends Model
         return $dates;
     }
 
-    // function getRatingAttribute() {
-    //     return
-    // }
+    /**
+     *  The date ranges that the vehicle is booked. Don't want dates before today
+     * 
+     *  @return array
+     */
+    public function individualBookedDates() : array
+    {
+        $dates = [];
+
+        $bookings = $this->bookings->where('to', '>=', Carbon::now());
+
+        foreach ($bookings as $booking) {
+            $period = CarbonPeriod::create($booking->from, $booking->to);
+
+            foreach ($period as $date) {
+                array_push($dates, $date->format('m/d/Y'));
+            }
+        }
+
+        return $dates;
+    }
 }

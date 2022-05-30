@@ -7,7 +7,7 @@
                         is-range
                         :min-date="minDate"
                         :max-date="maxDate"
-                        :attributes="bookedDatesAttributes">
+                        :attributes="unavailableDatesAttributes">
                 <template v-slot="{ inputValue, inputEvents }">
                     <div class="flex flex-col">
                         <label for="start" class="font-bold text-xs tracking-wider">Trip start</label>
@@ -100,21 +100,21 @@
                 return this.status === 200;
             },
 
-            // bookedDatesAttributes() {
-            //     let bookedDates = this.$store.state.bookedDates;
+            unavailableDatesAttributes() {
+                let bookedDates = this.unavailableDates;
 
-            //     let labelAttributes = [
-            //         {
-            //             dates: bookedDates,
-            //             dot: {color: 'red'},
-            //             popover: {
-            //                 label: 'Date already booked',
-            //             },
-            //         }
-            //     ]
+                let labelAttributes = [
+                    {
+                        dates: bookedDates,
+                        dot: {color: 'red'},
+                        popover: {
+                            label: 'Date unavailable',
+                        },
+                    }
+                ]
 
-            //     return bookedDates ? labelAttributes : [];
-            // }
+                return bookedDates ? labelAttributes : [];
+            }
         },
 
         methods: {

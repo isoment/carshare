@@ -19,7 +19,7 @@ class AvailabilityService
     {
         $vehicle = Vehicle::findOrFail($vehicleId);
 
-        $vehicleBookings = $vehicle->bookedDates();
+        $vehicleBookings = $vehicle->individualBookedDates();
 
         if (!$vehicle->isAvailable($request['from'], $request['to'])) {
             return response()->json([
@@ -85,9 +85,9 @@ class AvailabilityService
      */
     private function bookingsMerge(Vehicle $vehicle) : array
     {
-        $vehicleBookings = $vehicle->bookedDates();
+        $vehicleBookings = $vehicle->individualBookedDates();
 
-        $userBookings = current_user()->bookingDates();
+        $userBookings = current_user()->individualBookingDates();
 
         return array_merge($vehicleBookings, $userBookings);
     }

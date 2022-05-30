@@ -49,11 +49,7 @@ class AvailabilityTest extends TestCase
 
         $response->assertJsonStructure([
             'message',
-            'unavailableDates' => [
-                '*' => [
-                    'start', 'end'
-                ]
-            ]
+            'unavailableDates' => []
         ]);
     }
 
@@ -110,11 +106,7 @@ class AvailabilityTest extends TestCase
 
         $response->assertJsonStructure([
             'message',
-            'unavailableDates' => [
-                '*' => [
-                    'start', 'end'
-                ]
-            ]
+            'unavailableDates' => []
         ]);
     }
 
